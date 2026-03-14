@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CampusCuisine.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:CampusCuisine.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Title="Campus Cuisine">
+
+  <FlyoutItem Title="Home">
+    <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate pages:HomePage}"
+            Route="HomePage" />
+  </FlyoutItem>
+
+  <FlyoutItem Title="Starters">
+    <ShellContent
+            Title="Starters"
+            ContentTemplate="{DataTemplate pages:StartersPage}"
+            Route="StartersPage" />
+  </FlyoutItem>
+
+  <FlyoutItem Title="Mains">
+    <ShellContent
+            Title="Mains"
+            ContentTemplate="{DataTemplate pages:MainsPage}"
+            Route="MainsPage" />
+  </FlyoutItem>
+
+  <FlyoutItem Title="Desserts">
+    <ShellContent
+            Title="Desserts"
+            ContentTemplate="{DataTemplate pages:DessertsPage}"
+            Route="DessertsPage" />
+  </FlyoutItem>
+
+</Shell>
