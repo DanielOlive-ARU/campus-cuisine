@@ -19,10 +19,9 @@
             ItemsSource="{Binding Items}">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Frame
-                        BorderColor="Black"
-                        CornerRadius="0"
-                        HasShadow="False"
+          <Border
+                        Stroke="Black"
+                        StrokeShape="0"
                         Padding="10"
                         Margin="0,0,0,12">
 
@@ -69,7 +68,7 @@
               </VerticalStackLayout>
 
             </Grid>
-          </Frame>
+          </Border>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
