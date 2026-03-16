@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Campus_Cuisine
+namespace CampusCuisine
 {
   [Application]
   public class MainApplication : MauiApplication

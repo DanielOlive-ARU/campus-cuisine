@@ -1,10 +1,10 @@
-<api type="debug" assembly-name="Campus Cuisine" mvid="97de2d6d5612466896eabc60a1d18d04">
+<api type="debug" assembly-name="Campus Cuisine" mvid="999258be0a704d97b7a8e83cdbc1b14e">
   <java-to-managed>
-    <entry java-name="crc64a6598f8fd32ed972/MainActivity" managed-name="Campus_Cuisine.MainActivity, Campus Cuisine" managed-type-token-id="33554447" />
-    <entry java-name="crc64a6598f8fd32ed972/MainApplication" managed-name="Campus_Cuisine.MainApplication, Campus Cuisine" managed-type-token-id="33554448" />
+    <entry java-name="crc649beeff3c7b74c14a/MainActivity" managed-name="CampusCuisine.MainActivity, Campus Cuisine" managed-type-token-id="33554442" />
+    <entry java-name="crc649beeff3c7b74c14a/MainApplication" managed-name="CampusCuisine.MainApplication, Campus Cuisine" managed-type-token-id="33554443" />
   </java-to-managed>
   <managed-to-java>
-    <entry java-name="crc64a6598f8fd32ed972/MainActivity" managed-name="Campus_Cuisine.MainActivity, Campus Cuisine" managed-type-token-id="33554447" />
-    <entry java-name="crc64a6598f8fd32ed972/MainApplication" managed-name="Campus_Cuisine.MainApplication, Campus Cuisine" managed-type-token-id="33554448" />
+    <entry java-name="crc649beeff3c7b74c14a/MainActivity" managed-name="CampusCuisine.MainActivity, Campus Cuisine" managed-type-token-id="33554442" />
+    <entry java-name="crc649beeff3c7b74c14a/MainApplication" managed-name="CampusCuisine.MainApplication, Campus Cuisine" managed-type-token-id="33554443" />
   </managed-to-java>
 </api>

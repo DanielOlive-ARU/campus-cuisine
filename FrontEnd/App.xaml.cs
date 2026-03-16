@@ -1,6 +1,5 @@
-﻿namespace Campus_Cuisine;
+﻿namespace CampusCuisine;
 
-using CampusCuisine;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.LifecycleEvents;
 public partial class App : Application

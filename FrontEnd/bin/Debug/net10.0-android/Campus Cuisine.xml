@@ -4,7 +4,7 @@
         <name>Campus Cuisine</name>
     </assembly>
     <members>
-        <member name="T:Campus_Cuisine.Resource">
+        <member name="T:CampusCuisine.Resource">
             <summary>
             Android Resource Designer class.
             Exposes the Android Resource designer assembly into the project Namespace.

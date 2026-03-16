@@ -255,6 +255,10 @@ C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-mac
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\libxamarin-dotnet-nativeaot.a
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\libxamarin-dotnet.a
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\libxamarin-dotnet.dylib
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\Microsoft.Maui.Controls.HotReload.Forms.dll
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\Microsoft.VisualStudio.DesignTools.MobileTapContracts.dll
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\Microsoft.VisualStudio.DesignTools.TapContract.dll
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\bin\Debug\net10.0-maccatalyst\maccatalyst-x64\Microsoft.VisualStudio.DesignTools.XamlTapContract.dll
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\Campus Cuisine.csproj.AssemblyReference.cache
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\partialappmanifest\_PartialAppManifests.items
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\unpack\Microsoft.Maui.Essentials\BundleResource\xml\microsoft_maui_essentials_fileprovider_file_paths.xml
@@ -262,9 +266,6 @@ C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-mac
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\mauifont.inputs
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\mauisplash.inputs
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\mauisplash.stamp
-C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot@3x.png
-C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot@2x.png
-C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\appiconItunesArtwork.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\appicon83.5x83.5@2x.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\appicon76x76@2x.png
@@ -277,6 +278,9 @@ C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-mac
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\appicon20x20@3x.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\appicon20x20@2x.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\Assets.xcassets\appicon.appiconset\Contents.json
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot@3x.png
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot@2x.png
+C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\r\dotnet_bot.png
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\mauiimage.stamp
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\mauiimage.outputs
 C:\Users\Adam Wingell\source\repos\campus-cuisine\FrontEnd\obj\Debug\net10.0-maccatalyst\maccatalyst-x64\resizetizer\f\MauiInfo.plist
