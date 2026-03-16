@@ -1,4 +1,4 @@
-<api type="debug" assembly-name="Campus Cuisine" mvid="66dbb69ea2a3461b8996087c3cbbf772">
+<api type="debug" assembly-name="Campus Cuisine" mvid="97de2d6d5612466896eabc60a1d18d04">
   <java-to-managed>
     <entry java-name="crc64a6598f8fd32ed972/MainActivity" managed-name="Campus_Cuisine.MainActivity, Campus Cuisine" managed-type-token-id="33554447" />
     <entry java-name="crc64a6598f8fd32ed972/MainApplication" managed-name="Campus_Cuisine.MainApplication, Campus Cuisine" managed-type-token-id="33554448" />
