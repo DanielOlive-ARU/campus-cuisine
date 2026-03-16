@@ -9,28 +9,26 @@
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="20">
 
-      <Frame
-                BorderColor="Black"
-                CornerRadius="0"
-                HasShadow="False"
-                Padding="20">
+      <Border
+        Stroke="Black"
+        StrokeShape="0"
+        Padding="20">
 
         <VerticalStackLayout Spacing="15">
           <Label
-                        Text="Welcome to Campus Cuisine"
-                        FontSize="28"
-                        FontAttributes="Bold"
-                        HorizontalOptions="Center" />
+            Text="Welcome to Campus Cuisine"
+            FontSize="28"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
 
           <BoxView HeightRequest="1" BackgroundColor="Black" />
 
           <Label
-                        Text="Welcome to Campus Cuisine. Use the flyout navigation to browse Starters, Mains, and Desserts."
-                        FontSize="16" />
+            Text="Welcome to Campus Cuisine. Use the flyout navigation to browse Starters, Mains, and Desserts."
+            FontSize="16" />
 
         </VerticalStackLayout>
-      </Frame>
-
+      </Border>
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>
