@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Campus_Cuisine
+namespace CampusCuisine
 {
   public class Program
   {

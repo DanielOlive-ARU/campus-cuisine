@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Campus_Cuisine
+namespace CampusCuisine
 {
   public static class MauiProgram
   {
