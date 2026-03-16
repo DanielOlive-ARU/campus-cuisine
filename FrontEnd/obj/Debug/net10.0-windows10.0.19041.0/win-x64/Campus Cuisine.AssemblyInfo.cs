@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Campus Cuisine")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+1a23257594e9ecbf55c3d0977aac0449f120b11f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+ac32302c703c1fa37d732520db5d52b6de8af65d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Campus Cuisine")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Campus Cuisine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
