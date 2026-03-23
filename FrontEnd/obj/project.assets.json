@@ -29097,11 +29097,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adam Wingell\\source\\repos\\campus-cuisine\\FrontEnd\\Campus Cuisine.csproj",
+      "projectUniqueName": "C:\\Users\\Adam Wingell\\source\\repos\\DanielOlive-ARU\\campus-cuisine\\FrontEnd\\Campus Cuisine.csproj",
       "projectName": "Campus Cuisine",
-      "projectPath": "C:\\Users\\Adam Wingell\\source\\repos\\campus-cuisine\\FrontEnd\\Campus Cuisine.csproj",
+      "projectPath": "C:\\Users\\Adam Wingell\\source\\repos\\DanielOlive-ARU\\campus-cuisine\\FrontEnd\\Campus Cuisine.csproj",
       "packagesPath": "C:\\Users\\Adam Wingell\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adam Wingell\\source\\repos\\campus-cuisine\\FrontEnd\\obj\\",
+      "outputPath": "C:\\Users\\Adam Wingell\\source\\repos\\DanielOlive-ARU\\campus-cuisine\\FrontEnd\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [

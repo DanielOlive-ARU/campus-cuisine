@@ -1,8 +1,6 @@
 ﻿using CampusCuisine.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+
 
 namespace CampusCuisine.ViewModel
 {
@@ -16,7 +14,7 @@ namespace CampusCuisine.ViewModel
         {
         new MenuItemModel
         {
-          Name = "Garlic Bread",
+          Name = "Garlic bread",
           Description = "Toasted bread with garlic butter.",
           Price = "£3.50"
         },

@@ -18,6 +18,7 @@
           <Label
             Text="Welcome to Campus Cuisine"
             FontSize="28"
+            TextColor="Black"
             FontAttributes="Bold"
             HorizontalOptions="Center" />
 
