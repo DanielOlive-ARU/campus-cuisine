@@ -71,6 +71,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\MenuItemView.xaml.cs">
+	    <DependentUpon>MenuItemView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Pages\DessertsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

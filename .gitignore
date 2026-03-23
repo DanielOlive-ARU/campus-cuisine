@@ -1,4 +1,9 @@
+bin/
+obj/
 .vs/
+*.user
+*.rsuser
+*.suo
 backend/.venv/
 backend/.env
 backend/.artifacts/
