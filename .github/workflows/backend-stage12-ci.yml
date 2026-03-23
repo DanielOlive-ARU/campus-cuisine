@@ -1,0 +1,48 @@
+name: Backend Stage 1-2 CI
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - 'docs/api/**'
+      - '.github/workflows/backend-stage12-ci.yml'
+      - 'AGENTS.md'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'docs/api/**'
+      - '.github/workflows/backend-stage12-ci.yml'
+      - 'AGENTS.md'
+  workflow_dispatch:
+
+jobs:
+  backend-stage12:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'backend/requirements.txt'
+
+      - name: Install backend dependencies
+        run: python -m pip install -r backend/requirements.txt
+
+      - name: Syntax check backend Python files
+        run: python -m py_compile $(find backend -type f -name '*.py' | sort)
+
+      - name: Run backend Stage 1-2 tests
+        run: pytest backend/tests -q --junitxml=backend-test-results.xml
+
+      - name: Upload backend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-stage12-test-results
+          path: backend-test-results.xml
+          if-no-files-found: error
