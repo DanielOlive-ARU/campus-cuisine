@@ -373,6 +373,10 @@ Keep routers thin.
 Use SQLite because it satisfies persistence requirements without requiring server setup.
 
 ## Testing Strategy
+Current implementation status:
+- Phase 1 and Phase 2 already include automated tests for health, startup, DB creation, seed behaviour, and static file mounting.
+- Feature-specific tests expand in later phases as menu, admin, and order routes are implemented.
+
 ### Core backend tests
 1. health endpoint returns success
 2. menu retrieval returns expected items
@@ -413,7 +417,7 @@ Implement admin CRUD with API key protection.
 Implement order creation and order retrieval.
 
 ### Phase 7
-Add tests and final backend README instructions.
+Expand automated tests and final backend README instructions.
 
 ## Integration Contract with Frontend
 - frontend requests menu data from the backend

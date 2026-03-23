@@ -1,7 +1,7 @@
 # Backend Status
 
 ## Status
-Phase 1 and Phase 2 implemented; CI runtime validation pending first workflow run
+Phase 1 and Phase 2 implemented and validated locally and in clean CI; automatic CI is disabled in favor of local testing during active development
 
 ## Current Decisions
 - Canonical backend folder structure agreed.
@@ -10,9 +10,12 @@ Phase 1 and Phase 2 implemented; CI runtime validation pending first workflow ru
 - MVP order status is `confirmed`.
 - `image_url` values are relative paths.
 - Admin routes use the `x-admin-key` header.
+- GitHub Actions validation is retained as a manual workflow only.
+- Local backend testing uses ignored artifact directories to avoid contaminating the repo.
+- `uv` is the preferred local toolchain and can provision Python 3.12 when a normal local Python installation is unavailable.
 
 ## Next Task
-Run the backend Stage 1-2 GitHub Actions workflow and fix any runtime or test failures it exposes.
+Use the local backend testing platform during Phase 3 development, then rerun the manual GitHub Actions workflow only when needed.
 
 ## Progress Log
 | Date | Phase | Summary | Validation | Notes |
@@ -20,3 +23,6 @@ Run the backend Stage 1-2 GitHub Actions workflow and fix any runtime or test fa
 | 2026-03-23 | 0 | Documentation aligned and Codex handoff files added | Manual review | Ready for implementation review |
 | 2026-03-23 | 1-2 | Backend scaffold, health route, config, DB startup, static mount, and seed support added | `python3 -m py_compile $(find backend -type f -name '*.py' | sort)` | Runtime validation blocked in this shell because `pip` and `ensurepip` are unavailable |
 | 2026-03-23 | 1-2 validation | Added startup, DB, seed, and static mount tests plus a backend-only GitHub Actions workflow | Local syntax validation only | Full runtime validation now depends on the first GitHub Actions run |
+| 2026-03-23 | 1-2 CI | GitHub Actions installed dependencies and ran backend Stage 1-2 tests successfully | `pytest backend/tests -q --junitxml=backend-test-results.xml` | 8 tests passed on `ubuntu-latest` |
+| 2026-03-23 | local platform | Automatic CI disabled to control usage; local testing platform and CI/CD notes added | Documentation and scripts | Manual GitHub Actions workflow retained for on-demand validation |
+| 2026-03-23 | 1-2 local validation | Windows PowerShell local validation completed successfully using the new backend scripts | `./backend/scripts/bootstrap.ps1`, `./backend/scripts/test-stage12.ps1`, `./backend/scripts/smoke-stage12.ps1` | `uv` provisioned CPython 3.12.13, pytest passed with 8 tests, smoke test passed |

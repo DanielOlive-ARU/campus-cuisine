@@ -7,16 +7,19 @@ Read these files first and treat them as the source of truth:
 - docs/api/backend-implementation-spec.md
 - docs/api/backend-architecture-sheet.md
 - docs/api/api-contract.md
+- docs/testing/local-testing-platform.md
+- docs/project-management/ci-cd-notes.md
 - docs/requirements/requirements-mapping.md
 
 Task:
-Implement only Phase 1 and Phase 2 from `docs/api/backend-plan.md`.
+Implement only Phase 3 from `docs/api/backend-plan.md`.
 
 Scope:
 - Work only inside `backend/` unless a shared documentation file must be updated.
 - Do not touch `FrontEnd/`.
 - Do not add features outside the agreed plan.
 - Do not add authentication flows, payments, analytics, or admin UI.
+- Do not widen GitHub Actions triggers.
 
 Canonical implementation rules:
 - Use the backend layout defined in the source-of-truth docs.
@@ -25,26 +28,20 @@ Canonical implementation rules:
 - Use framework features over custom infrastructure.
 - Return relative image paths such as `/images/grilled-chicken-burger.jpg`.
 - Treat `confirmed` as the implemented order status for the MVP.
+- Phase 1 and Phase 2 are already complete and validated. Preserve that working baseline.
 
-Phase 1 acceptance:
-- `backend/` scaffold exists
-- app entrypoint exists
-- `GET /health` works
-
-Phase 2 acceptance:
-- settings load from `.env`
-- SQLite engine exists
-- request-scoped session dependency exists
-- lifespan startup creates tables
-- static image mount exists
-- seed support exists
+Phase 3 acceptance:
+- `MenuItem`, `Order`, and `OrderLine` models are implemented cleanly for the agreed MVP
+- request and response schemas match the API contract
+- validation rules are implemented in schemas and supporting helpers
 
 Before coding:
 - Summarise the files you will create or modify.
 - State the validation commands you will run.
+- Prefer the local backend testing platform for validation.
 
 After coding:
 - Return the changed files.
 - Show the validation commands and results.
-- Update `docs/api/backend-status.md` for the completed phases.
+- Update `docs/api/backend-status.md` for the completed phase.
 - Note any follow-up work, but do not implement later phases.

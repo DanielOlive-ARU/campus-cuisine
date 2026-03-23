@@ -21,6 +21,8 @@ Backend: Python FastAPI
 - `docs/api/api-contract.md`
 - `docs/api/backend-plan.md`
 - `docs/api/backend-status.md`
+- `docs/testing/local-testing-platform.md`
+- `docs/project-management/ci-cd-notes.md`
 - `docs/requirements/requirements-mapping.md`
 
 ## Backend Standards
@@ -34,6 +36,8 @@ Backend: Python FastAPI
 
 ## Validation
 - Run backend validation after each milestone.
+- Use the local backend testing platform for day-to-day validation.
+- Use the manual GitHub Actions workflow only when a clean-environment check is needed.
 - Keep docs aligned with implementation.
 - Fix failing tests before moving to the next milestone.
 

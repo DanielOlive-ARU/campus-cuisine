@@ -109,7 +109,7 @@ This backlog is structured so that all **MUST** requirements are completed befor
 4. Export project board evidence
 5. Add meeting notes and reflection
 6. Prepare viva walkthrough and speaking roles
-7. Add GitHub Actions if time allows
+7. Review whether the manual backend workflow should be expanded into scoped GitHub Actions later in the project
 
 ### Acceptance Criteria
 - All MUST requirements demonstrated in repository

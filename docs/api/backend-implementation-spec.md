@@ -498,6 +498,10 @@ Accept FastAPI's default validation error shape for 422 responses.
 ## Testing Strategy
 Use pytest with FastAPI `TestClient`.
 
+Current baseline:
+- Phase 1 and Phase 2 already include health, startup, DB creation, seed, and static mount tests.
+- Later phases expand coverage to menu, admin, validation, and orders.
+
 ### `tests/conftest.py`
 Create:
 - temporary SQLite test DB
@@ -529,4 +533,4 @@ Create:
 4. Phase 4: public menu routes
 5. Phase 5: admin CRUD routes
 6. Phase 6: orders
-7. Phase 7: tests and backend README
+7. Phase 7: expand tests and finalise backend README

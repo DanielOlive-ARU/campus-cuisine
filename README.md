@@ -11,8 +11,10 @@ The application is a cross-platform restaurant ordering app with flyout navigati
 
 ## Current State
 - The current frontend implementation lives under `FrontEnd/` and targets **.NET 10**.
-- The backend implementation will be added under `backend/`.
+- The backend implementation now lives under `backend/`.
+- Backend Phase 1 and Phase 2 are implemented and validated locally and in one clean GitHub Actions run.
 - Root `docs/` is the source of truth for planning and API documentation.
+- Automatic GitHub Actions runs are currently disabled; backend validation is local-first with a manual workflow retained for on-demand CI checks.
 
 ## Architecture Summary
 - **Frontend:** .NET MAUI, XAML, C#, MVVM, dependency injection
@@ -46,7 +48,9 @@ docs/
 - `docs/api/backend-status.md`
 - `docs/api/api-contract.md`
 - `docs/api/codex-backend-implementation-prompt.txt`
+- `docs/testing/local-testing-platform.md`
 - `docs/testing/test-plan.md`
+- `docs/project-management/ci-cd-notes.md`
 - `docs/team/roles-and-responsibilities.md`
 - `docs/meetings/meeting-template.md`
 - `docs/meetings/decision-log-template.md`
@@ -66,7 +70,7 @@ docs/
 - Order cancellation before checkout
 - Service/data loading tests
 - Order state persistence tests
-- GitHub Actions for automated tests
+- Scoped GitHub Actions workflows later in the project
 
 ## Out of Scope Unless Finished Early
 - Full user authentication flow
@@ -85,5 +89,7 @@ docs/
 1. Use the root `docs/` directory as the source of truth.
 2. Convert backlog items into GitHub Issues.
 3. Implement the backend phase by phase using `docs/api/backend-plan.md`.
-4. Keep `docs/api/backend-status.md` updated as milestones are completed.
-5. Keep implementation and documentation aligned.
+4. Use `docs/testing/local-testing-platform.md` for day-to-day backend validation.
+5. Keep `docs/api/backend-status.md` updated as milestones are completed.
+6. Use `docs/project-management/ci-cd-notes.md` when CI/CD is expanded later.
+7. Keep implementation and documentation aligned.

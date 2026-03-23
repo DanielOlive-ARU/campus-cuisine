@@ -1,18 +1,6 @@
 name: Backend Stage 1-2 CI
 
 on:
-  push:
-    paths:
-      - 'backend/**'
-      - 'docs/api/**'
-      - '.github/workflows/backend-stage12-ci.yml'
-      - 'AGENTS.md'
-  pull_request:
-    paths:
-      - 'backend/**'
-      - 'docs/api/**'
-      - '.github/workflows/backend-stage12-ci.yml'
-      - 'AGENTS.md'
   workflow_dispatch:
 
 jobs:
@@ -24,7 +12,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: 'pip'
@@ -41,7 +29,7 @@ jobs:
 
       - name: Upload backend test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: backend-stage12-test-results
           path: backend-test-results.xml
