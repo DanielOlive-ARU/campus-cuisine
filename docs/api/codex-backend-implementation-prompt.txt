@@ -1,0 +1,50 @@
+You are implementing the backend only.
+
+Read these files first and treat them as the source of truth:
+- AGENTS.md
+- docs/api/backend-plan.md
+- docs/api/backend-status.md
+- docs/api/backend-implementation-spec.md
+- docs/api/backend-architecture-sheet.md
+- docs/api/api-contract.md
+- docs/requirements/requirements-mapping.md
+
+Task:
+Implement only Phase 1 and Phase 2 from `docs/api/backend-plan.md`.
+
+Scope:
+- Work only inside `backend/` unless a shared documentation file must be updated.
+- Do not touch `FrontEnd/`.
+- Do not add features outside the agreed plan.
+- Do not add authentication flows, payments, analytics, or admin UI.
+
+Canonical implementation rules:
+- Use the backend layout defined in the source-of-truth docs.
+- Keep tests under `backend/tests/`.
+- Use FastAPI, SQLModel, SQLite, pydantic-settings, and pytest.
+- Use framework features over custom infrastructure.
+- Return relative image paths such as `/images/grilled-chicken-burger.jpg`.
+- Treat `confirmed` as the implemented order status for the MVP.
+
+Phase 1 acceptance:
+- `backend/` scaffold exists
+- app entrypoint exists
+- `GET /health` works
+
+Phase 2 acceptance:
+- settings load from `.env`
+- SQLite engine exists
+- request-scoped session dependency exists
+- lifespan startup creates tables
+- static image mount exists
+- seed support exists
+
+Before coding:
+- Summarise the files you will create or modify.
+- State the validation commands you will run.
+
+After coding:
+- Return the changed files.
+- Show the validation commands and results.
+- Update `docs/api/backend-status.md` for the completed phases.
+- Note any follow-up work, but do not implement later phases.
