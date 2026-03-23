@@ -1,4 +1,4 @@
-﻿namespace Campus_Cuisine
+﻿namespace CampusCuisine
 {
   public partial class MainPage : ContentPage
   {

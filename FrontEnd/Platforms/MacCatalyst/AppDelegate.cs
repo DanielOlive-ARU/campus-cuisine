@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Campus_Cuisine
+namespace CampusCuisine
 {
   [Register("AppDelegate")]
   public class AppDelegate : MauiUIApplicationDelegate

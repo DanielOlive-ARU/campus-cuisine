@@ -1768,12 +1768,12 @@ com.bumptech.glide.util.pool.FactoryPools$Poolable;com.bumptech.glide.util.pool.
 Bumptech.Glide.Util.Pool.FactoryPools+IResetter, Xamarin.Android.Glide;com.bumptech.glide.util.pool.FactoryPools$Resetter
 Bumptech.Glide.Util.Pool.FactoryPools.IResetter;com.bumptech.glide.util.pool.FactoryPools$Resetter
 com.bumptech.glide.util.pool.FactoryPools$Resetter;com.bumptech.glide.util.pool.FactoryPools$Resetter
-Campus_Cuisine.MainActivity, Campus Cuisine;crc64a6598f8fd32ed972.MainActivity
-Campus_Cuisine.MainActivity;crc64a6598f8fd32ed972.MainActivity
-campus_cuisine.MainActivity;crc64a6598f8fd32ed972.MainActivity
-Campus_Cuisine.MainApplication, Campus Cuisine;crc64a6598f8fd32ed972.MainApplication
-Campus_Cuisine.MainApplication;crc64a6598f8fd32ed972.MainApplication
-campus_cuisine.MainApplication;crc64a6598f8fd32ed972.MainApplication
+CampusCuisine.MainActivity, Campus Cuisine;crc649beeff3c7b74c14a.MainActivity
+CampusCuisine.MainActivity;crc649beeff3c7b74c14a.MainActivity
+campuscuisine.MainActivity;crc649beeff3c7b74c14a.MainActivity
+CampusCuisine.MainApplication, Campus Cuisine;crc649beeff3c7b74c14a.MainApplication
+CampusCuisine.MainApplication;crc649beeff3c7b74c14a.MainApplication
+campuscuisine.MainApplication;crc649beeff3c7b74c14a.MainApplication
 Google.Android.Material.Animation.IAnimatableView, Xamarin.Google.Android.Material;com.google.android.material.animation.AnimatableView
 Google.Android.Material.Animation.IAnimatableView;com.google.android.material.animation.AnimatableView
 com.google.android.material.animation.AnimatableView;com.google.android.material.animation.AnimatableView

@@ -11,8 +11,8 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <permission android:name="com.companyname.campuscuisine.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature" />
   <uses-permission android:name="com.companyname.campuscuisine.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-  <application android:name="crc64a6598f8fd32ed972.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="Campus Cuisine" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
-    <activity android:name="crc64a6598f8fd32ed972.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
+  <application android:name="crc649beeff3c7b74c14a.MainApplication" android:allowBackup="true" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:debuggable="true" android:extractNativeLibs="true" android:icon="@mipmap/appicon" android:label="Campus Cuisine" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
+    <activity android:name="crc649beeff3c7b74c14a.MainActivity" android:configChanges="density|orientation|smallestScreenSize|screenLayout|screenSize|uiMode" android:exported="true" android:launchMode="singleTop" android:theme="@style/Maui.SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

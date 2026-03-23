@@ -1,4 +1,4 @@
-﻿namespace Campus_Cuisine;
+﻿namespace CampusCuisine;
 
 using CampusCuisine;
 using Microsoft.Maui.Controls;
