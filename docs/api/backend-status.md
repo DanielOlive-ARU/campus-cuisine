@@ -10,12 +10,12 @@ Phase 7 implemented; Phase 1 to Phase 7 validated locally, with Phase 1 and Phas
 - MVP order status is `confirmed`.
 - `image_url` values are relative paths.
 - Admin routes use the `x-admin-key` header.
-- GitHub Actions validation is retained as a manual workflow only.
+- GitHub Actions validation is retained as a manual workflow, with a temporary branch-scoped `push` trigger on `backend-initial-implementation` until the next clean-environment run is captured.
 - Local backend testing uses ignored artifact directories to avoid contaminating the repo.
 - `uv` is the preferred local toolchain and can provision Python 3.12 when a normal local Python installation is unavailable.
 
 ## Next Task
-Push the Phase 7 cleanup, run the manual GitHub Actions backend validation workflow, and review the clean-environment result before any further backend changes.
+Push the temporary workflow-trigger update, let the branch-scoped backend validation workflow run, and review the clean-environment result before any further backend changes.
 
 ## Progress Log
 | Date | Phase | Summary | Validation | Notes |

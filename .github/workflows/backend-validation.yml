@@ -2,6 +2,15 @@ name: Backend Validation
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - backend-initial-implementation
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-validation.yml'
+      - 'docs/api/**'
+      - 'docs/testing/**'
+      - 'docs/project-management/ci-cd-notes.md'
 
 jobs:
   backend-validation:

@@ -3,6 +3,7 @@
 ## Active Validation Mode
 - Use the local backend testing platform for day-to-day backend validation.
 - Keep `.github/workflows/backend-validation.yml` manual-only for on-demand clean-environment checks.
+- Temporary exception: allow a branch-scoped `push` trigger on `backend-initial-implementation` until the first post-Phase-7 clean-environment run is captured.
 
 ## Phase 0
 Documentation lock and Codex handoff pack.

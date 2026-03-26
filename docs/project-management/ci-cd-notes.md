@@ -5,13 +5,15 @@ The project still intends to support CI/CD later in development, but automatic G
 
 ## Current Rules
 - Keep the backend validation workflow in the repo at `.github/workflows/backend-validation.yml`.
-- Allow manual execution through `workflow_dispatch` only.
+- Allow manual execution through `workflow_dispatch`.
+- Temporary exception: also allow a tightly scoped `push` trigger on `backend-initial-implementation` until the first full backend validation run is captured after Phase 7.
 - Use the local backend testing platform for day-to-day validation.
 
 ## Why This Decision Was Taken
 - Stage 1/2 backend validation has already passed once in GitHub Actions.
 - Ongoing automatic workflow runs are not necessary for every change at this stage.
 - The project still needs a clear path back to CI/CD later.
+- `workflow_dispatch` cannot be used until the workflow exists on the default branch, and the team does not want to change `main` before opening a PR.
 
 ## Evidence Already Captured
 Backend Stage 1/2 has already been validated in GitHub Actions with:
@@ -64,3 +66,4 @@ When CI/CD is expanded again:
 - prefer trigger scoping over running on every push
 - use manual or tagged release workflows for expensive packaging steps
 - keep build artifacts out of the source tree and out of git
+- remove the temporary branch-specific `push` trigger after the first post-Phase-7 clean-environment run
