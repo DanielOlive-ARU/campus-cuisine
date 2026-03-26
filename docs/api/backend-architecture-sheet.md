@@ -375,7 +375,7 @@ Use SQLite because it satisfies persistence requirements without requiring serve
 ## Testing Strategy
 Current implementation status:
 - Phase 1 and Phase 2 already include automated tests for health, startup, DB creation, seed behaviour, and static file mounting.
-- Feature-specific tests expand in later phases as menu, admin, and order routes are implemented.
+- Feature-specific tests now cover menu, admin, and order routes in addition to startup and health checks.
 
 ### Core backend tests
 1. health endpoint returns success
@@ -456,7 +456,4 @@ Menu items are stored in SQLite and managed through admin CRUD routes in Swagger
 To keep placed orders authoritative and avoid frontend/backend mismatches.
 
 ## Recommended Next Task
-Implement only Phase 1 and Phase 2 first:
-1. scaffold `backend/`
-2. add app startup and `GET /health`
-3. add settings, engine, session dependency, table creation, static mount, and seed support
+Run the manual GitHub Actions backend validation workflow against the current branch, then review the clean-environment result before any new backend work.

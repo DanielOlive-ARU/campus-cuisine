@@ -8,7 +8,7 @@ $python = Assert-VenvPythonPath
 $artifactsDir = Get-BackendPath '.artifacts'
 $pycacheDir = Join-Path $artifactsDir 'pycache'
 $pytestCacheDir = Join-Path $artifactsDir 'pytest-cache'
-$testResultsPath = Join-Path $artifactsDir 'test-results-stage12.xml'
+$testResultsPath = Join-Path $artifactsDir 'backend-test-results.xml'
 $compileScriptPath = Join-Path $artifactsDir 'compile-check.py'
 
 Initialize-LocalDirectories
@@ -34,10 +34,10 @@ for path in sorted(Path('.').rglob('*.py')):
     Write-Host 'Running backend syntax validation.'
     Invoke-Checked -FilePath $python -Arguments @($compileScriptPath) -WorkingDirectory $backendRoot
 
-    Write-Host 'Running backend Stage 1/2 pytest suite.'
+    Write-Host 'Running backend pytest suite.'
     Invoke-Checked -FilePath $python -Arguments @('-m', 'pytest', 'tests', '-q', '-o', "cache_dir=$pytestCacheDir", "--junitxml=$testResultsPath") -WorkingDirectory $backendRoot
 
-    Write-Host "Stage 1/2 backend tests completed successfully. Results: $testResultsPath"
+    Write-Host "Backend tests completed successfully. Results: $testResultsPath"
 }
 finally {
     Remove-Item -Path $compileScriptPath -ErrorAction SilentlyContinue

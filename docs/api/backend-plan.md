@@ -2,7 +2,7 @@
 
 ## Active Validation Mode
 - Use the local backend testing platform for day-to-day backend validation.
-- Keep `.github/workflows/backend-stage12-ci.yml` manual-only for on-demand clean-environment checks.
+- Keep `.github/workflows/backend-validation.yml` manual-only for on-demand clean-environment checks.
 
 ## Phase 0
 Documentation lock and Codex handoff pack.

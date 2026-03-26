@@ -1,10 +1,10 @@
-name: Backend Stage 1-2 CI
+name: Backend Validation
 
 on:
   workflow_dispatch:
 
 jobs:
-  backend-stage12:
+  backend-validation:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,13 +24,13 @@ jobs:
       - name: Syntax check backend Python files
         run: python -m py_compile $(find backend -type f -name '*.py' | sort)
 
-      - name: Run backend Stage 1-2 tests
+      - name: Run backend test suite
         run: pytest backend/tests -q --junitxml=backend-test-results.xml
 
       - name: Upload backend test results
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: backend-stage12-test-results
+          name: backend-test-results-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
           path: backend-test-results.xml
           if-no-files-found: error

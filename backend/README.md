@@ -31,7 +31,7 @@ The local backend workflow is Windows-first and prefers `uv` for environment set
 ```
 
 ## Manual CI
-The GitHub Actions backend Stage 1/2 workflow is retained for manual use only. Automatic triggers are disabled to control usage.
+The GitHub Actions backend validation workflow is retained for manual use only. Automatic triggers are disabled to control usage.
 
 ## Current Validation Status
 As of `2026-03-26`:
@@ -39,7 +39,7 @@ As of `2026-03-26`:
 - `test-stage12.ps1` passed with `37` tests
 - `smoke-stage12.ps1` completed successfully
 - direct `pytest` from the backend virtual environment also passed
-- the backend Stage 1/2 GitHub Actions workflow has also passed once on `ubuntu-latest`
+- the backend validation workflow has already passed once on `ubuntu-latest` for the earlier Phase 1/2 baseline
 
 ## Local Artifact Policy
 Local build, test, cache, and smoke-test outputs are redirected into ignored paths:

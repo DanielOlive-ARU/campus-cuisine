@@ -116,7 +116,7 @@ Current implemented backend tests cover:
 - Verify confirmation with order ID/status
 
 ## Current CI/CD Position
-- Backend Stage 1/2 GitHub Actions validation exists and has passed once.
+- Manual GitHub Actions backend validation exists and has passed once for the earlier Phase 1/2 baseline.
 - Automatic workflow triggers are currently disabled to control usage.
 - The backend workflow is retained as a manual `workflow_dispatch` job.
 - Day-to-day backend validation uses the local testing platform.

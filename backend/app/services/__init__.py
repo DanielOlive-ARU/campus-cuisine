@@ -1,1 +1,1 @@
-"""Business services are added in later phases."""
+"""Business services for menu and order flows."""

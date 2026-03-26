@@ -8,11 +8,11 @@ $python = Assert-VenvPythonPath
 $artifactsDir = Get-BackendPath '.artifacts'
 $localDir = Get-BackendPath '.local'
 $pycacheDir = Join-Path $artifactsDir 'pycache'
-$staticDir = Join-Path $localDir 'stage12-static'
-$dbPath = Join-Path $localDir 'stage12-smoke.db'
-$stdoutPath = Join-Path $artifactsDir 'stage12-smoke.stdout.log'
-$stderrPath = Join-Path $artifactsDir 'stage12-smoke.stderr.log'
-$dbAssertScriptPath = Join-Path $artifactsDir 'stage12-db-assert.py'
+$staticDir = Join-Path $localDir 'backend-smoke-static'
+$dbPath = Join-Path $localDir 'backend-smoke.db'
+$stdoutPath = Join-Path $artifactsDir 'backend-smoke.stdout.log'
+$stderrPath = Join-Path $artifactsDir 'backend-smoke.stderr.log'
+$dbAssertScriptPath = Join-Path $artifactsDir 'backend-db-assert.py'
 $port = 8001
 $baseUrl = "http://127.0.0.1:$port"
 
@@ -94,7 +94,7 @@ if count != 12:
         throw 'Static file mount did not return the expected content.'
     }
 
-    Write-Host 'Stage 1/2 smoke test completed successfully.'
+    Write-Host 'Backend smoke test completed successfully.'
 }
 finally {
     Remove-Item -Path $dbAssertScriptPath -ErrorAction SilentlyContinue

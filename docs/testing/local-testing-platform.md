@@ -47,7 +47,7 @@ Runs:
 Artifacts written to:
 - `backend/.artifacts/pycache/`
 - `backend/.artifacts/pytest-cache/`
-- `backend/.artifacts/test-results-stage12.xml`
+- `backend/.artifacts/backend-test-results.xml`
 
 ### `backend/scripts/smoke-stage12.ps1`
 Starts the backend locally and validates:
@@ -57,10 +57,10 @@ Starts the backend locally and validates:
 - static file serving
 
 Artifacts written to:
-- `backend/.local/stage12-smoke.db`
-- `backend/.local/stage12-static/`
-- `backend/.artifacts/stage12-smoke.stdout.log`
-- `backend/.artifacts/stage12-smoke.stderr.log`
+- `backend/.local/backend-smoke.db`
+- `backend/.local/backend-smoke-static/`
+- `backend/.artifacts/backend-smoke.stdout.log`
+- `backend/.artifacts/backend-smoke.stderr.log`
 
 ### `backend/scripts/run-api.ps1`
 Runs the backend locally for manual testing and future frontend integration.

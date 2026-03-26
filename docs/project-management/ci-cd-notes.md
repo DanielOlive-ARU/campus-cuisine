@@ -4,7 +4,7 @@
 The project still intends to support CI/CD later in development, but automatic GitHub Actions runs are disabled for now to control usage.
 
 ## Current Rules
-- Keep the backend Stage 1/2 GitHub Actions workflow in the repo at `.github/workflows/backend-stage12-ci.yml`.
+- Keep the backend validation workflow in the repo at `.github/workflows/backend-validation.yml`.
 - Allow manual execution through `workflow_dispatch` only.
 - Use the local backend testing platform for day-to-day validation.
 
@@ -21,7 +21,7 @@ Backend Stage 1/2 has already been validated in GitHub Actions with:
 
 This gives the team one clean-environment validation point before switching to local-first development.
 
-Backend Stage 1/2 has also been validated locally on Windows PowerShell with:
+The backend has also been validated locally on Windows PowerShell with:
 - `./backend/scripts/bootstrap.ps1`
 - `./backend/scripts/test-stage12.ps1`
 - `./backend/scripts/smoke-stage12.ps1`
@@ -29,7 +29,7 @@ Backend Stage 1/2 has also been validated locally on Windows PowerShell with:
 Observed local result:
 - `uv` provisioned `CPython 3.12.13`
 - dependencies installed successfully
-- `8` tests passed
+- current backend suite passes locally with menu, admin, and order coverage
 - smoke test completed successfully
 
 ## Re-enable Plan
