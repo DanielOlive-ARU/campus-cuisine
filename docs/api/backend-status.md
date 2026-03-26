@@ -1,7 +1,7 @@
 # Backend Status
 
 ## Status
-Phase 7 implemented; Phase 1 to Phase 7 validated locally, with Phase 1 and Phase 2 also validated in clean CI; automatic CI is disabled in favor of local testing during active development
+Phase 7 implemented; Phase 1 to Phase 7 validated locally, with Phase 1 to Phase 7 also validated in clean CI; automatic CI is disabled in favor of local testing during active development
 
 ## Current Decisions
 - Canonical backend folder structure agreed.
@@ -10,12 +10,12 @@ Phase 7 implemented; Phase 1 to Phase 7 validated locally, with Phase 1 and Phas
 - MVP order status is `confirmed`.
 - `image_url` values are relative paths.
 - Admin routes use the `x-admin-key` header.
-- GitHub Actions validation is retained as a manual workflow, with a temporary branch-scoped `push` trigger on `backend-initial-implementation` until the next clean-environment run is captured.
+- GitHub Actions validation is retained as a manual workflow only.
 - Local backend testing uses ignored artifact directories to avoid contaminating the repo.
 - `uv` is the preferred local toolchain and can provision Python 3.12 when a normal local Python installation is unavailable.
 
 ## Next Task
-Push the temporary workflow-trigger update, let the branch-scoped backend validation workflow run, and review the clean-environment result before any further backend changes.
+Remove the temporary workflow workaround from the branch, then prepare the PR and review the local `FrontEnd/` dirty state before opening it.
 
 ## Progress Log
 | Date | Phase | Summary | Validation | Notes |
@@ -30,3 +30,4 @@ Push the temporary workflow-trigger update, let the branch-scoped backend valida
 | 2026-03-26 | 3 | Implemented Phase 3 schemas and validation rules for menu and orders | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/test-stage12.ps1` | Request/response schemas now match the API contract and schema validation tests pass locally |
 | 2026-03-26 | 4-6 | Implemented public menu routes, protected admin menu CRUD, and order endpoints | `backend/.venv/Scripts/python.exe -m pytest backend/tests -q`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/test-stage12.ps1`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/smoke-stage12.ps1` | Local backend suite now passes with 37 tests; scripted validation and smoke testing both succeed |
 | 2026-03-26 | 7 | Hardened workflow/script naming and aligned backend docs with the implemented API state | `backend/.venv/Scripts/python.exe -m pytest backend/tests -q`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/test-stage12.ps1`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/smoke-stage12.ps1` | Backend validation naming is now generic, local artifacts use backend-wide names, and docs point to the manual validation workflow |
+| 2026-03-26 | 7 CI | GitHub Actions validated the post-Phase-7 backend in a clean environment | `pytest backend/tests -q --junitxml=backend-test-results.xml` | Workflow `backend-validation` succeeded on commit `397beaa`; 37 tests passed and artifact `backend-test-results-run-1-attempt-1` was uploaded |
