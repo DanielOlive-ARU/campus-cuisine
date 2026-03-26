@@ -86,8 +86,19 @@ function Invoke-Checked {
 
     Push-Location $WorkingDirectory
     try {
+        # Reset the native-process exit code so strict mode does not read a stale
+        # or unset value after commands that succeed without updating LASTEXITCODE.
+        $global:LASTEXITCODE = 0
         & $FilePath @Arguments
-        if ($LASTEXITCODE -ne 0) {
+        $commandSucceeded = $?
+        $exitCode = if (Get-Variable -Name LASTEXITCODE -ErrorAction SilentlyContinue) {
+            [int]$global:LASTEXITCODE
+        }
+        else {
+            0
+        }
+
+        if (-not $commandSucceeded -or $exitCode -ne 0) {
             throw "Command failed: $FilePath $($Arguments -join ' ')"
         }
     }

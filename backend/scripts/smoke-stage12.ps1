@@ -84,7 +84,7 @@ if count != 12:
 
     Invoke-Checked -FilePath $python -Arguments @('-c', $dbAssertScript) -WorkingDirectory $backendRoot
 
-    $staticResponse = Invoke-WebRequest -Uri "$baseUrl/images/probe.txt" -Method Get
+    $staticResponse = Invoke-WebRequest -Uri "$baseUrl/images/probe.txt" -Method Get -UseBasicParsing
     if ($staticResponse.Content.Trim() -ne 'local-static-ok') {
         throw 'Static file mount did not return the expected content.'
     }
