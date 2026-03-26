@@ -42,7 +42,7 @@ Creates the local environment, installs dependencies, prepares ignored local dir
 ### `backend/scripts/test-stage12.ps1`
 Runs:
 - syntax validation for backend Python files
-- `pytest` for the current backend Stage 1/2 suite
+- `pytest` for the current backend test suite
 
 Artifacts written to:
 - `backend/.artifacts/pycache/`
@@ -80,8 +80,8 @@ For manual API work:
 ./backend/scripts/run-api.ps1 -Port 8000 -SeedOnStartup
 ```
 
-## Stage 1/2 Validation Checklist
-A local Stage 1/2 pass should confirm:
+## Current Validation Checklist
+A local validation pass should confirm:
 - environment can be created
 - dependencies install successfully
 - backend syntax validation passes
@@ -103,6 +103,16 @@ Observed result:
 - backend dependencies installed successfully
 - `8` backend Stage 1/2 tests passed
 - smoke test completed successfully
+
+Successful extended local validation on `2026-03-26`:
+- `./backend/scripts/test-stage12.ps1`
+- `./backend/scripts/smoke-stage12.ps1`
+- `./backend/.venv/Scripts/python.exe -m pytest backend/tests -q`
+
+Observed result:
+- backend API, admin CRUD, and order tests all passed
+- `37` backend tests passed
+- scripted validation and smoke testing both completed successfully
 
 ## Future Use
 As the backend grows, this platform should be extended phase by phase before automatic CI is re-enabled more broadly.

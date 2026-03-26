@@ -32,7 +32,16 @@ try {
     $env:PYTHONPYCACHEPREFIX = $pycacheDir
 
     Write-Host "Starting backend API on http://127.0.0.1:$Port"
-    Invoke-Checked -FilePath $python -Arguments @('-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', $Port.ToString(), '--reload') -WorkingDirectory $backendRoot
+    Push-Location $backendRoot
+    try {
+        & $python -m uvicorn app.main:app --host 127.0.0.1 --port $Port --reload
+        if ($LASTEXITCODE -ne 0) {
+            throw "Backend API exited with code $LASTEXITCODE"
+        }
+    }
+    finally {
+        Pop-Location
+    }
 }
 finally {
     if ($null -eq $previousDatabaseUrl) {

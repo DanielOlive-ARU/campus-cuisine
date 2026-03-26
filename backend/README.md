@@ -15,7 +15,7 @@ The local backend workflow is Windows-first and prefers `uv` for environment set
 - `backend/scripts/bootstrap.ps1`
   Creates the local environment, installs dependencies, prepares local directories, and creates `.env` from `.env.example` if needed.
 - `backend/scripts/test-stage12.ps1`
-  Runs syntax validation and the current backend Stage 1/2 pytest suite, writing artifacts only to ignored local paths.
+  Runs syntax validation and the current backend pytest suite, writing artifacts only to ignored local paths.
 - `backend/scripts/smoke-stage12.ps1`
   Starts the API locally, checks `/health`, verifies DB creation and seed behavior, and verifies static file serving.
 - `backend/scripts/run-api.ps1`
@@ -34,10 +34,11 @@ The local backend workflow is Windows-first and prefers `uv` for environment set
 The GitHub Actions backend Stage 1/2 workflow is retained for manual use only. Automatic triggers are disabled to control usage.
 
 ## Current Validation Status
-As of `2026-03-23`:
+As of `2026-03-26`:
 - `bootstrap.ps1` completed successfully on Windows PowerShell using `uv`
-- `test-stage12.ps1` passed with `8` tests
+- `test-stage12.ps1` passed with `37` tests
 - `smoke-stage12.ps1` completed successfully
+- direct `pytest` from the backend virtual environment also passed
 - the backend Stage 1/2 GitHub Actions workflow has also passed once on `ubuntu-latest`
 
 ## Local Artifact Policy

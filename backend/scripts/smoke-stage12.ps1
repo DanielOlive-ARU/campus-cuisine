@@ -12,6 +12,7 @@ $staticDir = Join-Path $localDir 'stage12-static'
 $dbPath = Join-Path $localDir 'stage12-smoke.db'
 $stdoutPath = Join-Path $artifactsDir 'stage12-smoke.stdout.log'
 $stderrPath = Join-Path $artifactsDir 'stage12-smoke.stderr.log'
+$dbAssertScriptPath = Join-Path $artifactsDir 'stage12-db-assert.py'
 $port = 8001
 $baseUrl = "http://127.0.0.1:$port"
 
@@ -73,6 +74,9 @@ try {
     $dbAssertScript = @"
 import sqlite3
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path.cwd()))
 from app.models import MenuItem
 
 with sqlite3.connect(Path(r'$dbPath')) as connection:
@@ -81,8 +85,9 @@ with sqlite3.connect(Path(r'$dbPath')) as connection:
 if count != 12:
     raise SystemExit(f'Expected 12 seeded menu items, got {count}')
 "@
+    Set-Content -Path $dbAssertScriptPath -Value $dbAssertScript -Encoding utf8
 
-    Invoke-Checked -FilePath $python -Arguments @('-c', $dbAssertScript) -WorkingDirectory $backendRoot
+    Invoke-Checked -FilePath $python -Arguments @($dbAssertScriptPath) -WorkingDirectory $backendRoot
 
     $staticResponse = Invoke-WebRequest -Uri "$baseUrl/images/probe.txt" -Method Get -UseBasicParsing
     if ($staticResponse.Content.Trim() -ne 'local-static-ok') {
@@ -92,6 +97,8 @@ if count != 12:
     Write-Host 'Stage 1/2 smoke test completed successfully.'
 }
 finally {
+    Remove-Item -Path $dbAssertScriptPath -ErrorAction SilentlyContinue
+
     if ($null -ne $process -and -not $process.HasExited) {
         Stop-Process -Id $process.Id -Force
         Wait-Process -Id $process.Id -ErrorAction SilentlyContinue

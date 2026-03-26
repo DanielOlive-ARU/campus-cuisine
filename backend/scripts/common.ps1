@@ -86,19 +86,36 @@ function Invoke-Checked {
 
     Push-Location $WorkingDirectory
     try {
-        # Reset the native-process exit code so strict mode does not read a stale
-        # or unset value after commands that succeed without updating LASTEXITCODE.
-        $global:LASTEXITCODE = 0
-        & $FilePath @Arguments
-        $commandSucceeded = $?
-        $exitCode = if (Get-Variable -Name LASTEXITCODE -ErrorAction SilentlyContinue) {
-            [int]$global:LASTEXITCODE
+        $stdoutPath = [System.IO.Path]::GetTempFileName()
+        $stderrPath = [System.IO.Path]::GetTempFileName()
+
+        try {
+            $process = Start-Process `
+                -FilePath $FilePath `
+                -ArgumentList $Arguments `
+                -WorkingDirectory $WorkingDirectory `
+                -NoNewWindow `
+                -Wait `
+                -PassThru `
+                -RedirectStandardOutput $stdoutPath `
+                -RedirectStandardError $stderrPath
+
+            $stdoutText = Get-Content -Path $stdoutPath -Raw -ErrorAction SilentlyContinue
+            $stderrText = Get-Content -Path $stderrPath -Raw -ErrorAction SilentlyContinue
+
+            if (-not [string]::IsNullOrEmpty($stdoutText)) {
+                [Console]::Out.Write($stdoutText)
+            }
+
+            if (-not [string]::IsNullOrEmpty($stderrText)) {
+                [Console]::Error.Write($stderrText)
+            }
         }
-        else {
-            0
+        finally {
+            Remove-Item -Path $stdoutPath, $stderrPath -ErrorAction SilentlyContinue
         }
 
-        if (-not $commandSucceeded -or $exitCode -ne 0) {
+        if ($process.ExitCode -ne 0) {
             throw "Command failed: $FilePath $($Arguments -join ' ')"
         }
     }

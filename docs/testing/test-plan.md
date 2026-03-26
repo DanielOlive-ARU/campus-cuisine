@@ -18,9 +18,11 @@ FrontEnd/
 ```
 
 ## Current Backend Validation Status
-Phase 1 and Phase 2 backend validation has already been completed:
-- once in GitHub Actions on a clean runner
-- once locally on Windows PowerShell using the backend script platform
+Backend implementation through Phase 6 has been validated locally:
+- locally on Windows PowerShell using the backend script platform
+- with direct `pytest` inside the backend virtual environment
+
+Phase 1 and Phase 2 also have one successful clean-runner validation in GitHub Actions.
 
 Current implemented backend tests cover:
 - health endpoint success
@@ -30,6 +32,9 @@ Current implemented backend tests cover:
 - seed idempotency
 - seeded category coverage
 - static file mount
+- menu listing, filtering, and item lookup
+- admin menu authentication and CRUD
+- order creation, retrieval, and server-side totals
 
 ## Backend Test Scope (Dan)
 
@@ -134,6 +139,11 @@ Current implemented backend tests cover:
 ./backend/scripts/bootstrap.ps1
 ./backend/scripts/test-stage12.ps1
 ./backend/scripts/smoke-stage12.ps1
+```
+
+Direct backend test command:
+```powershell
+./backend/.venv/Scripts/python.exe -m pytest backend/tests -q
 ```
 
 ### Frontend

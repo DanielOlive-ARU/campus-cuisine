@@ -9,6 +9,7 @@ $artifactsDir = Get-BackendPath '.artifacts'
 $pycacheDir = Join-Path $artifactsDir 'pycache'
 $pytestCacheDir = Join-Path $artifactsDir 'pytest-cache'
 $testResultsPath = Join-Path $artifactsDir 'test-results-stage12.xml'
+$compileScriptPath = Join-Path $artifactsDir 'compile-check.py'
 
 Initialize-LocalDirectories
 Ensure-Directory -Path $pycacheDir
@@ -28,9 +29,10 @@ for path in sorted(Path('.').rglob('*.py')):
         continue
     py_compile.compile(str(path), doraise=True)
 "@
+    Set-Content -Path $compileScriptPath -Value $compileScript -Encoding utf8
 
     Write-Host 'Running backend syntax validation.'
-    Invoke-Checked -FilePath $python -Arguments @('-c', $compileScript) -WorkingDirectory $backendRoot
+    Invoke-Checked -FilePath $python -Arguments @($compileScriptPath) -WorkingDirectory $backendRoot
 
     Write-Host 'Running backend Stage 1/2 pytest suite.'
     Invoke-Checked -FilePath $python -Arguments @('-m', 'pytest', 'tests', '-q', '-o', "cache_dir=$pytestCacheDir", "--junitxml=$testResultsPath") -WorkingDirectory $backendRoot
@@ -38,6 +40,8 @@ for path in sorted(Path('.').rglob('*.py')):
     Write-Host "Stage 1/2 backend tests completed successfully. Results: $testResultsPath"
 }
 finally {
+    Remove-Item -Path $compileScriptPath -ErrorAction SilentlyContinue
+
     if ($null -eq $previousPycachePrefix) {
         Remove-Item Env:PYTHONPYCACHEPREFIX -ErrorAction SilentlyContinue
     }
