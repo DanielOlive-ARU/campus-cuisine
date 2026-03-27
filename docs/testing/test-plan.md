@@ -11,10 +11,30 @@ Testing is split into three layers:
 
 ## Test Projects Structure
 ```text
-/tests
-  /backend-tests
-  /frontend-tests
+backend/
+  tests/
+FrontEnd/
+  [frontend test project location to be confirmed]
 ```
+
+## Current Backend Validation Status
+Backend implementation through Phase 6 has been validated locally:
+- locally on Windows PowerShell using the backend script platform
+- with direct `pytest` inside the backend virtual environment
+
+Phase 1 and Phase 2 also have one successful clean-runner validation in GitHub Actions.
+
+Current implemented backend tests cover:
+- health endpoint success
+- startup DB creation
+- table creation
+- seed-on-empty behaviour
+- seed idempotency
+- seeded category coverage
+- static file mount
+- menu listing, filtering, and item lookup
+- admin menu authentication and CRUD
+- order creation, retrieval, and server-side totals
 
 ## Backend Test Scope (Dan)
 
@@ -74,7 +94,7 @@ Testing is split into three layers:
 | T07 | SHOULD | Shared order state persists across navigation | Frontend |
 | T08 | SHOULD | Empty menu dataset handled | Frontend service |
 | T09 | SHOULD | Removing absent item handled safely | Frontend |
-| T10 | MAY | CI runs tests on push | Shared |
+| T10 | MAY | Scoped or manual CI runs tests in a clean environment | Shared |
 
 ## Example Edge Cases
 - Decreasing quantity below 1
@@ -95,22 +115,35 @@ Testing is split into three layers:
 - Add items again and place order
 - Verify confirmation with order ID/status
 
-## Suggested GitHub Actions Plan
-- Run backend tests on push and pull request
-- Run frontend/core tests on push if environment allows
-- Fail workflow when tests fail
+## Current CI/CD Position
+- Manual GitHub Actions backend validation exists and has passed once for the earlier Phase 1/2 baseline.
+- Automatic workflow triggers are currently disabled to control usage.
+- The backend workflow is retained as a manual `workflow_dispatch` job.
+- Day-to-day backend validation uses the local testing platform.
+
+## Future GitHub Actions Plan
+- Re-enable backend CI with scoped triggers later, preferably pull requests only.
+- Add frontend/core validation when the MAUI build pipeline is ready.
+- Add packaging/release workflows later for the assessment deliverable.
 
 ## Evidence to Store in Repo
 - Test project source code
 - README test instructions
-- Optional screenshots of passing test runs
-- Optional GitHub Actions workflow file and run screenshots
+- Optional screenshots of passing local test runs
+- Manual GitHub Actions workflow file and run evidence
 
 ## README Test Commands Placeholder
 
 ### Backend
-```bash
-pytest
+```powershell
+./backend/scripts/bootstrap.ps1
+./backend/scripts/test-stage12.ps1
+./backend/scripts/smoke-stage12.ps1
+```
+
+Direct backend test command:
+```powershell
+./backend/.venv/Scripts/python.exe -m pytest backend/tests -q
 ```
 
 ### Frontend
@@ -118,4 +151,4 @@ pytest
 dotnet test
 ```
 
-Update these commands once the final project structure is confirmed.
+Frontend commands should be added once the final frontend test project structure is confirmed.

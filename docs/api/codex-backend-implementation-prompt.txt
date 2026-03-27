@@ -1,0 +1,48 @@
+You are implementing the backend only.
+
+Read these files first and treat them as the source of truth:
+- AGENTS.md
+- docs/api/backend-plan.md
+- docs/api/backend-status.md
+- docs/api/backend-implementation-spec.md
+- docs/api/backend-architecture-sheet.md
+- docs/api/api-contract.md
+- docs/testing/local-testing-platform.md
+- docs/project-management/ci-cd-notes.md
+- docs/requirements/requirements-mapping.md
+
+Task:
+Do not start a new implementation phase by default. Review the latest local or GitHub Actions backend validation result and only fix concrete backend issues that it exposes.
+
+Scope:
+- Work only inside `backend/` unless a shared documentation file must be updated.
+- Do not touch `FrontEnd/`.
+- Do not add features outside the agreed plan.
+- Do not add authentication flows, payments, analytics, or admin UI.
+- Do not widen GitHub Actions triggers.
+
+Canonical implementation rules:
+- Use the backend layout defined in the source-of-truth docs.
+- Keep tests under `backend/tests/`.
+- Use FastAPI, SQLModel, SQLite, pydantic-settings, and pytest.
+- Use framework features over custom infrastructure.
+- Return relative image paths such as `/images/grilled-chicken-burger.jpg`.
+- Treat `confirmed` as the implemented order status for the MVP.
+- Phase 1 through Phase 7 are already complete and validated locally. Preserve that working baseline.
+
+Current acceptance:
+- pytest suite passes locally
+- backend README reflects the current setup, run, and test workflow
+- docs remain aligned with the implemented API and validation approach
+- the manual GitHub Actions backend validation workflow can be run cleanly after push
+
+Before coding:
+- Summarise the files you will create or modify.
+- State the validation commands you will run.
+- Prefer the local backend testing platform for validation.
+
+After coding:
+- Return the changed files.
+- Show the validation commands and results.
+- Update `docs/api/backend-status.md` if the validation outcome changes the current state.
+- Note any follow-up work, but do not start new feature phases unless explicitly requested.

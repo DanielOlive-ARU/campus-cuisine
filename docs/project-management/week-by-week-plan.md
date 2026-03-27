@@ -75,4 +75,4 @@
 - Meeting notes and reflection
 - Project board evidence screenshots
 - Viva rehearsal
-- Optional GitHub Actions
+- Review whether to expand the manual backend workflow into scoped GitHub Actions

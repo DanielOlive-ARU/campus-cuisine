@@ -154,10 +154,10 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Owner:** Shared
 **Done when:** screenshots are placed into docs folders for final submission.
 
-### Issue 29: Add GitHub Actions test workflow
+### Issue 29: Expand GitHub Actions workflows when needed
 **Labels:** testing, may
 **Owner:** Shared
-**Done when:** at least one test workflow runs on push or pull request.
+**Done when:** the existing manual backend workflow has been reviewed and any later CI expansion uses scoped triggers rather than running on every change.
 
 ### Issue 30: Final README and viva prep
 **Labels:** documentation, must

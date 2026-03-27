@@ -1,0 +1,36 @@
+name: Backend Validation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backend-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'backend/requirements.txt'
+
+      - name: Install backend dependencies
+        run: python -m pip install -r backend/requirements.txt
+
+      - name: Syntax check backend Python files
+        run: python -m py_compile $(find backend -type f -name '*.py' | sort)
+
+      - name: Run backend test suite
+        run: pytest backend/tests -q --junitxml=backend-test-results.xml
+
+      - name: Upload backend test results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: backend-test-results-run-${{ github.run_number }}-attempt-${{ github.run_attempt }}
+          path: backend-test-results.xml
+          if-no-files-found: error
