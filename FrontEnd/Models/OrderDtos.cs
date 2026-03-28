@@ -1,14 +1,48 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace CampusCuisine.Models;
 
-public class OrderLineDto
+public class OrderLineDto : INotifyPropertyChanged
 {
+  private int _menuItemId;
+  private int _quantity;
+
   [JsonPropertyName("menu_item_id")]
-  public int MenuItemId { get; set; }
+  public int MenuItemId
+  {
+    get => _menuItemId;
+    set
+    {
+      if (_menuItemId != value)
+      {
+        _menuItemId = value;
+        OnPropertyChanged();
+      }
+    }
+  }
 
   [JsonPropertyName("quantity")]
-  public int Quantity { get; set; }
+  public int Quantity
+  {
+    get => _quantity;
+    set
+    {
+      if (_quantity != value)
+      {
+        _quantity = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  public event PropertyChangedEventHandler? PropertyChanged;
+
+  protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+  {
+    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+  }
 }
 
 public class CreateOrderRequestDto

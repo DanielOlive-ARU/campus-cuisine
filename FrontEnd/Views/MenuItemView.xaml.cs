@@ -31,7 +31,7 @@ public partial class MenuItemView : ContentView
         button.CommandParameter is MenuItemModel item)
     {
       var orderState = Application.Current!.Services.GetRequiredService<OrderState>();
-      orderState.AddItem(item);
+      orderState.AddLine(item.Id);
     }
   }
 }
