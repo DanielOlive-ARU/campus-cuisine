@@ -2,7 +2,7 @@ using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CampusCuisine;
+namespace CampusCuisine.Pages;
 
 public partial class DessertsPage : ContentPage
 {
@@ -10,7 +10,7 @@ public partial class DessertsPage : ContentPage
   {
     InitializeComponent();
 
-    var api = Application.Current!.Services.GetRequiredService<IApiService>();
+    var api = App.Services.GetRequiredService<IApiService>();
     BindingContext = new MenuItemViewModel(api, "Desserts");
   }
 

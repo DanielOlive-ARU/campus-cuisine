@@ -48,8 +48,8 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
   {
     InitializeComponent();
 
-    _apiService = Application.Current!.Services.GetRequiredService<IApiService>();
-    _orderState = Application.Current!.Services.GetRequiredService<OrderState>();
+    _apiService = App.Services.GetRequiredService<IApiService>();
+    _orderState = App.Services.GetRequiredService<OrderState>();
 
     BindingContext = this;
   }
@@ -83,7 +83,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
   {
     if (!_orderState.Lines.Any())
     {
-      await DisplayAlert("Order", "Your order is empty.", "OK");
+      await DisplayAlertAsync("Order", "Your order is empty.", "OK");
       return;
     }
 
@@ -94,7 +94,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
 
       if (result == null)
       {
-        await DisplayAlert("Order Failed", "No response was returned from the server.", "OK");
+        await DisplayAlertAsync("Order Failed", "No response was returned from the server.", "OK");
         return;
       }
 
@@ -105,7 +105,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
         $"Grand Total: £{result.GrandTotal:F2}\n\n" +
         $"{result.Message}";
 
-      await DisplayAlert("Order Placed", message, "OK");
+      await DisplayAlertAsync("Order Placed", message, "OK");
 
       _orderState.Clear();
       OrderItems.Clear();
@@ -122,11 +122,11 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
         _ => "Request Error"
       };
 
-      await DisplayAlert(title, ex.Message, "OK");
+      await DisplayAlertAsync(title, ex.Message, "OK");
     }
     catch (Exception ex)
     {
-      await DisplayAlert("Unexpected Error", ex.Message, "OK");
+      await DisplayAlertAsync("Unexpected Error", ex.Message, "OK");
     }
   }
 

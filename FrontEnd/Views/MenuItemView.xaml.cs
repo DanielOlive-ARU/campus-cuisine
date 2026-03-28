@@ -30,7 +30,7 @@ public partial class MenuItemView : ContentView
     if (sender is Button button &&
         button.CommandParameter is MenuItemModel item)
     {
-      var orderState = Application.Current!.Services.GetRequiredService<OrderState>();
+      var orderState = App.Services.GetRequiredService<OrderState>();
       orderState.AddLine(item.Id);
     }
   }

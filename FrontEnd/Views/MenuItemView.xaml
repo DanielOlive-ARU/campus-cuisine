@@ -9,7 +9,7 @@
   <CollectionView ItemsSource="{Binding Source={x:Reference ThisView}, Path=Items}">
     <CollectionView.ItemTemplate>
       <DataTemplate x:DataType="model:MenuItemModel">
-        <Frame Margin="10" Padding="10">
+        <Border Margin="10" Padding="10">
           <VerticalStackLayout Spacing="8">
 
             <Image Source="{Binding ImageUrl}"
@@ -18,12 +18,15 @@
 
             <Label Text="{Binding Name}"
                                FontAttributes="Bold"
+                               TextColor="Black"
                                FontSize="18" />
 
             <Label Text="{Binding Description}"
+                               TextColor="Black"
                                FontSize="14" />
 
             <Label Text="{Binding Price, StringFormat='£{0:F2}'}"
+                               TextColor="Black"
                                FontSize="16" />
 
             <Button Text="Add"
@@ -31,7 +34,7 @@
                                 CommandParameter="{Binding .}" />
 
           </VerticalStackLayout>
-        </Frame>
+        </Border>
       </DataTemplate>
     </CollectionView.ItemTemplate>
   </CollectionView>
