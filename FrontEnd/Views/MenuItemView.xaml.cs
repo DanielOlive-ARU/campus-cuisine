@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using CampusCuisine.Models;
+using CampusCuisine.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CampusCuisine.Views;
 
@@ -21,5 +23,15 @@ public partial class MenuItemView : ContentView
   public MenuItemView()
   {
     InitializeComponent();
+  }
+
+  private void OnAddClicked(object? sender, EventArgs e)
+  {
+    if (sender is Button button &&
+        button.CommandParameter is MenuItemModel item)
+    {
+      var orderState = Application.Current!.Services.GetRequiredService<OrderState>();
+      orderState.AddItem(item);
+    }
   }
 }
