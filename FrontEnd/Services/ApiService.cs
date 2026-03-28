@@ -36,14 +36,37 @@ public class ApiService : IApiService
 
   public async Task<OrderConfirmationDto?> PostOrderAsync(CreateOrderRequestDto order)
   {
-    var response = await _httpClient.PostAsJsonAsync("api/orders", order);
-
-    if (!response.IsSuccessStatusCode)
+    try
     {
-      return null;
-    }
+      var response = await _httpClient.PostAsJsonAsync("api/orders", order);
 
-    return await response.Content.ReadFromJsonAsync<OrderConfirmationDto>();
+      if (response.IsSuccessStatusCode)
+      {
+        return await response.Content.ReadFromJsonAsync<OrderConfirmationDto>();
+      }
+
+      var errorBody = await response.Content.ReadAsStringAsync();
+      var statusCode = (int)response.StatusCode;
+
+      var message = statusCode switch
+      {
+        400 => "There was a problem with your order.",
+        404 => "The requested item or order could not be found.",
+        422 => "Some order details are invalid.",
+        _ => $"Request failed with status {statusCode}."
+      };
+
+      if (!string.IsNullOrWhiteSpace(errorBody))
+      {
+        message += $"\n\nServer response: {errorBody}";
+      }
+
+      throw new ApiException(statusCode, message);
+    }
+    catch (HttpRequestException ex)
+    {
+      throw new ApiException(0, $"Network error: {ex.Message}");
+    }
   }
 
   private void FixImageUrls(IEnumerable<MenuItemModel> items)

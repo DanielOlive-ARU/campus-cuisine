@@ -81,12 +81,9 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
 
   private async void OnPlaceOrderClicked(object? sender, EventArgs e)
   {
-    ResultMessage = string.Empty;
-    ErrorMessage = string.Empty;
-
     if (!_orderState.Lines.Any())
     {
-      ErrorMessage = "Your order is empty.";
+      await DisplayAlert("Order", "Your order is empty.", "OK");
       return;
     }
 
@@ -97,29 +94,39 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
 
       if (result == null)
       {
-        ErrorMessage = "Order failed. Please check the backend and try again.";
+        await DisplayAlert("Order Failed", "No response was returned from the server.", "OK");
         return;
       }
 
-      ResultMessage =
-          $"Order placed successfully.\n" +
-          $"Order ID: {result.Id}\n" +
-          $"Status: {result.Status}\n" +
-          $"Total Items: {result.TotalItems}\n" +
-          $"Grand Total: £{result.GrandTotal:F2}\n" +
-          $"{result.Message}";
+      var message =
+        $"Order ID: {result.Id}\n" +
+        $"Status: {result.Status}\n" +
+        $"Total Items: {result.TotalItems}\n" +
+        $"Grand Total: £{result.GrandTotal:F2}\n\n" +
+        $"{result.Message}";
+
+      await DisplayAlert("Order Placed", message, "OK");
 
       _orderState.Clear();
       OrderItems.Clear();
       OnPropertyChanged(nameof(TotalItemsText));
     }
-    catch (HttpRequestException ex)
+    catch (ApiException ex)
     {
-      ErrorMessage = $"Network error: {ex.Message}";
+      string title = ex.StatusCode switch
+      {
+        400 => "Order Error",
+        404 => "Not Found",
+        422 => "Validation Error",
+        0 => "Network Error",
+        _ => "Request Error"
+      };
+
+      await DisplayAlert(title, ex.Message, "OK");
     }
     catch (Exception ex)
     {
-      ErrorMessage = $"Unexpected error: {ex.Message}";
+      await DisplayAlert("Unexpected Error", ex.Message, "OK");
     }
   }
 
