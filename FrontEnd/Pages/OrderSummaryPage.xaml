@@ -3,15 +3,15 @@
     x:Class="CampusCuisine.Pages.OrderSummaryPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:model="clr-namespace:CampusCuisine.Models"
+    xmlns:local="clr-namespace:CampusCuisine.Pages"
     Title="Order Summary">
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="16">
 
       <Label Text="Order Summary"
-                   FontSize="24"
-                   FontAttributes="Bold" />
+             FontSize="24"
+             FontAttributes="Bold" />
 
       <CollectionView ItemsSource="{Binding OrderItems}">
         <CollectionView.EmptyView>
@@ -19,40 +19,76 @@
         </CollectionView.EmptyView>
 
         <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="model:MenuItemModel">
+          <DataTemplate x:DataType="local:OrderSummaryLineViewModel">
             <Border Padding="10" Margin="0,4">
-              <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                <Label Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="{Binding Name}"
-                                       FontAttributes="Bold" />
+              <VerticalStackLayout Spacing="8">
 
-                <Label Grid.Row="0"
-                                       Grid.Column="1"
-                                       Text="{Binding Price, StringFormat='£{0:F2}'}" />
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                  <Label Grid.Row="0"
+                         Grid.Column="0"
+                         Text="{Binding Name}"
+                         FontAttributes="Bold" />
 
-                <Label Grid.Row="1"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="{Binding Description}"
-                                       FontSize="12" />
-              </Grid>
+                  <Label Grid.Row="0"
+                         Grid.Column="1"
+                         Text="{Binding UnitPrice, StringFormat='Unit: £{0:F2}'}" />
+
+                  <Label Grid.Row="1"
+                         Grid.Column="0"
+                         Grid.ColumnSpan="2"
+                         Text="{Binding Description}"
+                         FontSize="12" />
+
+                  <Label Grid.Row="2"
+                         Grid.Column="0"
+                         Text="{Binding LineTotal, StringFormat='Line total: £{0:F2}'}"
+                         FontAttributes="Bold" />
+
+                  <Label Grid.Row="2"
+                         Grid.Column="1"
+                         Text="{Binding Quantity, StringFormat='Qty: {0}'}" />
+                </Grid>
+
+                <HorizontalStackLayout Spacing="8">
+                  <Button Text="-"
+                          WidthRequest="50"
+                          Clicked="OnDecreaseQuantityClicked"
+                          CommandParameter="{Binding MenuItemId}" />
+
+                  <Button Text="+"
+                          WidthRequest="50"
+                          Clicked="OnIncreaseQuantityClicked"
+                          CommandParameter="{Binding MenuItemId}" />
+
+                  <Button Text="Remove"
+                          Clicked="OnRemoveItemClicked"
+                          CommandParameter="{Binding MenuItemId}" />
+                </HorizontalStackLayout>
+
+              </VerticalStackLayout>
             </Border>
           </DataTemplate>
         </CollectionView.ItemTemplate>
       </CollectionView>
 
       <Label Text="{Binding TotalItemsText}"
-                   FontAttributes="Bold" />
+             FontAttributes="Bold" />
+
+      <Label Text="{Binding GrandTotalText}"
+             FontSize="18"
+             FontAttributes="Bold" />
+
+      <Button Text="Clear Order"
+              Clicked="OnClearOrderClicked" />
 
       <Button Text="Place Order"
-                    Clicked="OnPlaceOrderClicked" />
+              Clicked="OnPlaceOrderClicked" />
 
       <Label Text="{Binding ResultMessage}"
-                   TextColor="Green" />
+             TextColor="Green" />
 
       <Label Text="{Binding ErrorMessage}"
-                   TextColor="Red" />
+             TextColor="Red" />
 
     </VerticalStackLayout>
   </ScrollView>

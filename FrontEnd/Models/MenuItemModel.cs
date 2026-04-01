@@ -12,7 +12,7 @@ public class MenuItemModel
 
   public string Category { get; set; } = string.Empty;
 
-  public double Price { get; set; }
+  public decimal Price { get; set; }
 
   [JsonPropertyName("image_url")]
   public string ImageUrl { get; set; } = string.Empty;

@@ -3,6 +3,7 @@ using CampusCuisine.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Net.Http;
 
 namespace CampusCuisine.ViewModel
 {
@@ -11,6 +12,7 @@ namespace CampusCuisine.ViewModel
     private readonly IApiService _apiService;
     private string _category = string.Empty;
     private bool _isBusy;
+    private string _errorMessage = string.Empty;
 
     public ObservableCollection<MenuItemModel> MenuItems { get; } = new();
 
@@ -40,6 +42,22 @@ namespace CampusCuisine.ViewModel
       }
     }
 
+    public string ErrorMessage
+    {
+      get => _errorMessage;
+      set
+      {
+        if (_errorMessage != value)
+        {
+          _errorMessage = value;
+          OnPropertyChanged();
+          OnPropertyChanged(nameof(HasError));
+        }
+      }
+    }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+
     public MenuItemViewModel(IApiService apiService, string category)
     {
       _apiService = apiService;
@@ -54,6 +72,7 @@ namespace CampusCuisine.ViewModel
       try
       {
         IsBusy = true;
+        ErrorMessage = string.Empty;
         MenuItems.Clear();
 
         var backendCategory = MapCategory(Category);
@@ -63,6 +82,21 @@ namespace CampusCuisine.ViewModel
         {
           MenuItems.Add(item);
         }
+      }
+      catch (HttpRequestException)
+      {
+        MenuItems.Clear();
+        ErrorMessage = "The menu service is currently unavailable.";
+      }
+      catch (TaskCanceledException)
+      {
+        MenuItems.Clear();
+        ErrorMessage = "The menu request timed out.";
+      }
+      catch (Exception)
+      {
+        MenuItems.Clear();
+        ErrorMessage = "Unable to load menu items right now.";
       }
       finally
       {

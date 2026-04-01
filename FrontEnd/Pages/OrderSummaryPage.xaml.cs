@@ -12,7 +12,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
   private readonly IApiService _apiService;
   private readonly OrderState _orderState;
 
-  public ObservableCollection<MenuItemModel> OrderItems { get; } = new();
+  public ObservableCollection<OrderSummaryLineViewModel> OrderItems { get; } = new();
 
   private string _resultMessage = string.Empty;
   public string ResultMessage
@@ -43,6 +43,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
   }
 
   public string TotalItemsText => $"Total items: {_orderState.TotalItems}";
+  public string GrandTotalText => $"Grand total: £{OrderItems.Sum(x => x.LineTotal):F2}";
 
   public OrderSummaryPage()
   {
@@ -71,12 +72,110 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
       var item = await _apiService.GetMenuItemAsync(line.MenuItemId);
       if (item != null)
       {
-        item.Description = $"{item.Description} (Qty: {line.Quantity})";
-        OrderItems.Add(item);
+        OrderItems.Add(new OrderSummaryLineViewModel
+        {
+          MenuItemId = item.Id,
+          Name = item.Name,
+          Description = item.Description,
+          UnitPrice = item.Price,
+          Quantity = line.Quantity
+        });
       }
     }
 
+    RefreshTotals();
+  }
+
+  private void RefreshTotals()
+  {
     OnPropertyChanged(nameof(TotalItemsText));
+    OnPropertyChanged(nameof(GrandTotalText));
+  }
+
+  private async void OnIncreaseQuantityClicked(object? sender, EventArgs e)
+  {
+    if (sender is Button button && button.CommandParameter is int menuItemId)
+    {
+      var line = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == menuItemId);
+      if (line != null)
+      {
+        line.Quantity++;
+        await LoadOrderItemsAsync();
+      }
+    }
+  }
+
+  private async void OnDecreaseQuantityClicked(object? sender, EventArgs e)
+  {
+    if (sender is Button button && button.CommandParameter is int menuItemId)
+    {
+      var line = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == menuItemId);
+      if (line == null)
+        return;
+
+      if (line.Quantity > 1)
+      {
+        line.Quantity--;
+      }
+      else
+      {
+        bool remove = await DisplayAlertAsync(
+          "Remove Item",
+          "Quantity is 1. Remove this item from the order?",
+          "Yes",
+          "No");
+
+        if (!remove)
+          return;
+
+        _orderState.Lines.Remove(line);
+      }
+
+      await LoadOrderItemsAsync();
+    }
+  }
+
+  private async void OnRemoveItemClicked(object? sender, EventArgs e)
+  {
+    if (sender is Button button && button.CommandParameter is int menuItemId)
+    {
+      var line = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == menuItemId);
+      if (line == null)
+        return;
+
+      bool confirm = await DisplayAlertAsync(
+        "Remove Item",
+        "Remove this item from your order?",
+        "Yes",
+        "No");
+
+      if (!confirm)
+        return;
+
+      _orderState.Lines.Remove(line);
+      await LoadOrderItemsAsync();
+    }
+  }
+
+  private async void OnClearOrderClicked(object? sender, EventArgs e)
+  {
+    if (!_orderState.Lines.Any())
+    {
+      await DisplayAlertAsync("Clear Order", "Your order is already empty.", "OK");
+      return;
+    }
+
+    bool confirm = await DisplayAlertAsync(
+      "Clear Order",
+      "Are you sure you want to clear the entire order?",
+      "Yes",
+      "No");
+
+    if (!confirm)
+      return;
+
+    _orderState.Clear();
+    await LoadOrderItemsAsync();
   }
 
   private async void OnPlaceOrderClicked(object? sender, EventArgs e)
@@ -108,8 +207,7 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
       await DisplayAlertAsync("Order Placed", message, "OK");
 
       _orderState.Clear();
-      OrderItems.Clear();
-      OnPropertyChanged(nameof(TotalItemsText));
+      await LoadOrderItemsAsync();
     }
     catch (ApiException ex)
     {
@@ -136,4 +234,14 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
   {
     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
   }
+}
+
+public class OrderSummaryLineViewModel
+{
+  public int MenuItemId { get; set; }
+  public string Name { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
+  public decimal UnitPrice { get; set; }
+  public int Quantity { get; set; }
+  public decimal LineTotal => UnitPrice * Quantity;
 }

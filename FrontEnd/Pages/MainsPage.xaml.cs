@@ -20,7 +20,14 @@ public partial class MainsPage : ContentPage
 
     if (BindingContext is MenuItemViewModel vm)
     {
-      await vm.InitializeAsync();
+      try
+      {
+        await vm.InitializeAsync();
+      }
+      catch
+      {
+        await DisplayAlertAsync("Menu Unavailable", "Failed to load mains. Please try again later.", "OK");
+      }
     }
   }
 }
