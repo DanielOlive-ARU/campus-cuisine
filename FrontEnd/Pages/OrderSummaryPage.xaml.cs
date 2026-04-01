@@ -1,13 +1,10 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using CampusCuisine.Models;
 using CampusCuisine.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CampusCuisine.Pages;
 
-public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
+public partial class OrderSummaryPage : ContentPage
 {
   private readonly IApiService _apiService;
   private readonly OrderState _orderState;
@@ -226,13 +223,6 @@ public partial class OrderSummaryPage : ContentPage, INotifyPropertyChanged
     {
       await DisplayAlertAsync("Unexpected Error", ex.Message, "OK");
     }
-  }
-
-  public new event PropertyChangedEventHandler? PropertyChanged;
-
-  protected new void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-  {
-    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
   }
 }
 

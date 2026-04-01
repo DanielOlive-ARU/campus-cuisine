@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CampusCuisine.Services;
+using Microsoft.Maui.Devices;
 
 namespace CampusCuisine
 {
@@ -17,12 +18,7 @@ namespace CampusCuisine
           fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         });
 
-      // Single source of truth for API base URL.
-      // Windows local: http://localhost:8000/
-      // Android emulator (Google): http://10.0.2.2:8000/
-      // Android emulator (Hyper-V): http://10.0.2.2:8000/
-      // Physical device: http://192.168.0.125:8000/
-      const string apiBaseUrl = "http://localhost:8000/";
+      var apiBaseUrl = GetApiBaseUrl();
 
       builder.Services.AddHttpClient<IApiService, ApiService>(client =>
       {
@@ -36,6 +32,17 @@ namespace CampusCuisine
 #endif
 
       return builder.Build();
+    }
+
+    private static string GetApiBaseUrl()
+    {
+      if (DeviceInfo.Platform == DevicePlatform.Android)
+        return "http://10.0.2.2:8000/";
+
+      if (DeviceInfo.Platform == DevicePlatform.WinUI)
+        return "http://localhost:8000/";
+
+      return "http://localhost:8000/";
     }
   }
 }

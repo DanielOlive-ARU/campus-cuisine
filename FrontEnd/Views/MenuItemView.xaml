@@ -3,35 +3,55 @@
     x:Class="CampusCuisine.Views.MenuItemView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:model="clr-namespace:CampusCuisine.Models"
+    xmlns:local="clr-namespace:CampusCuisine.Views"
     x:Name="ThisView">
 
-  <CollectionView ItemsSource="{Binding Source={x:Reference ThisView}, Path=Items}">
+  <CollectionView x:Name="ItemsCollection"
+                  ItemsSource="{Binding Source={x:Reference ThisView}, Path=DisplayItems}">
+    <CollectionView.EmptyView>
+      <Label Text="No menu items are currently available in this category."
+           Padding="20" />
+    </CollectionView.EmptyView>
+
     <CollectionView.ItemTemplate>
-      <DataTemplate x:DataType="model:MenuItemModel">
+      <DataTemplate x:DataType="local:MenuItemCardViewModel">
         <Border Margin="10" Padding="10">
           <VerticalStackLayout Spacing="8">
 
             <Image Source="{Binding ImageUrl}"
-                               Aspect="AspectFill"
-                               HeightRequest="180" />
+                 Aspect="AspectFill"
+                 HeightRequest="180" />
 
             <Label Text="{Binding Name}"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               FontSize="18" />
+                 FontAttributes="Bold"
+                 TextColor="Black"
+                 FontSize="18" />
 
             <Label Text="{Binding Description}"
-                               TextColor="Black"
-                               FontSize="14" />
+                 TextColor="Black"
+                 FontSize="14" />
 
             <Label Text="{Binding Price, StringFormat='£{0:F2}'}"
-                               TextColor="Black"
-                               FontSize="16" />
+                 TextColor="Black"
+                 FontSize="16" />
 
-            <Button Text="Add"
-                                Clicked="OnAddClicked"
-                                CommandParameter="{Binding .}" />
+            <Label Text="{Binding QuantityText}"
+                 IsVisible="{Binding HasQuantity}"
+                 TextColor="Black"
+                 FontAttributes="Bold" />
+
+            <HorizontalStackLayout Spacing="8">
+              <Button Text="-"
+                    WidthRequest="50"
+                    IsVisible="{Binding HasQuantity}"
+                    Clicked="OnDecreaseClicked"
+                    CommandParameter="{Binding Id}" />
+
+              <Button Text="+"
+                    WidthRequest="50"
+                    Clicked="OnAddClicked"
+                    CommandParameter="{Binding Id}" />
+            </HorizontalStackLayout>
 
           </VerticalStackLayout>
         </Border>

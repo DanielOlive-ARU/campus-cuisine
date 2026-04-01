@@ -78,8 +78,11 @@ namespace CampusCuisine.ViewModel
         var backendCategory = MapCategory(Category);
         var items = await _apiService.GetMenuByCategoryAsync(backendCategory);
 
+        System.Diagnostics.Debug.WriteLine($"Loaded {items.Count()} items for {backendCategory}");
+
         foreach (var item in items)
         {
+          System.Diagnostics.Debug.WriteLine($"Item: {item.Name}");
           MenuItems.Add(item);
         }
       }
