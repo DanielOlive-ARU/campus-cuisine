@@ -103,7 +103,12 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
     if (sender is Button button &&
         button.CommandParameter is int menuItemId)
     {
-      _orderState.AddLine(menuItemId);
+      // find the display card to capture name/price snapshot
+      var card = DisplayItems.FirstOrDefault(c => c.Id == menuItemId);
+      var name = card?.Name ?? string.Empty;
+      var unitPrice = (double)(card?.Price ?? 0m);
+
+      _orderState.AddLine(menuItemId, name, unitPrice);
       RefreshDisplayItems();
     }
   }
@@ -113,15 +118,8 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
     if (sender is Button button &&
         button.CommandParameter is int menuItemId)
     {
-      var line = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == menuItemId);
-      if (line == null)
-        return;
-
-      if (line.Quantity > 1)
-        line.Quantity--;
-      else
-        _orderState.Lines.Remove(line);
-
+      // Use OrderState API instead of mutating lines directly
+      _orderState.RemoveLine(menuItemId);
       RefreshDisplayItems();
     }
   }

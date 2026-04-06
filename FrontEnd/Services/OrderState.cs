@@ -36,6 +36,7 @@ public class OrderState : INotifyPropertyChanged
     {
       existing.Quantity += quantity;
 
+      // If name/price were not set before, fill them
       if (string.IsNullOrWhiteSpace(existing.Name) && !string.IsNullOrWhiteSpace(name))
         existing.Name = name!;
       if (existing.UnitPrice == 0 && unitPrice > 0)
@@ -83,6 +84,7 @@ public class OrderState : INotifyPropertyChanged
       {
         MenuItemId = x.MenuItemId,
         Quantity = x.Quantity
+        // Name and UnitPrice intentionally not copied — server expects only menu_item_id and quantity
       }).ToList()
     };
   }

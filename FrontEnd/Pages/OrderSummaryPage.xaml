@@ -13,7 +13,8 @@
              FontSize="24"
              FontAttributes="Bold" />
 
-      <CollectionView ItemsSource="{Binding OrderItems}">
+      <CollectionView x:Name="SummaryCollection" 
+                      ItemsSource="{Binding OrderItems}">
         <CollectionView.EmptyView>
           <Label Text="Your order is empty." />
         </CollectionView.EmptyView>

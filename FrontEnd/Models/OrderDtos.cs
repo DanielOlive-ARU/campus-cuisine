@@ -37,6 +37,7 @@ public class OrderLineDto : INotifyPropertyChanged
     }
   }
 
+  // Local snapshot fields used by the frontend only:
   [JsonIgnore]
   public string Name { get; set; } = string.Empty;
 
