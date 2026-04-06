@@ -7,7 +7,7 @@
     Title="Desserts"
     BackgroundColor="White">
 
-  <Grid RowDefinitions="Auto,*" Padding="20">
+  <Grid RowDefinitions="Auto,*,Auto" Padding="20">
     <Label
             Text="Desserts"
             FontSize="28"
@@ -19,5 +19,14 @@
     <views:MenuItemView
             Grid.Row="1"
             Items="{Binding MenuItems}" />
+
+    <!-- Order summary bar -->
+    <Grid Grid.Row="2" BackgroundColor="White" Padding="12" ColumnDefinitions="*,Auto">
+      <Label x:Name="OrderTotalLabel"
+             Text="0 items"
+             VerticalOptions="Center"
+             FontAttributes="Bold" />
+      <Button Text="Order Summary" Grid.Column="1" Clicked="OnOrderSummaryClicked" />
+    </Grid>
   </Grid>
 </ContentPage>

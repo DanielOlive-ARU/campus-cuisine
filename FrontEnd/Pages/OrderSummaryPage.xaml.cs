@@ -27,21 +27,75 @@ public partial class OrderSummaryPage : ContentPage
     SummaryCollection.ItemsSource = Lines;
   }
 
-  private void OnIncreaseClicked(object sender, EventArgs e)
+  private void OnDecreaseQuantityClicked(object? sender, EventArgs e)
   {
-    if (sender is Button b && b.CommandParameter is int id)
+    if (sender is not Button b)
+      return;
+
+    int? id = b.CommandParameter switch
     {
-      var line = Lines.FirstOrDefault(x => x.MenuItemId == id);
-      _orderState.AddLine(id, line?.Name, line?.UnitPrice ?? 0);
+      int i => i,
+      string s when int.TryParse(s, out var pi) => pi,
+      _ => null
+    };
+
+    if (!id.HasValue)
+      return;
+
+    // decrease by one
+    _orderState.RemoveLine(id.Value, 1);
+  }
+
+  private void OnIncreaseQuantityClicked(object? sender, EventArgs e)
+  {
+    if (sender is not Button b)
+      return;
+
+    int? id = b.CommandParameter switch
+    {
+      int i => i,
+      string s when int.TryParse(s, out var pi) => pi,
+      _ => null
+    };
+
+    if (!id.HasValue)
+      return;
+
+    // capture existing snapshot if available
+    var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
+    _orderState.AddLine(id.Value, existing?.Name, existing?.UnitPrice ?? 0, 1);
+  }
+
+  private void OnRemoveItemClicked(object? sender, EventArgs e)
+  {
+    if (sender is not Button b)
+      return;
+
+    int? id = b.CommandParameter switch
+    {
+      int i => i,
+      string s when int.TryParse(s, out var pi) => pi,
+      _ => null
+    };
+
+    if (!id.HasValue)
+      return;
+
+    var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
+    if (existing != null)
+    {
+      // remove entire line
+      _orderState.RemoveLine(id.Value, existing.Quantity);
     }
   }
 
-  private void OnDecreaseClicked(object sender, EventArgs e)
+  private void OnClearOrderClicked(object? sender, EventArgs e)
   {
-    if (sender is Button b && b.CommandParameter is int id)
-    {
-      _orderState.RemoveLine(id);
-    }
+    // Use the shared OrderState to clear the local order
+    _orderState.Clear();
+
+    // Optionally update any UI or navigate back
+    // MainThread.BeginInvokeOnMainThread(() => { /* update UI if needed */ });
   }
 
   private async void OnPlaceOrderClicked(object sender, EventArgs e)

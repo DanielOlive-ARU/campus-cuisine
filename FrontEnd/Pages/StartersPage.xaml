@@ -4,10 +4,12 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:CampusCuisine.Views"
+    xmlns:local="clr-namespace:CampusCuisine"
     Title="Starters"
     BackgroundColor="White">
 
-  <Grid RowDefinitions="Auto,*" Padding="20">
+  <!-- Now three rows: header, content, footer summary bar -->
+  <Grid RowDefinitions="Auto,*,Auto" Padding="20">
     <Label
             Text="Starters"
             FontSize="28"
@@ -19,5 +21,14 @@
     <views:MenuItemView
             Grid.Row="1"
             Items="{Binding MenuItems}" />
+
+    <!-- Order summary bar placed in Row 2 -->
+    <Grid Grid.Row="2" BackgroundColor="White" Padding="12" ColumnDefinitions="*,Auto">
+      <Label x:Name="OrderTotalLabel"
+             Text="0 items"
+             VerticalOptions="Center"
+             FontAttributes="Bold" />
+      <Button Text="Order Summary" Grid.Column="1" Clicked="OnOrderSummaryClicked" />
+    </Grid>
   </Grid>
 </ContentPage>

@@ -1,17 +1,38 @@
 using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 
 namespace CampusCuisine.Pages;
 
 public partial class StartersPage : ContentPage
 {
+  private readonly OrderState _orderState;
   public StartersPage()
   {
     InitializeComponent();
 
     var api = App.Services.GetRequiredService<IApiService>();
     BindingContext = new MenuItemViewModel(api, "Starters");
+
+    // Get shared order state and wire updates to the footer label
+    _orderState = App.Services.GetRequiredService<OrderState>();
+    OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
+
+    // Subscribe to changes on OrderState to update UI
+    _orderState.PropertyChanged += OrderState_PropertyChanged;
+  }
+
+  private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+  {
+    if (e.PropertyName == nameof(OrderState.TotalItems) || string.IsNullOrEmpty(e.PropertyName))
+    {
+      // Ensure UI update on main thread
+      MainThread.BeginInvokeOnMainThread(() =>
+      {
+        OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
+      });
+    }
   }
 
   protected override async void OnAppearing()
@@ -29,5 +50,16 @@ public partial class StartersPage : ContentPage
         await DisplayAlertAsync("Menu Unavailable", "Failed to load starters. Please try again later.", "OK");
       }
     }
+  }
+  private async void OnOrderSummaryClicked(object sender, EventArgs e)
+  {
+    await Shell.Current.GoToAsync(nameof(Pages.OrderSummaryPage));
+  }
+
+  protected override void OnDisappearing()
+  {
+    base.OnDisappearing();
+    // unsubscribe to avoid leaks
+    _orderState.PropertyChanged -= OrderState_PropertyChanged;
   }
 }
