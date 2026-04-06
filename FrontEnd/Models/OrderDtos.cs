@@ -37,6 +37,12 @@ public class OrderLineDto : INotifyPropertyChanged
     }
   }
 
+  [JsonIgnore]
+  public string Name { get; set; } = string.Empty;
+
+  [JsonIgnore]
+  public double Price { get; set; }
+
   public event PropertyChangedEventHandler? PropertyChanged;
 
   protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
