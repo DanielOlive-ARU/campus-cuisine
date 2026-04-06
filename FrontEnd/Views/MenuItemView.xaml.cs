@@ -34,8 +34,6 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
   {
     InitializeComponent();
     _orderState = App.Services.GetRequiredService<OrderState>();
-    // Do NOT override BindingContext here - the page sets the VM and the XAML uses x:Reference ThisView
-    // BindingContext = this; <-- removed
   }
 
   private static void OnItemsChanged(BindableObject bindable, object oldValue, object newValue)
@@ -103,6 +101,10 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
     if (sender is Button button &&
         button.CommandParameter is int menuItemId)
     {
+      var card = DisplayItems.FirstOrDefault(c => c.Id == menuItemId);
+      var name = card?.Name ?? string.Empty;
+      var unitPrice = (double)(card?.Price ?? 0m);
+
       _orderState.AddLine(menuItemId);
       RefreshDisplayItems();
     }
@@ -113,15 +115,7 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
     if (sender is Button button &&
         button.CommandParameter is int menuItemId)
     {
-      var line = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == menuItemId);
-      if (line == null)
-        return;
-
-      if (line.Quantity > 1)
-        line.Quantity--;
-      else
-        _orderState.Lines.Remove(line);
-
+      _orderState.RemoveLine(menuItemId);
       RefreshDisplayItems();
     }
   }
