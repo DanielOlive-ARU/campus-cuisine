@@ -41,7 +41,7 @@ public class OrderLineDto : INotifyPropertyChanged
   public string Name { get; set; } = string.Empty;
 
   [JsonIgnore]
-  public double Price { get; set; }
+  public double UnitPrice { get; set; }
 
   public event PropertyChangedEventHandler? PropertyChanged;
 

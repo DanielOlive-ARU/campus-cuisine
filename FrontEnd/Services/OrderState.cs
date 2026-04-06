@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using CampusCuisine.Models;
 
@@ -13,7 +14,7 @@ public class OrderState : INotifyPropertyChanged
 
   public int TotalItems => _lines.Sum(x => x.Quantity);
 
-  public void AddLine(int menuItemId, int quantity = 1)
+  public void AddLine(int menuItemId, string? name = null, double unitPrice = 0, int quantity = 1)
   {
     if (quantity <= 0)
       return;
@@ -22,15 +23,24 @@ public class OrderState : INotifyPropertyChanged
 
     if (existing is null)
     {
-      _lines.Add(new OrderLineDto
+      var line = new OrderLineDto
       {
         MenuItemId = menuItemId,
-        Quantity = quantity
-      });
+        Quantity = quantity,
+        Name = name ?? string.Empty,
+        UnitPrice = unitPrice
+      };
+      _lines.Add(line);
     }
     else
     {
       existing.Quantity += quantity;
+
+      // If name/price were not set before, fill them
+      if (string.IsNullOrWhiteSpace(existing.Name) && !string.IsNullOrWhiteSpace(name))
+        existing.Name = name!;
+      if (existing.UnitPrice == 0 && unitPrice > 0)
+        existing.UnitPrice = unitPrice;
     }
 
     OnPropertyChanged(nameof(Lines));
@@ -47,11 +57,8 @@ public class OrderState : INotifyPropertyChanged
       return;
 
     existing.Quantity -= quantity;
-
     if (existing.Quantity <= 0)
-    {
       _lines.Remove(existing);
-    }
 
     OnPropertyChanged(nameof(Lines));
     OnPropertyChanged(nameof(TotalItems));
@@ -77,6 +84,7 @@ public class OrderState : INotifyPropertyChanged
       {
         MenuItemId = x.MenuItemId,
         Quantity = x.Quantity
+        // Name and UnitPrice intentionally not copied — server expects only menu_item_id and quantity
       }).ToList()
     };
   }
