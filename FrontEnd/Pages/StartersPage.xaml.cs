@@ -15,11 +15,9 @@ public partial class StartersPage : ContentPage
     var api = App.Services.GetRequiredService<IApiService>();
     BindingContext = new MenuItemViewModel(api, "Starters");
 
-    // Get shared order state and wire updates to the footer label
     _orderState = App.Services.GetRequiredService<OrderState>();
     OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
 
-    // Subscribe to changes on OrderState to update UI
     _orderState.PropertyChanged += OrderState_PropertyChanged;
   }
 
@@ -27,7 +25,7 @@ public partial class StartersPage : ContentPage
   {
     if (e.PropertyName == nameof(OrderState.TotalItems) || string.IsNullOrEmpty(e.PropertyName))
     {
-      // Ensure UI update on main thread
+
       MainThread.BeginInvokeOnMainThread(() =>
       {
         OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
@@ -53,13 +51,12 @@ public partial class StartersPage : ContentPage
   }
   private async void OnOrderSummaryClicked(object sender, EventArgs e)
   {
-    await Shell.Current.GoToAsync(nameof(Pages.OrderSummaryPage));
+    await Shell.Current.GoToAsync(nameof(OrderSummaryPage));
   }
 
   protected override void OnDisappearing()
   {
     base.OnDisappearing();
-    // unsubscribe to avoid leaks
     _orderState.PropertyChanged -= OrderState_PropertyChanged;
   }
 }

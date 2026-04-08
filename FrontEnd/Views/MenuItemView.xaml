@@ -20,7 +20,8 @@
 
             <Image Source="{Binding ImageUrl}"
                  Aspect="AspectFill"
-                 HeightRequest="180" />
+                 HeightRequest="300"
+                 BackgroundColor="#F0F0F0"/>
 
             <Label Text="{Binding Name}"
                  FontAttributes="Bold"

@@ -17,12 +17,12 @@
             TextColor="Black"
             Grid.Row="0"
             Margin="0,0,0,15" />
-    
-    <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="Red" Margin="0,0,0,10" />
-    
+
     <views:MenuItemView
             Grid.Row="1"
             Items="{Binding MenuItems}" />
+    
+      <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="Red" Margin="0,50,0,10" />
 
     <!-- Order summary bar placed in Row 2 -->
     <Grid Grid.Row="2" BackgroundColor="White" Padding="12" ColumnDefinitions="*,Auto">
