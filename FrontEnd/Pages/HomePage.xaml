@@ -31,9 +31,28 @@
         </VerticalStackLayout>
       </Border>
 
+      <!-- Current order status -->
+      <Border Stroke="LightGray" Padding="12">
+        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+          <VerticalStackLayout>
+            <Label Text="Current Order" FontAttributes="Bold" />
+            <Label Text="{Binding TotalItemsText}" />
+            <Label Text="{Binding GrandTotalText}" />
+          </VerticalStackLayout>
+
+          <VerticalStackLayout HorizontalOptions="EndAndExpand" VerticalOptions="Center" Spacing="8">
+            <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
+            <Button Text="Continue Current Order"
+                    Clicked="OnContinueOrderClicked"
+                    IsVisible="{Binding HasOrder}"
+                    IsEnabled="{Binding HasOrder}" />
+          </VerticalStackLayout>
+        </HorizontalStackLayout>
+      </Border>
+
       <VerticalStackLayout Spacing="12" Padding="20">
-        <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
-        <Button Text="Continue Current Order" Clicked="OnContinueOrderClicked" />
+        <!-- Secondary actions if needed -->
+        <Label Text="Quick access:" FontAttributes="Bold" />
       </VerticalStackLayout>
 
     </VerticalStackLayout>
