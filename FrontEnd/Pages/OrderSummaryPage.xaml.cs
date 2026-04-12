@@ -21,17 +21,30 @@ public partial class OrderSummaryPage : ContentPage
     InitializeComponent();
     _orderState = App.Services.GetRequiredService<OrderState>();
     _api = App.Services.GetRequiredService<IApiService>();
-    _orderState.PropertyChanged += (_, _) =>
-    {
-      OnPropertyChanged(nameof(TotalItemsText));
-      OnPropertyChanged(nameof(GrandTotalText));
-    };
     BindingContext = this;
   }
 
   protected override void OnAppearing()
   {
     base.OnAppearing();
+    _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
+    _orderState.PropertyChanged += OnOrderStatePropertyChanged;
+    RefreshTotals();
+  }
+
+  protected override void OnDisappearing()
+  {
+    _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
+    base.OnDisappearing();
+  }
+
+  private void OnOrderStatePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+  {
+    RefreshTotals();
+  }
+
+  private void RefreshTotals()
+  {
     OnPropertyChanged(nameof(TotalItemsText));
     OnPropertyChanged(nameof(GrandTotalText));
   }
