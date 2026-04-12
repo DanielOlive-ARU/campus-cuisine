@@ -56,6 +56,13 @@
                           Clicked="OnDecreaseQuantityClicked"
                           CommandParameter="{Binding MenuItemId}" />
 
+                  <Entry WidthRequest="70"
+                         Keyboard="Numeric"
+                         HorizontalTextAlignment="Center"
+                         Text="{Binding Quantity, Mode=OneWay}"
+                         Completed="OnQuantityEntryCompleted"
+                         Unfocused="OnQuantityEntryUnfocused" />
+
                   <Button Text="+"
                           WidthRequest="50"
                           Clicked="OnIncreaseQuantityClicked"
