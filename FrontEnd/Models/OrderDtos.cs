@@ -8,6 +8,9 @@ public class OrderLineDto : INotifyPropertyChanged
 {
   private int _menuItemId;
   private int _quantity;
+  private string _name = string.Empty;
+  private string _description = string.Empty;
+  private double _unitPrice;
 
   [JsonPropertyName("menu_item_id")]
   public int MenuItemId
@@ -33,16 +36,57 @@ public class OrderLineDto : INotifyPropertyChanged
       {
         _quantity = value;
         OnPropertyChanged();
+        OnPropertyChanged(nameof(LineTotal));
       }
     }
   }
 
   // Local snapshot fields used by the frontend only:
   [JsonIgnore]
-  public string Name { get; set; } = string.Empty;
+  public string Name
+  {
+    get => _name;
+    set
+    {
+      if (_name != value)
+      {
+        _name = value;
+        OnPropertyChanged();
+      }
+    }
+  }
 
   [JsonIgnore]
-  public double UnitPrice { get; set; }
+  public string Description
+  {
+    get => _description;
+    set
+    {
+      if (_description != value)
+      {
+        _description = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  [JsonIgnore]
+  public double UnitPrice
+  {
+    get => _unitPrice;
+    set
+    {
+      if (_unitPrice != value)
+      {
+        _unitPrice = value;
+        OnPropertyChanged();
+        OnPropertyChanged(nameof(LineTotal));
+      }
+    }
+  }
+
+  [JsonIgnore]
+  public double LineTotal => UnitPrice * Quantity;
 
   public event PropertyChangedEventHandler? PropertyChanged;
 

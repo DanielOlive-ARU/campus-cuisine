@@ -3,7 +3,7 @@
     x:Class="CampusCuisine.Pages.OrderSummaryPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CampusCuisine.Pages"
+    xmlns:model="clr-namespace:CampusCuisine.Models"
     Title="Order Summary">
 
   <ScrollView>
@@ -13,14 +13,14 @@
              FontSize="24"
              FontAttributes="Bold" />
 
-      <CollectionView x:Name="SummaryCollection" 
-                      ItemsSource="{Binding OrderItems}">
+      <CollectionView x:Name="SummaryCollection"
+                      ItemsSource="{Binding Lines}">
         <CollectionView.EmptyView>
           <Label Text="Your order is empty." />
         </CollectionView.EmptyView>
 
         <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="local:OrderSummaryLineViewModel">
+          <DataTemplate x:DataType="model:OrderLineDto">
             <Border Padding="10" Margin="0,4">
               <VerticalStackLayout Spacing="8">
 
@@ -84,12 +84,6 @@
 
       <Button Text="Place Order"
               Clicked="OnPlaceOrderClicked" />
-
-      <Label Text="{Binding ResultMessage}"
-             TextColor="Green" />
-
-      <Label Text="{Binding ErrorMessage}"
-             TextColor="Red" />
 
     </VerticalStackLayout>
   </ScrollView>

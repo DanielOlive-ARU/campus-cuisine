@@ -12,19 +12,28 @@ public partial class OrderSummaryPage : ContentPage
 
   public ObservableCollection<OrderLineDto> Lines => _orderState.Lines;
 
+  public string TotalItemsText => $"Total items: {_orderState.TotalItems}";
+
+  public string GrandTotalText => $"Grand total: £{_orderState.GrandTotal:F2}";
+
   public OrderSummaryPage()
   {
     InitializeComponent();
     _orderState = App.Services.GetRequiredService<OrderState>();
     _api = App.Services.GetRequiredService<IApiService>();
+    _orderState.PropertyChanged += (_, _) =>
+    {
+      OnPropertyChanged(nameof(TotalItemsText));
+      OnPropertyChanged(nameof(GrandTotalText));
+    };
     BindingContext = this;
   }
 
   protected override void OnAppearing()
   {
     base.OnAppearing();
-    // ensure UI bound collection is current
-    SummaryCollection.ItemsSource = Lines;
+    OnPropertyChanged(nameof(TotalItemsText));
+    OnPropertyChanged(nameof(GrandTotalText));
   }
 
   private void OnDecreaseQuantityClicked(object? sender, EventArgs e)
@@ -63,7 +72,7 @@ public partial class OrderSummaryPage : ContentPage
 
     // capture existing snapshot if available
     var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
-    _orderState.AddLine(id.Value, existing?.Name, existing?.UnitPrice ?? 0, 1);
+    _orderState.AddLine(id.Value, existing?.Name, existing?.UnitPrice ?? 0, 1, existing?.Description);
   }
 
   private void OnRemoveItemClicked(object? sender, EventArgs e)
