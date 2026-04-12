@@ -30,6 +30,12 @@
 
         </VerticalStackLayout>
       </Border>
+
+      <VerticalStackLayout Spacing="12" Padding="20">
+        <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
+        <Button Text="Continue Current Order" Clicked="OnContinueOrderClicked" />
+      </VerticalStackLayout>
+
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

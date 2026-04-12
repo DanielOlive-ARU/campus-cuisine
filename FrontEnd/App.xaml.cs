@@ -1,16 +1,20 @@
-﻿namespace CampusCuisine;
+﻿using System;
 
-using CampusCuisine;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.LifecycleEvents;
-public partial class App : Application
+namespace CampusCuisine
 {
-  public App()
+  public partial class App : Application
   {
-    InitializeComponent();
-  }
-  protected override Window CreateWindow(IActivationState? activationState)
-  {
-    return new Window(new AppShell());
+    public static IServiceProvider Services { get; private set; } = default!;
+
+    public App(IServiceProvider serviceProvider)
+    {
+      InitializeComponent();
+      Services = serviceProvider;
+    }
+
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+      return new Window(new AppShell());
+    }
   }
 }

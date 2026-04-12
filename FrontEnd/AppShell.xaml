@@ -35,4 +35,10 @@
             Route="DessertsPage" />
   </FlyoutItem>
 
+  <FlyoutItem Title="Order Summary">
+    <ShellContent
+        Title="Order Summary"
+        ContentTemplate="{DataTemplate pages:OrderSummaryPage}" />
+  </FlyoutItem>
+
 </Shell>
