@@ -163,3 +163,10 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Labels:** documentation, must
 **Owner:** Shared
 **Done when:** setup/run/test instructions and speaking notes are complete.
+
+### Issue 31: Harden frontend order-state DI with interface abstraction
+**Labels:** frontend, should, architecture, testing
+**Owner:** Adam
+**Description:** Introduce `IOrderStateService` so pages/viewmodels can depend on an abstraction rather than the concrete `OrderState` class.
+**Reason:** Current MAUI DI registration is valid, but interface-based DI improves testability, separation of concerns, and viva defensibility.
+**Done when:** `OrderState` implements `IOrderStateService`, DI registers the interface, consumers use the abstraction where practical, and Windows build/manual order-flow regression passes.

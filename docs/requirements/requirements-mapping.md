@@ -15,7 +15,7 @@ This file translates the assignment brief into implementable requirements and li
 | GEN-02 | MUST | App runs without crashing | Stable navigation, validation, error handling | Shared | test evidence, demo video/screenshots |
 | GEN-03 | MUST | At least four primary pages | Welcome, Main Course, Dessert/Appetizer, Order Summary | Adam | `/Views`, wireframes |
 | GEN-04 | MUST | All primary pages accessible from flyout | Shell flyout items for each main page | Adam | `AppShell.xaml` |
-| GEN-05 | MUST | Persistent order state during navigation | Shared `IOrderStateService` singleton injected into ViewModels | Adam | service code, state tests |
+| GEN-05 | MUST | Persistent order state during navigation | Shared `OrderState` singleton registered in MAUI DI and resolved by pages/viewmodels | Adam | service code, state tests |
 | GEN-06 | MUST | Support creating and managing customer orders | Frontend add/update/remove/clear order + backend order endpoint | Shared | service code, API tests |
 | GEN-07 | MUST | User can place an order | Order Summary page submits order to backend and shows confirmation | Shared | integration demo |
 | GEN-08 | SHOULD | Consistent branding | Shared styles, colours, typography resource dictionaries | Adam | `/Styles` |
@@ -64,7 +64,7 @@ This file translates the assignment brief into implementable requirements and li
 | SUM-11 | MUST | Allow direct quantity editing | Stepper/buttons/text entry with validation | Adam | page |
 | ORD-01 | MUST | Multiple quantities supported | Shared order service aggregates by item id | Adam | unit tests |
 | ORD-02 | MUST | Accurate totals | Business logic covered by tests | Shared | unit tests |
-| ORD-03 | MUST | Consistent order across pages | Singleton state service + VM bindings | Adam | navigation/state tests |
+| ORD-03 | MUST | Consistent order across pages | `OrderState` singleton service + UI/ViewModel bindings | Adam | navigation/state tests |
 | ORD-04 | SHOULD | Order cancellation before checkout | Cancel action resets pending order before submission | Adam | optional feature |
 | ORD-05 | MAY | Reorder from history | Deferred unless optional order history complete | Shared | backlog |
 | API-01 | MUST | RESTful menu retrieval | `/api/menu` endpoints returning menu data | Dan | FastAPI routers |
@@ -75,12 +75,12 @@ This file translates the assignment brief into implementable requirements and li
 | API-06 | MAY | Analytics | Out of scope unless finished early | Dan | backlog |
 | TECH-01 | MUST | Use .NET MAUI | Frontend project built in MAUI | Adam | project file |
 | TECH-02 | MUST | Use XAML + C# | XAML views and C# viewmodels/services | Adam | repo structure |
-| TECH-03 | MUST | Shared service/state management | `IOrderStateService` registered in DI | Adam | service registration |
+| TECH-03 | MUST | Shared service/state management | `OrderState` registered as a singleton in MAUI DI | Adam | service registration |
 | TECH-04 | MUST | Add food items without code changes | Menu stored in SQLite and managed by CRUD | Dan | DB + admin endpoints |
 | TECH-05 | MUST | Communicate with backend via REST | API service uses HTTP client and DTO mapping | Shared | API service |
 | TECH-06 | MUST | Structured architecture pattern | MVVM on frontend; layered API backend | Shared | architecture section in README |
 | TECH-07 | MUST | Separate UI, business logic, data access | Views/VMs/Services in app; routers/services/repositories in API | Shared | repo structure |
-| TECH-08 | MUST | Dependency injection | MAUI DI and FastAPI dependency pattern | Shared | startup code |
+| TECH-08 | MUST | Dependency injection | MAUI service registration for `IApiService` and `OrderState`; FastAPI `Depends(...)` for backend dependencies | Shared | startup code, backend routers, decision log |
 | TECH-09 | MUST | Reusable UI components/styles | DishCard and OrderSummaryBar with shared resources | Adam | component folder |
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
 | TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |
@@ -113,5 +113,5 @@ These features can remain in the backlog under **MAY** or **future work** unless
 1. **SQLite** is used so menu items can be added without code changes.
 2. **FastAPI** is used because it provides REST support, validation, and automatic OpenAPI documentation.
 3. **MAUI Shell + MVVM** supports the flyout navigation requirement and keeps UI logic separate.
-4. **Shared Order State Service** is the core mechanism for maintaining persistent order state across pages.
+4. **Shared Order State Service** is registered through MAUI DI and is the core mechanism for maintaining persistent order state across pages.
 5. **Reusable UI Components** reduce duplication and improve consistency between category pages.

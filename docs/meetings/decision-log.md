@@ -1,0 +1,73 @@
+# Decision Log
+
+This log records technical and project decisions that may need to be defended in the viva. It uses the structure from `docs/meetings/decision-log-template.md`.
+
+| Date | Decision | Reason | Alternatives Considered | Impact |
+|---|---|---|---|---|
+| 2026-04-15 | Keep and document the existing dependency injection approach rather than refactor immediately | The course leader confirmed DI must be part of the solution. Review showed DI already exists in the MAUI frontend through `MauiProgram.cs` service registration and in the FastAPI backend through `Depends(...)`. | Refactor frontend pages to full constructor injection now; leave DI undocumented | Confirms the project satisfies the DI requirement while avoiding a risky refactor during frontend patch slices. A future hardening pass can improve DI style if time allows. |
+| 2026-04-15 | Treat Order Summary as a top-level MAUI Shell destination | Manual testing found that opening Order Summary as a pushed route could leave the app stuck when the user selected the same flyout item again. Order Summary is a primary page and should be part of the Shell hierarchy. | Keep pushed navigation and call `PopToRoot`; remove Order Summary from the flyout; use Shell item lookup instead of routes | Supports the requirement that all primary pages remain accessible from the flyout and makes navigation behaviour easier to explain and test. |
+
+## Decision Notes
+
+### Dependency Injection Review
+
+#### Context
+The assessor explicitly stated that dependency injection must be part of the submitted solution. We reviewed the frontend and backend before continuing with more frontend patch slices.
+
+#### Evidence
+The MAUI frontend registers services in `MauiProgram.cs`:
+
+```csharp
+builder.Services.AddHttpClient<IApiService, ApiService>(client =>
+{
+  client.BaseAddress = new Uri(apiBaseUrl);
+});
+
+builder.Services.AddSingleton<OrderState>();
+```
+
+The frontend then resolves these registered services where needed, including the shared `OrderState` and API service. The backend uses FastAPI dependency injection with `Depends(...)` for request-scoped database sessions and admin API-key checks.
+
+#### Decision
+The current DI implementation is sufficient for the coursework requirement. We will document it clearly and avoid a broad refactor until the core functional slices are stable.
+
+#### Future Improvement
+If time allows, the frontend could be hardened by moving more pages and view models toward direct constructor injection instead of resolving services through the application service provider.
+
+This has been recorded as a technical-debt item in `docs/project-management/backlog-and-milestones.md` and as Issue 31 in `docs/project-management/github-issues-seed.md`.
+
+### Order Summary Shell Navigation Fix
+
+#### Context
+During manual Windows testing, opening Order Summary from a category page worked initially, but flyout navigation could then get stuck. For example:
+
+1. Open Mains.
+2. Tap the page-level Order Summary button.
+3. Open the flyout.
+4. Tap Mains.
+5. The app stays on Order Summary instead of returning to Mains.
+
+The same issue could follow whichever page launched Order Summary.
+
+#### Cause
+`OrderSummaryPage` was being opened as a pushed Shell route over the current flyout item. Shell still considered the underlying category page selected, so selecting that same flyout item did not reset the visible page.
+
+#### Decision
+Make Order Summary an explicit top-level Shell route and navigate to it with absolute Shell navigation:
+
+```csharp
+await Shell.Current.GoToAsync("//OrderSummaryPage");
+```
+
+This treats Order Summary as a primary flyout destination rather than a detail page pushed onto another page's navigation stack.
+
+#### Requirement Link
+This supports:
+
+- GEN-01: app uses flyout navigation
+- GEN-04: all primary pages are accessible from the flyout
+- GEN-05: order state persists during navigation
+- GEN-02: app should not get stuck during normal use
+
+#### Reflection
+This bug was useful because the first symptom looked like an order-state or clear-order issue. Manual reproduction showed the problem followed the page that opened Order Summary, which pointed to Shell route state instead. The fix improved our understanding of MAUI Shell and showed why full user-journey navigation testing is needed, not just page-open testing.

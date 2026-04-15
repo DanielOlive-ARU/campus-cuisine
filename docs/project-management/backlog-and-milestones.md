@@ -116,6 +116,27 @@ This backlog is structured so that all **MUST** requirements are completed befor
 - Tests pass locally
 - Both students can explain their code and design decisions confidently
 
+## Technical Debt / Hardening Backlog
+
+These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.
+
+### Introduce `IOrderStateService`
+**Priority:** SHOULD after MVP stability
+**Owner:** Adam
+**Reason:** The frontend currently registers and resolves the concrete `OrderState` singleton through MAUI DI. This satisfies the dependency injection requirement, but an `IOrderStateService` abstraction would make the design cleaner, easier to test, and easier to defend as formal dependency injection.
+
+**Scope:**
+1. Add `IOrderStateService`.
+2. Make `OrderState` implement `IOrderStateService`.
+3. Register `builder.Services.AddSingleton<IOrderStateService, OrderState>();`.
+4. Update consumers to depend on `IOrderStateService` where practical.
+5. Run full Windows build and order-flow regression tests.
+
+**Do not start until:**
+1. MVP order flow is stable.
+2. Shell navigation fix is validated.
+3. Order Summary editing is stable.
+
 ## Task Allocation Summary
 
 | Area | Dan | Adam | Shared |
