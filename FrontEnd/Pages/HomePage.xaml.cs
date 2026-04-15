@@ -118,7 +118,7 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
     if (!_orderState.Lines.Any())
       return;
 
-    await Shell.Current.GoToAsync(nameof(OrderSummaryPage));
+    await Shell.Current.GoToAsync("//OrderSummaryPage");
   }
 
   protected override void OnDisappearing()

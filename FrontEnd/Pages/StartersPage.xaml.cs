@@ -51,7 +51,7 @@ public partial class StartersPage : ContentPage
   }
   private async void OnOrderSummaryClicked(object sender, EventArgs e)
   {
-    await Shell.Current.GoToAsync(nameof(OrderSummaryPage));
+    await Shell.Current.GoToAsync("//OrderSummaryPage");
   }
 
   protected override void OnDisappearing()

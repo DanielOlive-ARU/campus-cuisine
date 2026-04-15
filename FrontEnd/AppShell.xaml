@@ -38,6 +38,7 @@
   <FlyoutItem Title="Order Summary">
     <ShellContent
         Title="Order Summary"
+        Route="OrderSummaryPage"
         ContentTemplate="{DataTemplate pages:OrderSummaryPage}" />
   </FlyoutItem>
 
