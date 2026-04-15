@@ -17,24 +17,35 @@ public partial class MainsPage : ContentPage
     BindingContext = new MenuItemViewModel(api, "Mains");
 
     _orderState = App.Services.GetRequiredService<OrderState>();
-    OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
-    _orderState.PropertyChanged += OrderState_PropertyChanged;
+    RefreshOrderSummary();
   }
 
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    if (e.PropertyName == nameof(OrderState.TotalItems) || string.IsNullOrEmpty(e.PropertyName))
+    if (e.PropertyName == nameof(OrderState.TotalItems) ||
+        e.PropertyName == nameof(OrderState.GrandTotal) ||
+        string.IsNullOrEmpty(e.PropertyName))
     {
-      MainThread.BeginInvokeOnMainThread(() =>
-      {
-        OrderTotalLabel.Text = $"{_orderState.TotalItems} items";
-      });
+      RefreshOrderSummary();
     }
+  }
+
+  private void RefreshOrderSummary()
+  {
+    MainThread.BeginInvokeOnMainThread(() =>
+    {
+      var totalItems = _orderState.TotalItems;
+      OrderTotalLabel.Text = $"{totalItems} item{(totalItems == 1 ? string.Empty : "s")}";
+      OrderGrandTotalLabel.Text = $"£{_orderState.GrandTotal:F2}";
+    });
   }
 
   protected override async void OnAppearing()
   {
     base.OnAppearing();
+    _orderState.PropertyChanged -= OrderState_PropertyChanged;
+    _orderState.PropertyChanged += OrderState_PropertyChanged;
+    RefreshOrderSummary();
 
     if (BindingContext is MenuItemViewModel vm)
     {

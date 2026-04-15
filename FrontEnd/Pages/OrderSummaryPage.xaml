@@ -59,7 +59,7 @@
                   <Entry WidthRequest="70"
                          Keyboard="Numeric"
                          HorizontalTextAlignment="Center"
-                         Text="{Binding Quantity, Mode=OneWay}"
+                         Text="{Binding QuantityText, Mode=TwoWay}"
                          Completed="OnQuantityEntryCompleted"
                          Unfocused="OnQuantityEntryUnfocused" />
 
@@ -89,7 +89,8 @@
       <Button Text="Clear Order"
               Clicked="OnClearOrderClicked" />
 
-      <Button Text="Place Order"
+      <Button x:Name="PlaceOrderButton"
+              Text="Place Order"
               Clicked="OnPlaceOrderClicked" />
 
     </VerticalStackLayout>

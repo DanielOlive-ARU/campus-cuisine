@@ -9,6 +9,7 @@ public partial class OrderSummaryPage : ContentPage
 {
   private readonly OrderState _orderState;
   private readonly IApiService _api;
+  private bool _isPlacingOrder;
 
   public ObservableCollection<OrderLineDto> Lines => _orderState.Lines;
 
@@ -22,6 +23,7 @@ public partial class OrderSummaryPage : ContentPage
     _orderState = App.Services.GetRequiredService<OrderState>();
     _api = App.Services.GetRequiredService<IApiService>();
     BindingContext = this;
+    SetPlaceOrderBusy(false);
   }
 
   protected override void OnAppearing()
@@ -71,11 +73,11 @@ public partial class OrderSummaryPage : ContentPage
       return;
 
     var currentQuantity = line.Quantity;
-    var text = entry.Text?.Trim();
+    var text = line.QuantityText?.Trim();
 
     if (string.IsNullOrWhiteSpace(text) || !int.TryParse(text, out var parsedQuantity))
     {
-      entry.Text = currentQuantity.ToString();
+      line.QuantityText = currentQuantity.ToString();
       if (showValidationAlerts)
         await DisplayAlertAsync("Invalid Quantity", "Please enter a whole number quantity.", "OK");
       return;
@@ -83,7 +85,7 @@ public partial class OrderSummaryPage : ContentPage
 
     if (parsedQuantity <= 0)
     {
-      entry.Text = currentQuantity.ToString();
+      line.QuantityText = currentQuantity.ToString();
       if (showValidationAlerts)
         await DisplayAlertAsync("Invalid Quantity", "Quantity must be greater than zero.", "OK");
       return;
@@ -91,14 +93,13 @@ public partial class OrderSummaryPage : ContentPage
 
     if (parsedQuantity > 999)
     {
-      entry.Text = currentQuantity.ToString();
+      line.QuantityText = currentQuantity.ToString();
       if (showValidationAlerts)
         await DisplayAlertAsync("Invalid Quantity", "Quantity is too large.", "OK");
       return;
     }
 
     _orderState.SetQuantity(line.MenuItemId, parsedQuantity);
-    entry.Text = parsedQuantity.ToString();
   }
 
   private async void OnQuantityEntryCompleted(object? sender, EventArgs e)
@@ -129,7 +130,7 @@ public partial class OrderSummaryPage : ContentPage
 
     if (existing.Quantity > 1)
     {
-      _orderState.RemoveLine(id.Value, 1);
+      _orderState.SetQuantity(id.Value, existing.Quantity - 1);
       return;
     }
 
@@ -150,7 +151,10 @@ public partial class OrderSummaryPage : ContentPage
 
     // capture existing snapshot if available
     var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
-    _orderState.AddLine(id.Value, existing?.Name, existing?.UnitPrice ?? 0, 1, existing?.Description);
+    if (existing is null)
+      return;
+
+    _orderState.SetQuantity(id.Value, existing.Quantity + 1);
   }
 
   private async void OnRemoveItemClicked(object? sender, EventArgs e)
@@ -184,6 +188,9 @@ public partial class OrderSummaryPage : ContentPage
 
   private async void OnPlaceOrderClicked(object sender, EventArgs e)
   {
+    if (_isPlacingOrder)
+      return;
+
     if (!_orderState.HasOrder)
     {
       await DisplayAlertAsync("Order Empty", "Your order is empty. Please add an item before placing an order.", "OK");
@@ -191,6 +198,7 @@ public partial class OrderSummaryPage : ContentPage
     }
 
     var request = _orderState.ToCreateOrderRequest();
+    SetPlaceOrderBusy(true);
 
     try
     {
@@ -208,6 +216,20 @@ public partial class OrderSummaryPage : ContentPage
     catch (Exception ex)
     {
       await DisplayAlertAsync("Network Error", ex.Message, "OK");
+    }
+    finally
+    {
+      SetPlaceOrderBusy(false);
+    }
+  }
+
+  private void SetPlaceOrderBusy(bool isBusy)
+  {
+    _isPlacingOrder = isBusy;
+    if (PlaceOrderButton is not null)
+    {
+      PlaceOrderButton.IsEnabled = !isBusy;
+      PlaceOrderButton.Text = isBusy ? "Placing Order..." : "Place Order";
     }
   }
 }
