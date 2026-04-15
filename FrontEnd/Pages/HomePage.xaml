@@ -33,21 +33,21 @@
 
       <!-- Current order status -->
       <Border Stroke="LightGray" Padding="12">
-        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
           <VerticalStackLayout>
-            <Label Text="Current Order" FontAttributes="Bold" />
-            <Label Text="{Binding TotalItemsText}" />
-            <Label Text="{Binding GrandTotalText}" />
+            <Label Text="Current Order" FontAttributes="Bold" TextColor="Black" />
+            <Label Text="{Binding TotalItemsText}" TextColor="Black" />
+            <Label Text="{Binding GrandTotalText}" TextColor="Black" />
           </VerticalStackLayout>
 
-          <VerticalStackLayout HorizontalOptions="EndAndExpand" VerticalOptions="Center" Spacing="8">
+          <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="8">
             <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
             <Button Text="Continue Current Order"
                     Clicked="OnContinueOrderClicked"
                     IsVisible="{Binding HasOrder}"
                     IsEnabled="{Binding HasOrder}" />
           </VerticalStackLayout>
-        </HorizontalStackLayout>
+        </Grid>
       </Border>
 
       <VerticalStackLayout Spacing="12" Padding="20">

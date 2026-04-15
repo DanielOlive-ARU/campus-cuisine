@@ -1,13 +1,10 @@
 using CampusCuisine.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace CampusCuisine.Pages;
 
-public partial class HomePage : ContentPage, INotifyPropertyChanged
+public partial class HomePage : ContentPage
 {
   private readonly OrderState _orderState;
 
@@ -17,27 +14,24 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
 
     _orderState = App.Services.GetRequiredService<OrderState>();
 
-    // Use this page as binding context for simple properties
     BindingContext = this;
-
-    // Subscribe to changes on OrderState and its Lines collection
-    _orderState.PropertyChanged += OrderState_PropertyChanged;
-    if (_orderState.Lines is INotifyCollectionChanged coll)
-      coll.CollectionChanged += Lines_CollectionChanged;
-
-    // Ensure initial values are shown
     UpdateOrderInfo();
   }
 
-  private void Lines_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+  protected override void OnAppearing()
   {
+    base.OnAppearing();
+    _orderState.PropertyChanged -= OrderState_PropertyChanged;
+    _orderState.PropertyChanged += OrderState_PropertyChanged;
     UpdateOrderInfo();
   }
 
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    // Recompute whenever TotalItems or Lines change
-    if (string.IsNullOrEmpty(e?.PropertyName) || e.PropertyName == nameof(OrderState.TotalItems))
+    if (string.IsNullOrEmpty(e?.PropertyName)
+        || e.PropertyName == nameof(OrderState.TotalItems)
+        || e.PropertyName == nameof(OrderState.GrandTotal)
+        || e.PropertyName == nameof(OrderState.HasOrder))
     {
       UpdateOrderInfo();
     }
@@ -45,9 +39,8 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
 
   private void UpdateOrderInfo()
   {
-    // Compute on background but update UI on main thread
     var totalItems = _orderState.TotalItems;
-    var grand = _orderState.Lines.Sum(x => x.Quantity * x.UnitPrice);
+    var grand = _orderState.GrandTotal;
     var totalText = $"{totalItems} item{(totalItems == 1 ? "" : "s")}";
     var grandText = $"£{grand:F2}";
 
@@ -103,19 +96,27 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
 
   private async void OnStartNewOrderClicked(object sender, EventArgs e)
   {
-    // Clear local order state and navigate to the default menu (Starters)
-    _orderState.Clear();
+    if (_orderState.HasOrder)
+    {
+      var confirm = await DisplayAlertAsync(
+        "Start New Order",
+        "Start a new order? This will clear your current order.",
+        "Start New",
+        "Cancel");
 
-    // Update UI immediately
-    UpdateOrderInfo();
+      if (!confirm)
+        return;
+
+      _orderState.Clear();
+      UpdateOrderInfo();
+    }
 
     await Shell.Current.GoToAsync("///StartersPage");
   }
 
   private async void OnContinueOrderClicked(object sender, EventArgs e)
   {
-    // Only navigate if there is an order
-    if (!_orderState.Lines.Any())
+    if (!_orderState.HasOrder)
       return;
 
     await Shell.Current.GoToAsync("//OrderSummaryPage");
@@ -125,13 +126,6 @@ public partial class HomePage : ContentPage, INotifyPropertyChanged
   {
     base.OnDisappearing();
 
-    // Unsubscribe to avoid leaks
     _orderState.PropertyChanged -= OrderState_PropertyChanged;
-    if (_orderState.Lines is INotifyCollectionChanged coll)
-      coll.CollectionChanged -= Lines_CollectionChanged;
   }
-
-  public new event PropertyChangedEventHandler? PropertyChanged;
-  protected new void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
