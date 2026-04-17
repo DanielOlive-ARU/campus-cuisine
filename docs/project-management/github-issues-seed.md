@@ -172,6 +172,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Owner:** Adam
 **Description:** Introduce `IOrderStateService` so pages/viewmodels can depend on an abstraction rather than the concrete `OrderState` class.
 **Reason:** Current MAUI DI registration is valid for the brief, but interface-based DI improves testability, separation of concerns, and viva defensibility.
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** `OrderState` implements `IOrderStateService`, DI registers the interface, consumers use the abstraction where practical, and Windows build/manual order-flow regression passes.
 
 ### Issue 32: Move Order Summary quantity edit buffer into a view model

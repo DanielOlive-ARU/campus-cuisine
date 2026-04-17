@@ -75,12 +75,12 @@ This file translates the assignment brief into implementable requirements and li
 | API-06 | MAY | Analytics | Out of scope unless finished early | Dan | backlog |
 | TECH-01 | MUST | Use .NET MAUI | Frontend project built in MAUI | Adam | project file |
 | TECH-02 | MUST | Use XAML + C# | XAML views and C# viewmodels/services | Adam | repo structure |
-| TECH-03 | MUST | Shared service/state management | Current implementation uses concrete `OrderState` registered as a singleton in MAUI DI; planned pre-submission hardening introduces `IOrderStateService` abstraction | Adam | service registration, decision log, issue tracker |
+| TECH-03 | MUST | Shared service/state management | Shared order state uses `IOrderStateService` over a single `OrderState` singleton instance in MAUI DI | Adam | service registration, decision log, tests |
 | TECH-04 | MUST | Add food items without code changes | Menu stored in SQLite and managed by CRUD | Dan | DB + admin endpoints |
 | TECH-05 | MUST | Communicate with backend via REST | API service uses HTTP client and DTO mapping | Shared | API service |
 | TECH-06 | MUST | Structured architecture pattern | MVVM on frontend; layered API backend | Shared | architecture section in README |
 | TECH-07 | MUST | Separate UI, business logic, data access | Views/VMs/Services in app; routers/services/repositories in API | Shared | repo structure |
-| TECH-08 | MUST | Dependency injection | MAUI DI currently registers `IApiService` and concrete `OrderState`; backend uses FastAPI `Depends(...)`. Planned pre-submission hardening introduces `IOrderStateService` on the frontend | Shared | startup code, backend routers, decision log |
+| TECH-08 | MUST | Dependency injection | MAUI DI registers `IApiService`, concrete `OrderState`, and `IOrderStateService` mapped to the same singleton instance; backend uses FastAPI `Depends(...)` | Shared | startup code, backend routers, decision log |
 | TECH-09 | MUST | Reusable UI components/styles | `MenuItemView` and reusable `OrderSummaryBar` are implemented and shared across the category pages | Adam | `Views/MenuItemView.xaml`, `Views/OrderSummaryBar.xaml`, decision log |
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
 | TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |

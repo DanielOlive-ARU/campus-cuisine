@@ -120,22 +120,18 @@ This backlog is structured so that all **MUST** requirements are completed befor
 
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.
 
-### Introduce `IOrderStateService`
-**Priority:** Planned pre-submission hardening after MVP stability
+### Completed: introduce `IOrderStateService`
+**Status:** Completed on `submission-hardening-and-testing`
 **Owner:** Adam
-**Reason:** The frontend currently registers and resolves the concrete `OrderState` singleton through MAUI DI. This satisfies the dependency injection requirement, but an `IOrderStateService` abstraction would make the design cleaner, easier to test, and easier to defend as formal dependency injection.
+**Outcome:** The frontend now uses `IOrderStateService` over the shared `OrderState` singleton, improving DI clarity without changing runtime behaviour.
 
-**Scope:**
-1. Add `IOrderStateService`.
-2. Make `OrderState` implement `IOrderStateService`.
-3. Register `builder.Services.AddSingleton<IOrderStateService, OrderState>();`.
-4. Update consumers to depend on `IOrderStateService` where practical.
-5. Run full Windows build and order-flow regression tests.
-
-**Do not start until:**
-1. MVP order flow is stable.
-2. Shell navigation fix is validated.
-3. Order Summary editing is stable.
+**Delivered scope:**
+1. Added `IOrderStateService`.
+2. Made `OrderState` implement `IOrderStateService`.
+3. Registered `IOrderStateService` to resolve the same underlying `OrderState` singleton instance.
+4. Updated frontend consumers to depend on `IOrderStateService` where practical.
+5. Added notification-contract tests for aggregate `PropertyChanged` updates.
+6. Re-ran Windows build, core build, frontend tests, and manual order-flow regression checks.
 
 ### Completed: refactor category summary bars into reusable `OrderSummaryBar`
 **Status:** Completed on `submission-hardening-and-testing`

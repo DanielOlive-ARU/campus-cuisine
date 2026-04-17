@@ -9,6 +9,7 @@ This log records technical and project decisions that may need to be defended in
 | 2026-04-15 | Keep a temporary `QuantityText` UI buffer on `OrderLineDto` to stabilise Order Summary editing | Manual testing found that the quantity `Entry` between the `-` and `+` buttons could drift out of sync with the real quantity, while totals remained correct. Direct binding from the editable `Entry` to `Quantity` caused invalid and stale UI states. | Keep direct `Entry` binding to `Quantity`; manage `Entry.Text` manually in code-behind; introduce a dedicated `OrderLineViewModel` immediately | Restores correct user-visible quantity editing for MVP without reopening larger frontend refactors. This should be revisited later to move UI-editing state out of the DTO and into a cleaner MVVM layer. |
 | 2026-04-17 | Keep current page-level summary bars and concrete `OrderState` for MVP stability, but record reusable `OrderSummaryBar` and `IOrderStateService` as pre-submission hardening targets | Current functionality is stable, but both areas remain weaker than the desired final architecture for submission | Refactor both immediately before stabilising the current branch; leave them undocumented | Preserves the stable branch while making the intended architectural end state explicit before final submission. |
 | 2026-04-17 | Refactor category summary bars into a reusable `OrderSummaryBar` once the frontend core/test split and regression checks were stable | The duplicated category-page summary bar UI had become the next clear architecture weakness after the frontend checkpoint was secured with automated tests and manual Windows validation. | Keep the duplicated XAML until the final submission; combine this refactor with `IOrderStateService` in one larger change | Removes repeated UI and page-specific summary-bar logic while keeping the user-facing category flow unchanged. This closes the reusable summary bar hardening target and leaves `IOrderStateService` as the next DI-focused hardening task. |
+| 2026-04-17 | Introduce `IOrderStateService` once the reusable summary bar and frontend regression checkpoint were stable | The remaining frontend DI weakness was direct dependence on the concrete `OrderState` singleton. The interface slice could now be done safely because the core/test split and reusable summary bar refactor were already validated. | Leave the concrete type in place until final submission; combine this change with a broader constructor-injection rewrite | Improves DI clarity and viva defensibility while preserving a single shared runtime state instance. The branch now exposes a clearer contract for order state and backs it with additional notification tests. |
 
 ## Decision Notes
 
@@ -27,6 +28,7 @@ builder.Services.AddHttpClient<IApiService, ApiService>(client =>
 });
 
 builder.Services.AddSingleton<OrderState>();
+builder.Services.AddSingleton<IOrderStateService>(sp => sp.GetRequiredService<OrderState>());
 ```
 
 The frontend then resolves these registered services where needed, including the shared `OrderState` and API service. The backend uses FastAPI dependency injection with `Depends(...)` for request-scoped database sessions and admin API-key checks.
@@ -102,22 +104,13 @@ This has been recorded as a technical-debt item in `docs/project-management/back
 ### Summary Bar and Shared State Hardening
 
 #### Context
-The frontend previously implemented the category summary bar behaviour directly inside the Starters, Mains, and Desserts pages, and it used the concrete `OrderState` service registered in MAUI DI. The duplicated summary bar UI has now been refactored into a reusable `OrderSummaryBar`, while the concrete `OrderState` registration remains in place.
+The frontend previously implemented the category summary bar behaviour directly inside the Starters, Mains, and Desserts pages, and it used the concrete `OrderState` service registered in MAUI DI. The duplicated summary bar UI has now been refactored into a reusable `OrderSummaryBar`, and the order-state DI has now been hardened with `IOrderStateService` over the same shared singleton instance.
 
 #### Decision
-Stabilise the branch first, then complete the reusable `OrderSummaryBar` refactor once the frontend core/test checkpoint is in place. Keep `IOrderStateService` as the remaining DI-focused hardening target:
-
-- introduce `IOrderStateService` as the frontend abstraction over `OrderState`
+Stabilise the branch first, then complete the reusable `OrderSummaryBar` refactor and the `IOrderStateService` hardening step once the frontend core/test checkpoint is in place.
 
 #### Why
-The reusable summary bar improves alignment with the reusable UI component requirement and removes duplicated UI logic from the three category pages without altering the user journey. `IOrderStateService` still remains a useful cleanup, but it is separate from the UI reuse problem and can be handled next.
+The reusable summary bar improves alignment with the reusable UI component requirement and removes duplicated UI logic from the three category pages without altering the user journey. `IOrderStateService` improves DI clarity and testability without changing runtime behaviour, because the interface resolves to the same underlying singleton `OrderState` instance.
 
 #### Current State
-The reusable summary bar has been completed. The remaining related hardening item is:
-
-- introduce `IOrderStateService` over the concrete `OrderState`
-
-This remaining item is tracked in:
-
-- `docs/project-management/backlog-and-milestones.md`
-- Issue 31 in `docs/project-management/github-issues-seed.md`
+The reusable summary bar and `IOrderStateService` hardening have both been completed on `submission-hardening-and-testing`.

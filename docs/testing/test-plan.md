@@ -91,6 +91,7 @@ The frontend now has a dedicated automated test project at `CampusCuisine.Tests`
 Current implemented frontend automated tests cover:
 - `OrderState` add/remove/set/clear behavior
 - total item count and grand total calculation
+- `OrderState` `PropertyChanged` notifications for aggregate state updates
 - safe handling of missing-line removal and invalid add quantities
 - request DTO mapping for placed orders
 - `MenuItemViewModel` category mapping and success/failure handling
@@ -100,7 +101,7 @@ Current implemented frontend automated tests cover:
 - `ApiService` HTTP/network error translation
 
 Current validated result:
-- `36` frontend tests passing locally with `dotnet test`
+- `39` frontend tests passing locally with `dotnet test`
 - MAUI app build, core library build, and frontend test project build all succeed on the current branch
 
 ## Priority Test Cases
