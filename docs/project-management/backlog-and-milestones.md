@@ -72,7 +72,7 @@ This backlog is structured so that all **MUST** requirements are completed befor
 5. Protect admin endpoints with basic auth/API key if implemented
 
 ### Frontend Tasks (Adam)
-1. Implement shared `IOrderStateService`
+1. Implement shared order state service
 2. Connect Main Course page to live menu API
 3. Connect Dessert page to live menu API
 4. Implement add/increase/decrease/remove actions
@@ -121,7 +121,7 @@ This backlog is structured so that all **MUST** requirements are completed befor
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.
 
 ### Introduce `IOrderStateService`
-**Priority:** SHOULD after MVP stability
+**Priority:** Planned pre-submission hardening after MVP stability
 **Owner:** Adam
 **Reason:** The frontend currently registers and resolves the concrete `OrderState` singleton through MAUI DI. This satisfies the dependency injection requirement, but an `IOrderStateService` abstraction would make the design cleaner, easier to test, and easier to defend as formal dependency injection.
 
@@ -136,6 +136,40 @@ These items should only be started after the MVP order flow, Shell navigation, a
 1. MVP order flow is stable.
 2. Shell navigation fix is validated.
 3. Order Summary editing is stable.
+
+### Refactor category summary bars into reusable `OrderSummaryBar`
+**Priority:** Planned pre-submission hardening after MVP stability
+**Owner:** Adam
+**Reason:** The application already implements summary-bar behaviour on category pages, but the current implementation duplicates the UI across pages. Refactoring this into a reusable `OrderSummaryBar` would better satisfy the reusable UI component requirement and produce a cleaner frontend architecture for submission.
+
+**Scope:**
+1. Create reusable `OrderSummaryBar` component.
+2. Move current count/total/navigation behaviour out of page-specific duplicated XAML.
+3. Reuse the component on Starters, Mains, and Desserts.
+4. Re-run Windows build and manual order-flow regression tests.
+5. Update requirements and architecture documentation to reference the reusable component directly.
+
+**Do not start until:**
+1. Current MVP order flow remains stable.
+2. Home page and Order Summary behaviour are validated.
+3. Refactor can be tested before merge.
+
+### Move Order Summary quantity edit buffer into a view model layer
+**Priority:** SHOULD after MVP stability
+**Owner:** Adam
+**Reason:** The current frontend uses a temporary `QuantityText` buffer on `OrderLineDto` so the editable quantity `Entry` in Order Summary can stay in sync without letting invalid values affect totals. This is acceptable for MVP, but it mixes UI editing state into the DTO and is weaker than a cleaner MVVM design.
+
+**Scope:**
+1. Introduce a dedicated order-summary view model or order-line view model for editable quantity state.
+2. Move `QuantityText` or equivalent UI-buffer behaviour out of `OrderLineDto`.
+3. Keep backend payloads unchanged.
+4. Re-run Windows build and manual order-flow regression tests.
+5. Update documentation to explain the final MVVM structure.
+
+**Do not start until:**
+1. MVP order flow is stable.
+2. Order Summary editing and validation are stable.
+3. Frontend tests are in place or planned closely enough to protect the refactor.
 
 ## Task Allocation Summary
 

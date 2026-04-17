@@ -88,9 +88,10 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Done when:** component displays image, name, description, price, and quantity actions.
 
 ### Issue 16: Build reusable OrderSummaryBar component
-**Labels:** frontend, must
+**Labels:** frontend, must, architecture
 **Owner:** Adam
-**Done when:** component displays item count, total, and navigates to summary page.
+**Description:** Refactor the currently duplicated category-page summary bar UI into a reusable `OrderSummaryBar` component.
+**Done when:** the component displays item count and total, navigates to `OrderSummaryPage`, and is reused by Starters, Mains, and Desserts without breaking existing behaviour.
 
 ### Issue 17: Build Main Course page and bind to menu data
 **Labels:** frontend, must
@@ -168,5 +169,12 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Labels:** frontend, should, architecture, testing
 **Owner:** Adam
 **Description:** Introduce `IOrderStateService` so pages/viewmodels can depend on an abstraction rather than the concrete `OrderState` class.
-**Reason:** Current MAUI DI registration is valid, but interface-based DI improves testability, separation of concerns, and viva defensibility.
+**Reason:** Current MAUI DI registration is valid for the brief, but interface-based DI improves testability, separation of concerns, and viva defensibility.
 **Done when:** `OrderState` implements `IOrderStateService`, DI registers the interface, consumers use the abstraction where practical, and Windows build/manual order-flow regression passes.
+
+### Issue 32: Move Order Summary quantity edit buffer into a view model
+**Labels:** frontend, should, architecture, testing
+**Owner:** Adam
+**Description:** Remove the temporary `QuantityText` UI buffer from `OrderLineDto` and move editable quantity state into a dedicated order-summary or order-line view model.
+**Reason:** The current `QuantityText` buffer is a pragmatic MVP fix that keeps the quantity `Entry` in sync and prevents invalid values from mutating totals. It does not break the current solution, but a dedicated view-model layer would better align the frontend with a stricter MVVM design.
+**Done when:** editable quantity state no longer lives on `OrderLineDto`, Order Summary quantity editing still works, backend payload shape is unchanged, and Windows build/manual order-flow regression passes.
