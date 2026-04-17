@@ -94,7 +94,7 @@ public partial class HomePage : ContentPage
     }
   }
 
-  private async void OnStartNewOrderClicked(object sender, EventArgs e)
+  private async void OnStartNewOrderClicked(object? sender, EventArgs e)
   {
     if (_orderState.HasOrder)
     {
@@ -114,7 +114,7 @@ public partial class HomePage : ContentPage
     await Shell.Current.GoToAsync("///StartersPage");
   }
 
-  private async void OnContinueOrderClicked(object sender, EventArgs e)
+  private async void OnContinueOrderClicked(object? sender, EventArgs e)
   {
     if (!_orderState.HasOrder)
       return;

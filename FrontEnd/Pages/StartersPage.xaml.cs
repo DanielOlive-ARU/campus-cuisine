@@ -58,7 +58,7 @@ public partial class StartersPage : ContentPage
       }
     }
   }
-  private async void OnOrderSummaryClicked(object sender, EventArgs e)
+  private async void OnOrderSummaryClicked(object? sender, EventArgs e)
   {
     await Shell.Current.GoToAsync("//OrderSummaryPage");
   }

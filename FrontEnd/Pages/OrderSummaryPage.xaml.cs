@@ -186,7 +186,7 @@ public partial class OrderSummaryPage : ContentPage
       _orderState.Clear();
   }
 
-  private async void OnPlaceOrderClicked(object sender, EventArgs e)
+  private async void OnPlaceOrderClicked(object? sender, EventArgs e)
   {
     if (_isPlacingOrder)
       return;

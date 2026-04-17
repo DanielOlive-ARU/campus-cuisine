@@ -60,7 +60,7 @@ public partial class DessertsPage : ContentPage
     }
   }
 
-  private async void OnOrderSummaryClicked(object sender, EventArgs e)
+  private async void OnOrderSummaryClicked(object? sender, EventArgs e)
   {
     await Shell.Current.GoToAsync("//OrderSummaryPage");
   }
