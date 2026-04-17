@@ -209,7 +209,20 @@ public partial class OrderSummaryPage : ContentPage
         return;
       }
 
-      await DisplayAlertAsync("Order Confirmed", $"Order ID: {confirmation.Id}\nTotal items: {confirmation.TotalItems}\nTotal: £{confirmation.GrandTotal:F2}", "OK");
+      var confirmationLines = new List<string>
+      {
+        $"Order ID: {confirmation.Id}",
+        $"Total items: {confirmation.TotalItems}",
+        $"Total: £{confirmation.GrandTotal:F2}"
+      };
+
+      if (confirmation.EstimatedPrepMinutes.HasValue)
+      {
+        confirmationLines.Add(
+          $"Estimated preparation time: about {confirmation.EstimatedPrepMinutes.Value} minutes");
+      }
+
+      await DisplayAlertAsync("Order Confirmed", string.Join('\n', confirmationLines), "OK");
       _orderState.Clear();
       await Shell.Current.GoToAsync("..");
     }

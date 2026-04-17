@@ -55,13 +55,22 @@ public class ApiServiceTests
   public async Task PostOrderAsync_Success_ReturnsConfirmation()
   {
     var service = CreateService(_ => JsonResponse(HttpStatusCode.OK,
-      new OrderConfirmationDto { Id = 1, Status = "placed", TotalItems = 2, GrandTotal = 10.5, Message = "ok" }));
+      new OrderConfirmationDto
+      {
+        Id = 1,
+        Status = "placed",
+        TotalItems = 2,
+        GrandTotal = 10.5,
+        Message = "ok",
+        EstimatedPrepMinutes = 15
+      }));
 
     var result = await service.PostOrderAsync(new CreateOrderRequestDto());
 
     Assert.NotNull(result);
     Assert.Equal(1, result!.Id);
     Assert.Equal("placed", result.Status);
+    Assert.Equal(15, result.EstimatedPrepMinutes);
   }
 
   [Theory]
