@@ -26,13 +26,14 @@ def create_order_route(
 ) -> OrderConfirmation:
     """Create a new order."""
 
-    order = create_order(session, payload)
+    order, estimated_prep_minutes = create_order(session, payload)
     return OrderConfirmation(
         id=order.id,
         status=order.status,
         total_items=order.total_items,
         grand_total=order.grand_total,
         message="Order placed successfully",
+        estimated_prep_minutes=estimated_prep_minutes,
     )
 
 

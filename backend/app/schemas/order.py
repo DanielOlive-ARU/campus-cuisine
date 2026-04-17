@@ -76,3 +76,10 @@ class OrderConfirmation(OrderSchemaBase):
     total_items: int
     grand_total: float
     message: str
+    estimated_prep_minutes: int = Field(
+        ...,
+        description=(
+            "Server-calculated estimate in whole minutes. Derived from basket size "
+            "and distinct line count; clamped to 10–35."
+        ),
+    )

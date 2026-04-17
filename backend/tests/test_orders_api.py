@@ -24,6 +24,7 @@ def test_create_order_returns_confirmation(seeded_client) -> None:
     assert payload["total_items"] == 3
     assert payload["grand_total"] == 21.97
     assert payload["message"] == "Order placed successfully"
+    assert payload["estimated_prep_minutes"] == 15
 
 
 def test_get_order_returns_full_order_with_snapshot_lines(seeded_client) -> None:
