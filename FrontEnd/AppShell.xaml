@@ -42,4 +42,11 @@
         ContentTemplate="{DataTemplate pages:OrderSummaryPage}" />
   </FlyoutItem>
 
+  <FlyoutItem Title="Help">
+    <ShellContent
+        Title="Help"
+        Route="HelpPage"
+        ContentTemplate="{DataTemplate pages:HelpPage}" />
+  </FlyoutItem>
+
 </Shell>

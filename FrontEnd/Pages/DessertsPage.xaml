@@ -7,21 +7,98 @@
     Title="Desserts"
     BackgroundColor="White">
 
-  <Grid RowDefinitions="Auto,*,Auto" Padding="20">
-    <Label
+  <ContentPage.Resources>
+    <Color x:Key="DessertInk">#3E2130</Color>
+    <Color x:Key="DessertBerry">#B64B78</Color>
+    <Color x:Key="DessertRose">#F6D9E5</Color>
+    <Color x:Key="DessertCream">#FFF8F2</Color>
+    <Color x:Key="DessertCaramel">#D59A4C</Color>
+    <Color x:Key="DessertChocolate">#69412B</Color>
+    <Color x:Key="DessertPanel">#FFFCFA</Color>
+
+    <LinearGradientBrush x:Key="DessertPageBrush" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Color="#FFF9F4" Offset="0.0" />
+      <GradientStop Color="#FCE9F0" Offset="0.45" />
+      <GradientStop Color="#FFF1E0" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <Style x:Key="DessertTag" TargetType="Border">
+      <Setter Property="Margin" Value="0,0,10,10" />
+      <Setter Property="Padding" Value="10,6" />
+      <Setter Property="BackgroundColor" Value="{StaticResource DessertRose}" />
+      <Setter Property="Stroke" Value="{StaticResource DessertBerry}" />
+      <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+      <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+
+    <Style x:Key="DessertSectionCard" TargetType="Border">
+      <Setter Property="Padding" Value="18" />
+      <Setter Property="BackgroundColor" Value="{StaticResource DessertPanel}" />
+      <Setter Property="Stroke" Value="{StaticResource DessertRose}" />
+      <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+      <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+  </ContentPage.Resources>
+
+  <Grid RowDefinitions="Auto,*,Auto"
+        Padding="20"
+        RowSpacing="16"
+        Background="{StaticResource DessertPageBrush}">
+
+    <Border Grid.Row="0"
+            Padding="24"
+            Stroke="{StaticResource DessertBerry}"
+            BackgroundColor="{StaticResource DessertCream}"
+            StrokeShape="RoundRectangle 28">
+      <VerticalStackLayout Spacing="14">
+        <Label
             Text="Desserts"
-            FontSize="28"
+            FontSize="30"
             FontAttributes="Bold"
-            TextColor="Black"
-            Grid.Row="0"
-            Margin="0,0,0,15" />
+            TextColor="{StaticResource DessertInk}" />
 
-    <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="Red" Margin="0,50,0,10" />
+        <Label
+            Text="Finish the order with something warm, chilled, or indulgent."
+            FontSize="15"
+            TextColor="{StaticResource DessertInk}" />
 
-    <views:MenuItemView
+        <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Start">
+          <Border Style="{StaticResource DessertTag}">
+            <Label Text="Sweet finish" TextColor="{StaticResource DessertInk}" FontAttributes="Bold" />
+          </Border>
+
+          <Border Style="{StaticResource DessertTag}">
+            <Label Text="Rich flavours" TextColor="{StaticResource DessertInk}" FontAttributes="Bold" />
+          </Border>
+
+          <Border Style="{StaticResource DessertTag}">
+            <Label Text="Just for you" TextColor="{StaticResource DessertInk}" FontAttributes="Bold" />
+          </Border>
+        </FlexLayout>
+      </VerticalStackLayout>
+    </Border>
+
+    <Border Grid.Row="1" Style="{StaticResource DessertSectionCard}" Padding="0">
+      <Grid RowDefinitions="Auto,*" Padding="18">
+        <Label Grid.Row="0"
+               Text="{Binding ErrorMessage}"
+               IsVisible="{Binding HasError}"
+               TextColor="#B42318"
+               FontAttributes="Bold"
+               Margin="0,0,0,12" />
+
+        <views:MenuItemView
             Grid.Row="1"
             Items="{Binding MenuItems}" />
+      </Grid>
+    </Border>
 
-    <views:OrderSummaryBar Grid.Row="2" />
+    <Border Grid.Row="2"
+            Padding="12"
+            BackgroundColor="{StaticResource DessertCream}"
+            Stroke="{StaticResource DessertBerry}"
+            StrokeShape="RoundRectangle 22">
+      <views:OrderSummaryBar />
+    </Border>
   </Grid>
 </ContentPage>
