@@ -203,7 +203,8 @@ Future extension:
   "status": "confirmed",
   "total_items": 3,
   "grand_total": 21.97,
-  "message": "Order placed successfully"
+  "message": "Order placed successfully",
+  "estimated_prep_minutes": 15
 }
 ```
 
@@ -238,4 +239,5 @@ Future extension:
 - Frontend should treat menu responses as read-only DTOs.
 - Order state should be managed locally until the user taps **Place Order**.
 - The backend should calculate authoritative totals rather than trusting client totals.
+- `estimated_prep_minutes` is returned only in the `POST /api/orders` confirmation payload for this slice; it is intentionally not persisted or returned by `GET /api/orders/{order_id}` yet.
 - `image_url` values are relative paths; the app should prepend the backend base URL when loading images.

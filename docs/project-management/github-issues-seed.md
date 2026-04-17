@@ -117,6 +117,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 ### Issue 21: Add styling, theme, and reusable resources
 **Labels:** frontend, should
 **Owner:** Adam
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** consistent branding and dessert page theme differences are visible.
 
 ### Issue 22: Add offline menu cache
@@ -181,3 +182,17 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Description:** Remove the temporary `QuantityText` UI buffer from `OrderLineDto` and move editable quantity state into a dedicated order-summary or order-line view model.
 **Reason:** The current `QuantityText` buffer is a pragmatic MVP fix that keeps the quantity `Entry` in sync and prevents invalid values from mutating totals. It does not break the current solution, but a dedicated view-model layer would better align the frontend with a stricter MVVM design.
 **Done when:** editable quantity state no longer lives on `OrderLineDto`, Order Summary quantity editing still works, backend payload shape is unchanged, and Windows build/manual order-flow regression passes.
+
+### Issue 33: Add Help page to the customer app
+**Labels:** frontend, should
+**Owner:** Adam
+**Status:** Completed on `submission-hardening-and-testing`
+**Description:** Add a static Help page to the MAUI Shell flyout so the app includes an additional primary-style page with guidance on ordering and recovery flows.
+**Done when:** Help appears in the flyout, the page renders cleanly, and existing order navigation remains unaffected.
+
+### Issue 34: Add estimated preparation time to order confirmation
+**Labels:** shared, may, backend, frontend, documentation
+**Owner:** Shared
+**Status:** Completed on `submission-hardening-and-testing`
+**Description:** Return a lightweight server-calculated prep-time estimate in the `POST /api/orders` confirmation payload and show it in the frontend confirmation alert.
+**Done when:** backend confirmation includes `estimated_prep_minutes`, frontend displays it, tests pass, and docs explain that the estimate is confirmation-only in this slice.

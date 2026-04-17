@@ -25,13 +25,13 @@ This file translates the assignment brief into implementable requirements and li
 | PAGE-02 | MUST | Main Course page included | Category page loads mains from backend | Adam | `MainsPage.xaml` |
 | PAGE-03 | MUST | Dessert/Appetizer page included | Category page loads desserts/appetizers from backend | Adam | `DessertsPage.xaml` |
 | PAGE-04 | MUST | Order Summary page included | Editable order summary and checkout action | Adam | `OrderSummaryPage.xaml` |
-| PAGE-05 | SHOULD | Additional page such as Help/Profile/History | Add Help page if time allows | Adam | optional page |
+| PAGE-05 | SHOULD | Additional page such as Help/Profile/History | Static Help page added to Shell flyout with ordering guidance and recovery/help sections | Adam | `FrontEnd/AppShell.xaml`, `FrontEnd/Pages/HelpPage.xaml` |
 | HOME-01 | MUST | Welcome page displays restaurant name | Static heading bound or configured in app constants | Adam | wireframe + view |
 | HOME-02 | MUST | Welcome page shows description/introduction | Short intro paragraph on landing page | Adam | wireframe + view |
 | HOME-03 | MUST | Welcome page shows current order status | Summary tile bound to order state service | Adam | view + VM |
 | HOME-04 | MUST | Start New Order button | Clears order after confirmation and navigates to menu | Adam | view logic |
 | HOME-05 | MUST | Continue Current Order button when order exists | Conditional visibility based on item count > 0 | Adam | VM/UI behaviour |
-| HOME-06 | SHOULD | Professional restaurant-style interface | Hero banner, clean cards, consistent spacing | Adam | screenshots |
+| HOME-06 | SHOULD | Professional restaurant-style interface | Home page now uses a branded hero, stat cards, and quick-navigation panels for a clearer restaurant landing experience | Adam | `FrontEnd/Pages/HomePage.xaml` |
 | HOME-07 | MAY | Promotions/featured dishes | Optional featured section loaded from backend flags | Shared | optional feature |
 | MAIN-01 | MUST | List of main course dishes | GET menu by category = main | Shared | API contract + page |
 | MAIN-02 | MUST | Name, description, price shown | Dish card component shows required fields | Adam | `DishCard` |
@@ -49,7 +49,7 @@ This file translates the assignment brief into implementable requirements and li
 | DESS-05 | MUST | Summary bar displayed | Reusable `OrderSummaryBar` component is used on category pages | Adam | `DessertsPage.xaml`, `Views/OrderSummaryBar.xaml` |
 | DESS-06 | MUST | Summary bar shows items + total | `OrderSummaryBar` reads shared order totals from `OrderState` and formats item count and grand total consistently | Adam | `Views/OrderSummaryBar.xaml.cs` |
 | DESS-07 | MUST | Summary bar navigates to summary page | Reuses the same Shell absolute route to `OrderSummaryPage` | Adam | `Views/OrderSummaryBar.xaml.cs`, `AppShell.xaml` |
-| DESS-08 | SHOULD | Distinct colour theme | Different accent styling for desserts page | Adam | styles |
+| DESS-08 | SHOULD | Distinct colour theme | Desserts page now uses a distinct warm dessert palette, themed hero section, and styled summary container | Adam | `FrontEnd/Pages/DessertsPage.xaml` |
 | DESS-09 | SHOULD | Images from backend | Same image strategy as mains | Shared | screenshots |
 | SUM-01 | MUST | Display all current order items | Collection view bound to order items | Adam | page + VM |
 | SUM-02 | MUST | Show quantity, item price, line total | Editable line items with totals | Adam | page |
@@ -62,6 +62,7 @@ This file translates the assignment brief into implementable requirements and li
 | SUM-09 | MUST | Generate order confirmation | Response shows order ID/status | Shared | API response + UI |
 | SUM-10 | MUST | Handle empty order state | Empty state panel and disabled checkout | Adam | page |
 | SUM-11 | MUST | Allow direct quantity editing | Stepper/buttons/text entry with validation | Adam | page |
+| SUM-12 | MAY | Show estimated preparation time after checkout | Backend confirmation now returns a server-calculated prep estimate and the frontend shows it in the confirmation alert | Shared | order API tests, `FrontEnd/Pages/OrderSummaryPage.xaml.cs` |
 | ORD-01 | MUST | Multiple quantities supported | Shared order service aggregates by item id | Adam | unit tests |
 | ORD-02 | MUST | Accurate totals | Business logic covered by tests | Shared | unit tests |
 | ORD-03 | MUST | Consistent order across pages | `OrderState` singleton service + UI/ViewModel bindings | Adam | navigation/state tests |

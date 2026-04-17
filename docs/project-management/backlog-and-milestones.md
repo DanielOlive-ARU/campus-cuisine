@@ -116,6 +116,32 @@ This backlog is structured so that all **MUST** requirements are completed befor
 - Tests pass locally
 - Both students can explain their code and design decisions confidently
 
+## Delivered SHOULD/MAY Enhancements
+
+### Completed: add Help page and frontend presentation polish
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Adam
+**Outcome:** The app now includes a Help page in the Shell flyout, a more polished Home page, and a visually distinct Desserts page theme that improves perceived completeness without reopening the core order flow.
+
+**Delivered scope:**
+1. Added a Help page with ordering guidance, recovery steps, and safe-use reminders.
+2. Added a real flyout navigation entry for Help.
+3. Polished the Home page with a stronger hero, current-order stat cards, and quick navigation actions.
+4. Added a meaningful dessert-specific visual theme while keeping category-page behaviour unchanged.
+5. Re-ran Windows build, frontend tests, and manual navigation/order-flow regression checks.
+
+### Completed: add estimated preparation time to order confirmation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Order confirmation now includes a lightweight server-calculated preparation estimate that is returned by `POST /api/orders` and displayed in the frontend confirmation alert.
+
+**Delivered scope:**
+1. Added a backend prep-time helper and confirmation response field.
+2. Kept the estimate confirmation-only and out of the persisted order model for now.
+3. Updated backend and frontend tests to cover the new response field.
+4. Updated the frontend confirmation alert to display the estimate when present.
+5. Re-ran backend validation, Windows build, and frontend tests.
+
 ## Technical Debt / Hardening Backlog
 
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.
