@@ -95,6 +95,7 @@ Current implemented backend tests cover:
 | T08 | SHOULD | Empty menu dataset handled | Frontend service |
 | T09 | SHOULD | Removing absent item handled safely | Frontend |
 | T10 | MAY | Scoped or manual CI runs tests in a clean environment | Shared |
+| T11 | MUST | Shell flyout navigation returns from Order Summary to the selected primary page | Frontend manual/regression |
 
 ## Example Edge Cases
 - Decreasing quantity below 1
@@ -114,6 +115,31 @@ Current implemented backend tests cover:
 - Clear order and confirm dialog appears
 - Add items again and place order
 - Verify confirmation with order ID/status
+
+## Manual Regression: Shell Navigation After Order Summary
+
+### Purpose
+Verify that Order Summary behaves as a top-level flyout page and does not trap the user on a pushed navigation stack.
+
+### Steps
+1. Open Mains.
+2. Tap Order Summary.
+3. Open the flyout.
+4. Tap Mains.
+5. Confirm Mains displays.
+6. Repeat from Starters.
+7. Repeat from Desserts.
+8. Open Order Summary from Home using Continue Current Order.
+9. From Order Summary, use the flyout to open Home, Starters, Mains, and Desserts.
+
+### Expected Result
+The app navigates to each selected flyout page correctly and does not remain stuck on Order Summary.
+
+### Requirement Coverage
+- GEN-01: app uses flyout navigation.
+- GEN-04: all primary pages are accessible from the flyout.
+- GEN-05: order state persists during navigation.
+- GEN-02: app remains stable during normal navigation.
 
 ## Current CI/CD Position
 - Manual GitHub Actions backend validation exists and has passed once for the earlier Phase 1/2 baseline.

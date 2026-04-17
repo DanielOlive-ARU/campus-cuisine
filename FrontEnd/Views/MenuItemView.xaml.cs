@@ -107,8 +107,9 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
       var card = DisplayItems.FirstOrDefault(c => c.Id == menuItemId);
       var name = card?.Name ?? string.Empty;
       var unitPrice = (double)(card?.Price ?? 0m);
+      var description = card?.Description ?? string.Empty;
 
-      _orderState.AddLine(menuItemId, name, unitPrice);
+      _orderState.AddLine(menuItemId, name, unitPrice, description: description);
       RefreshDisplayItems();
     }
   }

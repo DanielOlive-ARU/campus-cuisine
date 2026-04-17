@@ -24,10 +24,15 @@
 
     <!-- Order summary bar -->
     <Grid Grid.Row="2" BackgroundColor="White" Padding="12" ColumnDefinitions="*,Auto">
-      <Label x:Name="OrderTotalLabel"
-             Text="0 items"
-             VerticalOptions="Center"
-             FontAttributes="Bold" />
+      <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+        <Label x:Name="OrderTotalLabel"
+               Text="0 items"
+               FontAttributes="Bold"
+               TextColor="Black" />
+        <Label x:Name="OrderGrandTotalLabel"
+               Text="£0.00"
+               TextColor="Black" />
+      </VerticalStackLayout>
       <Button Text="Order Summary" Grid.Column="1" Clicked="OnOrderSummaryClicked" />
     </Grid>
   </Grid>
