@@ -79,6 +79,9 @@
 	  <Compile Update="Views\MenuItemView.xaml.cs">
 	    <DependentUpon>MenuItemView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\OrderSummaryBar.xaml.cs">
+	    <DependentUpon>OrderSummaryBar.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>

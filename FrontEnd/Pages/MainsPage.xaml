@@ -22,18 +22,6 @@
             Grid.Row="1"
             Items="{Binding MenuItems}" />
 
-    <!-- Order summary bar -->
-    <Grid Grid.Row="2" BackgroundColor="White" Padding="12" ColumnDefinitions="*,Auto">
-      <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-        <Label x:Name="OrderTotalLabel"
-               Text="0 items"
-               FontAttributes="Bold"
-               TextColor="Black" />
-        <Label x:Name="OrderGrandTotalLabel"
-               Text="£0.00"
-               TextColor="Black" />
-      </VerticalStackLayout>
-      <Button Text="Order Summary" Grid.Column="1" Clicked="OnOrderSummaryClicked" />
-    </Grid>
+    <views:OrderSummaryBar Grid.Row="2" />
   </Grid>
 </ContentPage>
