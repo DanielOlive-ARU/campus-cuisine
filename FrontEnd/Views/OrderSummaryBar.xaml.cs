@@ -6,14 +6,14 @@ namespace CampusCuisine.Views;
 
 public partial class OrderSummaryBar : ContentView
 {
-  private readonly OrderState _orderState;
+  private readonly IOrderStateService _orderState;
   private bool _isSubscribed;
 
   public OrderSummaryBar()
   {
     InitializeComponent();
 
-    _orderState = App.Services.GetRequiredService<OrderState>();
+    _orderState = App.Services.GetRequiredService<IOrderStateService>();
 
     Loaded += OnLoaded;
     Unloaded += OnUnloaded;
@@ -42,8 +42,8 @@ public partial class OrderSummaryBar : ContentView
 
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    if (e.PropertyName == nameof(OrderState.TotalItems) ||
-        e.PropertyName == nameof(OrderState.GrandTotal) ||
+    if (e.PropertyName == nameof(IOrderStateService.TotalItems) ||
+        e.PropertyName == nameof(IOrderStateService.GrandTotal) ||
         string.IsNullOrEmpty(e.PropertyName))
     {
       RefreshSummary();

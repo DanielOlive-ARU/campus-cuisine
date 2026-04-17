@@ -12,7 +12,7 @@ namespace CampusCuisine.Views;
 
 public partial class MenuItemView : ContentView, INotifyPropertyChanged
 {
-  private readonly OrderState _orderState;
+  private readonly IOrderStateService _orderState;
 
   public static readonly BindableProperty ItemsProperty =
       BindableProperty.Create(
@@ -33,7 +33,7 @@ public partial class MenuItemView : ContentView, INotifyPropertyChanged
   public MenuItemView()
   {
     InitializeComponent();
-    _orderState = App.Services.GetRequiredService<OrderState>();
+    _orderState = App.Services.GetRequiredService<IOrderStateService>();
     // Do NOT override BindingContext here - the page sets the VM and the XAML uses x:Reference ThisView
     // BindingContext = this; <-- removed
   }

@@ -7,7 +7,7 @@ namespace CampusCuisine.Pages;
 
 public partial class OrderSummaryPage : ContentPage
 {
-  private readonly OrderState _orderState;
+  private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
   private bool _isPlacingOrder;
 
@@ -20,7 +20,7 @@ public partial class OrderSummaryPage : ContentPage
   public OrderSummaryPage()
   {
     InitializeComponent();
-    _orderState = App.Services.GetRequiredService<OrderState>();
+    _orderState = App.Services.GetRequiredService<IOrderStateService>();
     _api = App.Services.GetRequiredService<IApiService>();
     BindingContext = this;
     SetPlaceOrderBusy(false);

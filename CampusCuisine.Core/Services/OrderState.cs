@@ -6,7 +6,7 @@ using CampusCuisine.Models;
 
 namespace CampusCuisine.Services;
 
-public class OrderState : INotifyPropertyChanged
+public class OrderState : IOrderStateService
 {
   private readonly ObservableCollection<OrderLineDto> _lines = new();
 

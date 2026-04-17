@@ -193,4 +193,52 @@ public class OrderStateTests
 
     Assert.Empty(state.Lines);
   }
+
+  [Fact]
+  public void AddLine_RaisesPropertyChanged_ForAggregateProperties()
+  {
+    var state = new OrderState();
+    var raisedProperties = new List<string?>();
+    state.PropertyChanged += (_, e) => raisedProperties.Add(e.PropertyName);
+
+    state.AddLine(1, unitPrice: 5.5, quantity: 2);
+
+    Assert.Contains(nameof(IOrderStateService.Lines), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.TotalItems), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.GrandTotal), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.HasOrder), raisedProperties);
+  }
+
+  [Fact]
+  public void SetQuantity_RaisesPropertyChanged_ForAggregateProperties()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 5.5, quantity: 1);
+    var raisedProperties = new List<string?>();
+    state.PropertyChanged += (_, e) => raisedProperties.Add(e.PropertyName);
+
+    state.SetQuantity(1, 4);
+
+    Assert.Contains(nameof(IOrderStateService.Lines), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.TotalItems), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.GrandTotal), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.HasOrder), raisedProperties);
+  }
+
+  [Fact]
+  public void MutatingExistingLineQuantity_RaisesPropertyChanged_ForAggregateProperties()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 5.5, quantity: 1);
+    var line = Assert.Single(state.Lines);
+    var raisedProperties = new List<string?>();
+    state.PropertyChanged += (_, e) => raisedProperties.Add(e.PropertyName);
+
+    line.Quantity = 3;
+
+    Assert.Contains(nameof(IOrderStateService.Lines), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.TotalItems), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.GrandTotal), raisedProperties);
+    Assert.Contains(nameof(IOrderStateService.HasOrder), raisedProperties);
+  }
 }

@@ -6,13 +6,13 @@ namespace CampusCuisine.Pages;
 
 public partial class HomePage : ContentPage
 {
-  private readonly OrderState _orderState;
+  private readonly IOrderStateService _orderState;
 
   public HomePage()
   {
     InitializeComponent();
 
-    _orderState = App.Services.GetRequiredService<OrderState>();
+    _orderState = App.Services.GetRequiredService<IOrderStateService>();
 
     BindingContext = this;
     UpdateOrderInfo();
@@ -29,9 +29,9 @@ public partial class HomePage : ContentPage
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
     if (string.IsNullOrEmpty(e?.PropertyName)
-        || e.PropertyName == nameof(OrderState.TotalItems)
-        || e.PropertyName == nameof(OrderState.GrandTotal)
-        || e.PropertyName == nameof(OrderState.HasOrder))
+        || e.PropertyName == nameof(IOrderStateService.TotalItems)
+        || e.PropertyName == nameof(IOrderStateService.GrandTotal)
+        || e.PropertyName == nameof(IOrderStateService.HasOrder))
     {
       UpdateOrderInfo();
     }

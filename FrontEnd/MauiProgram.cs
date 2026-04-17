@@ -26,6 +26,7 @@ namespace CampusCuisine
       });
 
       builder.Services.AddSingleton<OrderState>();
+      builder.Services.AddSingleton<IOrderStateService>(sp => sp.GetRequiredService<OrderState>());
 
 #if DEBUG
       builder.Logging.AddDebug();
