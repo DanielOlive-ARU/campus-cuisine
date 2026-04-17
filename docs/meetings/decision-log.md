@@ -101,6 +101,9 @@ Once the MVP frontend flow and tests are stable, move the quantity editing buffe
 
 This has been recorded as a technical-debt item in `docs/project-management/backlog-and-milestones.md` and as Issue 32 in `docs/project-management/github-issues-seed.md`.
 
+#### Current Deferral Rationale
+We deliberately deferred that refactor after the `IOrderStateService` hardening landed. The proposed fix would introduce a second synchronisation layer over `_orderState.Lines` on the most regression-prone page in the app, which creates a higher risk of stale quantity display, focus loss during typing, or totals drifting out of sync. The current `QuantityText` approach keeps `OrderState` as the single source of truth, the Windows flow is stable, and the frontend regression suite is currently at `39` passing tests. The marginal MVVM gain is therefore smaller than the regression risk at this stage, so the team chose to pivot to remaining SHOULD/MAY work instead.
+
 ### Summary Bar and Shared State Hardening
 
 #### Context
