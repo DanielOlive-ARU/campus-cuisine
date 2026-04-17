@@ -38,17 +38,17 @@ This file translates the assignment brief into implementable requirements and li
 | MAIN-03 | MUST | Add item option | Add button on each dish card | Adam | component + service |
 | MAIN-04 | MUST | Increase/decrease quantity | Plus/minus controls update shared state | Adam | component + tests |
 | MAIN-05 | MUST | Removing item updates immediately | Order state notifies UI instantly | Adam | state tests |
-| MAIN-06 | MUST | Order summary bar displayed | Bottom summary bar currently implemented on category pages; planned pre-submission hardening is a reusable `OrderSummaryBar` component | Adam | `MainsPage.xaml`, `StartersPage.xaml`, issue tracker |
-| MAIN-07 | MUST | Summary bar shows total items + total price | Bound to shared order totals on category pages | Adam | category page XAML/code-behind |
-| MAIN-08 | MUST | Summary bar navigates to Order Summary page | Summary bar routes to `OrderSummaryPage` via Shell navigation | Adam | category pages + `AppShell.xaml` |
+| MAIN-06 | MUST | Order summary bar displayed | Reusable `OrderSummaryBar` component is used on category pages | Adam | `MainsPage.xaml`, `StartersPage.xaml`, `Views/OrderSummaryBar.xaml` |
+| MAIN-07 | MUST | Summary bar shows total items + total price | `OrderSummaryBar` reads shared order totals from `OrderState` and formats item count and grand total consistently | Adam | `Views/OrderSummaryBar.xaml.cs` |
+| MAIN-08 | MUST | Summary bar navigates to Order Summary page | `OrderSummaryBar` routes to `OrderSummaryPage` via Shell absolute navigation | Adam | `Views/OrderSummaryBar.xaml.cs`, `AppShell.xaml` |
 | MAIN-09 | SHOULD | Images loaded dynamically from backend | Image URLs returned by API and displayed in app | Shared | API sample + page screenshots |
 | DESS-01 | MUST | Dessert page displays desserts | GET menu by category = dessert/appetizer | Shared | page + API |
 | DESS-02 | MUST | Name, description, price shown | Reuse DishCard component | Adam | component |
 | DESS-03 | MUST | Added to same shared order | Same order state service across all pages | Adam | state tests |
 | DESS-04 | MUST | Multiple quantity supported | Quantity buttons and aggregation logic | Adam | service tests |
-| DESS-05 | MUST | Summary bar displayed | Bottom summary bar currently implemented on category pages; planned pre-submission hardening is a reusable `OrderSummaryBar` component | Adam | `DessertsPage.xaml`, issue tracker |
-| DESS-06 | MUST | Summary bar shows items + total | Shared state binding on category pages | Adam | category page XAML/code-behind |
-| DESS-07 | MUST | Summary bar navigates to summary page | Reuses the same Shell route to `OrderSummaryPage` | Adam | category pages + `AppShell.xaml` |
+| DESS-05 | MUST | Summary bar displayed | Reusable `OrderSummaryBar` component is used on category pages | Adam | `DessertsPage.xaml`, `Views/OrderSummaryBar.xaml` |
+| DESS-06 | MUST | Summary bar shows items + total | `OrderSummaryBar` reads shared order totals from `OrderState` and formats item count and grand total consistently | Adam | `Views/OrderSummaryBar.xaml.cs` |
+| DESS-07 | MUST | Summary bar navigates to summary page | Reuses the same Shell absolute route to `OrderSummaryPage` | Adam | `Views/OrderSummaryBar.xaml.cs`, `AppShell.xaml` |
 | DESS-08 | SHOULD | Distinct colour theme | Different accent styling for desserts page | Adam | styles |
 | DESS-09 | SHOULD | Images from backend | Same image strategy as mains | Shared | screenshots |
 | SUM-01 | MUST | Display all current order items | Collection view bound to order items | Adam | page + VM |
@@ -81,7 +81,7 @@ This file translates the assignment brief into implementable requirements and li
 | TECH-06 | MUST | Structured architecture pattern | MVVM on frontend; layered API backend | Shared | architecture section in README |
 | TECH-07 | MUST | Separate UI, business logic, data access | Views/VMs/Services in app; routers/services/repositories in API | Shared | repo structure |
 | TECH-08 | MUST | Dependency injection | MAUI DI currently registers `IApiService` and concrete `OrderState`; backend uses FastAPI `Depends(...)`. Planned pre-submission hardening introduces `IOrderStateService` on the frontend | Shared | startup code, backend routers, decision log |
-| TECH-09 | MUST | Reusable UI components/styles | `MenuItemView` is implemented; category summary bar functionality is currently page-level and is planned to be refactored into a reusable `OrderSummaryBar` before final submission | Adam | `Views/MenuItemView.xaml`, issue tracker, decision log |
+| TECH-09 | MUST | Reusable UI components/styles | `MenuItemView` and reusable `OrderSummaryBar` are implemented and shared across the category pages | Adam | `Views/MenuItemView.xaml`, `Views/OrderSummaryBar.xaml`, decision log |
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
 | TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |
 | TECH-12 | SHOULD | Animations/custom alerts/transitions | Add simple navigation or add-to-order animation | Adam | UX polish evidence |

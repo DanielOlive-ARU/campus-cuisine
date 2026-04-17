@@ -137,22 +137,17 @@ These items should only be started after the MVP order flow, Shell navigation, a
 2. Shell navigation fix is validated.
 3. Order Summary editing is stable.
 
-### Refactor category summary bars into reusable `OrderSummaryBar`
-**Priority:** Planned pre-submission hardening after MVP stability
+### Completed: refactor category summary bars into reusable `OrderSummaryBar`
+**Status:** Completed on `submission-hardening-and-testing`
 **Owner:** Adam
-**Reason:** The application already implements summary-bar behaviour on category pages, but the current implementation duplicates the UI across pages. Refactoring this into a reusable `OrderSummaryBar` would better satisfy the reusable UI component requirement and produce a cleaner frontend architecture for submission.
+**Outcome:** Category-page summary bar duplication has been removed. A reusable `OrderSummaryBar` component now owns the shared totals display and navigation behaviour for Starters, Mains, and Desserts.
 
-**Scope:**
-1. Create reusable `OrderSummaryBar` component.
-2. Move current count/total/navigation behaviour out of page-specific duplicated XAML.
-3. Reuse the component on Starters, Mains, and Desserts.
-4. Re-run Windows build and manual order-flow regression tests.
-5. Update requirements and architecture documentation to reference the reusable component directly.
-
-**Do not start until:**
-1. Current MVP order flow remains stable.
-2. Home page and Order Summary behaviour are validated.
-3. Refactor can be tested before merge.
+**Delivered scope:**
+1. Created reusable `OrderSummaryBar` component.
+2. Moved count/total/navigation behaviour out of page-specific duplicated XAML.
+3. Reused the component on Starters, Mains, and Desserts.
+4. Re-ran Windows build, frontend tests, and manual order-flow regression checks.
+5. Updated requirements and architecture documentation to reference the reusable component directly.
 
 ### Move Order Summary quantity edit buffer into a view model layer
 **Priority:** SHOULD after MVP stability

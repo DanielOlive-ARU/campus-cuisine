@@ -91,6 +91,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Labels:** frontend, must, architecture
 **Owner:** Adam
 **Description:** Refactor the currently duplicated category-page summary bar UI into a reusable `OrderSummaryBar` component.
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** the component displays item count and total, navigates to `OrderSummaryPage`, and is reused by Starters, Mains, and Desserts without breaking existing behaviour.
 
 ### Issue 17: Build Main Course page and bind to menu data

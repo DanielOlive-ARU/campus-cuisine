@@ -8,6 +8,7 @@ This log records technical and project decisions that may need to be defended in
 | 2026-04-15 | Treat Order Summary as a top-level MAUI Shell destination | Manual testing found that opening Order Summary as a pushed route could leave the app stuck when the user selected the same flyout item again. Order Summary is a primary page and should be part of the Shell hierarchy. | Keep pushed navigation and call `PopToRoot`; remove Order Summary from the flyout; use Shell item lookup instead of routes | Supports the requirement that all primary pages remain accessible from the flyout and makes navigation behaviour easier to explain and test. |
 | 2026-04-15 | Keep a temporary `QuantityText` UI buffer on `OrderLineDto` to stabilise Order Summary editing | Manual testing found that the quantity `Entry` between the `-` and `+` buttons could drift out of sync with the real quantity, while totals remained correct. Direct binding from the editable `Entry` to `Quantity` caused invalid and stale UI states. | Keep direct `Entry` binding to `Quantity`; manage `Entry.Text` manually in code-behind; introduce a dedicated `OrderLineViewModel` immediately | Restores correct user-visible quantity editing for MVP without reopening larger frontend refactors. This should be revisited later to move UI-editing state out of the DTO and into a cleaner MVVM layer. |
 | 2026-04-17 | Keep current page-level summary bars and concrete `OrderState` for MVP stability, but record reusable `OrderSummaryBar` and `IOrderStateService` as pre-submission hardening targets | Current functionality is stable, but both areas remain weaker than the desired final architecture for submission | Refactor both immediately before stabilising the current branch; leave them undocumented | Preserves the stable branch while making the intended architectural end state explicit before final submission. |
+| 2026-04-17 | Refactor category summary bars into a reusable `OrderSummaryBar` once the frontend core/test split and regression checks were stable | The duplicated category-page summary bar UI had become the next clear architecture weakness after the frontend checkpoint was secured with automated tests and manual Windows validation. | Keep the duplicated XAML until the final submission; combine this refactor with `IOrderStateService` in one larger change | Removes repeated UI and page-specific summary-bar logic while keeping the user-facing category flow unchanged. This closes the reusable summary bar hardening target and leaves `IOrderStateService` as the next DI-focused hardening task. |
 
 ## Decision Notes
 
@@ -101,19 +102,22 @@ This has been recorded as a technical-debt item in `docs/project-management/back
 ### Summary Bar and Shared State Hardening
 
 #### Context
-The current frontend implements the category summary bar behaviour directly inside the Starters, Mains, and Desserts pages, and it uses the concrete `OrderState` service registered in MAUI DI. This is functionally stable for the current branch, but it is not yet the cleaner architectural end state we want before submission.
+The frontend previously implemented the category summary bar behaviour directly inside the Starters, Mains, and Desserts pages, and it used the concrete `OrderState` service registered in MAUI DI. The duplicated summary bar UI has now been refactored into a reusable `OrderSummaryBar`, while the concrete `OrderState` registration remains in place.
 
 #### Decision
-Keep the current page-level summary bars and concrete `OrderState` on the stable branch so the MVP user journey remains reliable. At the same time, record two pre-submission hardening targets:
+Stabilise the branch first, then complete the reusable `OrderSummaryBar` refactor once the frontend core/test checkpoint is in place. Keep `IOrderStateService` as the remaining DI-focused hardening target:
 
-- refactor duplicated category summary bar UI into a reusable `OrderSummaryBar`
 - introduce `IOrderStateService` as the frontend abstraction over `OrderState`
 
-#### Why Now
-Both changes would improve alignment with the reusable UI component and dependency-injection expectations in the brief, but they are refactors rather than current runtime blockers. Deferring them until after the stable branch is merged reduces risk.
+#### Why
+The reusable summary bar improves alignment with the reusable UI component requirement and removes duplicated UI logic from the three category pages without altering the user journey. `IOrderStateService` still remains a useful cleanup, but it is separate from the UI reuse problem and can be handled next.
 
-#### Future Improvement
-These items are now tracked in:
+#### Current State
+The reusable summary bar has been completed. The remaining related hardening item is:
+
+- introduce `IOrderStateService` over the concrete `OrderState`
+
+This remaining item is tracked in:
 
 - `docs/project-management/backlog-and-milestones.md`
-- Issue 16 and Issue 31 in `docs/project-management/github-issues-seed.md`
+- Issue 31 in `docs/project-management/github-issues-seed.md`
