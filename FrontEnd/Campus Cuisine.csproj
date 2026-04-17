@@ -72,6 +72,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CampusCuisine.Core\CampusCuisine.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Update="Views\MenuItemView.xaml.cs">
 	    <DependentUpon>MenuItemView.xaml</DependentUpon>
 	  </Compile>
