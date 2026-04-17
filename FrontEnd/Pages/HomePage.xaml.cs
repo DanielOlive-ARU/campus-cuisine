@@ -46,13 +46,13 @@ public partial class HomePage : ContentPage
 
     MainThread.BeginInvokeOnMainThread(() =>
     {
-      TotalItemsText = $"Items: {totalText}";
-      GrandTotalText = $"Total: {grandText}";
+      TotalItemsText = totalText;
+      GrandTotalText = grandText;
       HasOrder = totalItems > 0;
     });
   }
 
-  private string _totalItemsText = "Items: 0 items";
+  private string _totalItemsText = "0 items";
   public string TotalItemsText
   {
     get => _totalItemsText;
@@ -66,7 +66,7 @@ public partial class HomePage : ContentPage
     }
   }
 
-  private string _grandTotalText = "Total: £0.00";
+  private string _grandTotalText = "£0.00";
   public string GrandTotalText
   {
     get => _grandTotalText;
@@ -120,6 +120,16 @@ public partial class HomePage : ContentPage
       return;
 
     await Shell.Current.GoToAsync("//OrderSummaryPage");
+  }
+
+  private async void OnQuickNavigateClicked(object? sender, EventArgs e)
+  {
+    if (sender is not Button button ||
+        button.CommandParameter is not string route ||
+        string.IsNullOrWhiteSpace(route))
+      return;
+
+    await Shell.Current.GoToAsync(route);
   }
 
   protected override void OnDisappearing()
