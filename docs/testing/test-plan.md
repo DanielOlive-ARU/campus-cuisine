@@ -14,7 +14,8 @@ Testing is split into three layers:
 backend/
   tests/
 FrontEnd/
-  [frontend test project location to be confirmed]
+  CampusCuisine.Core/
+  CampusCuisine.Tests/
 ```
 
 ## Current Backend Validation Status
@@ -71,15 +72,36 @@ Current implemented backend tests cover:
 - Removing an item not present does not crash
 
 ### API/Service Tests
+- Menu view model maps frontend categories to backend categories correctly
 - Menu service parses menu response correctly
-- Empty response handled without crash
-- Invalid response handled gracefully when mocked
+- Relative image URLs are converted to absolute URLs
+- Absolute image URLs are preserved
+- Invalid/network responses are handled gracefully when mocked
 - Order submission response maps to confirmation DTO
+- API error status codes map to expected frontend exception messages
 
 ### Navigation/State Tests
 - Order state persists when switching pages
 - Summary bar reflects latest totals after quantity changes
 - Empty order state shown correctly on summary page
+
+## Current Frontend Validation Status
+The frontend now has a dedicated automated test project at `FrontEnd/CampusCuisine.Tests` backed by the plain .NET class library `FrontEnd/CampusCuisine.Core`.
+
+Current implemented frontend automated tests cover:
+- `OrderState` add/remove/set/clear behavior
+- total item count and grand total calculation
+- safe handling of missing-line removal and invalid add quantities
+- request DTO mapping for placed orders
+- `MenuItemViewModel` category mapping and success/failure handling
+- `MenuItemViewModel` busy-state re-entry guard
+- `ApiService` image URL normalization
+- `ApiService` order-confirmation mapping
+- `ApiService` HTTP/network error translation
+
+Current validated result:
+- `34` frontend tests passing locally with `dotnet test`
+- MAUI app build, core library build, and frontend test project build all succeed on the current branch
 
 ## Priority Test Cases
 
@@ -149,7 +171,7 @@ The app navigates to each selected flyout page correctly and does not remain stu
 
 ## Future GitHub Actions Plan
 - Re-enable backend CI with scoped triggers later, preferably pull requests only.
-- Add frontend/core validation when the MAUI build pipeline is ready.
+- Add frontend/core validation using `FrontEnd/CampusCuisine.Tests` when the MAUI build pipeline is ready.
 - Add packaging/release workflows later for the assessment deliverable.
 
 ## Evidence to Store in Repo
@@ -173,8 +195,11 @@ Direct backend test command:
 ```
 
 ### Frontend
-```bash
-dotnet test
+```powershell
+dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
 ```
 
-Frontend commands should be added once the final frontend test project structure is confirmed.
+Optional targeted frontend test run:
+```powershell
+dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug --filter OrderState
+```

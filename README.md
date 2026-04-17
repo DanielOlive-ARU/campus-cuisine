@@ -11,6 +11,7 @@ The application is a cross-platform restaurant ordering app with flyout navigati
 
 ## Current State
 - The current frontend implementation lives under `FrontEnd/` and targets **.NET 10**.
+- Frontend core logic is now extracted into `FrontEnd/CampusCuisine.Core/` and the frontend test project lives in `FrontEnd/CampusCuisine.Tests/`.
 - The backend implementation now lives under `backend/`.
 - Backend Phase 1 and Phase 2 are implemented and validated locally and in one clean GitHub Actions run.
 - Root `docs/` is the source of truth for planning and API documentation.
@@ -26,6 +27,8 @@ The application is a cross-platform restaurant ordering app with flyout navigati
 ## Suggested Repository Structure
 ```text
 FrontEnd/
+  CampusCuisine.Core/
+  CampusCuisine.Tests/
 backend/
 docs/
   api/
@@ -96,3 +99,21 @@ docs/
 5. Keep `docs/api/backend-status.md` updated as milestones are completed.
 6. Use `docs/project-management/ci-cd-notes.md` when CI/CD is expanded later.
 7. Keep implementation and documentation aligned.
+
+## Run Tests
+
+### Backend
+```powershell
+./backend/scripts/bootstrap.ps1
+./backend/.venv/Scripts/python.exe -m pytest backend/tests -q
+```
+
+### Frontend
+```powershell
+dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
+```
+
+Optional targeted frontend test run:
+```powershell
+dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug --filter OrderState
+```
