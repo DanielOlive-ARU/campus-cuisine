@@ -14,8 +14,8 @@ Testing is split into three layers:
 backend/
   tests/
 FrontEnd/
-  CampusCuisine.Core/
-  CampusCuisine.Tests/
+CampusCuisine.Core/
+CampusCuisine.Tests/
 ```
 
 ## Current Backend Validation Status
@@ -86,7 +86,7 @@ Current implemented backend tests cover:
 - Empty order state shown correctly on summary page
 
 ## Current Frontend Validation Status
-The frontend now has a dedicated automated test project at `FrontEnd/CampusCuisine.Tests` backed by the plain .NET class library `FrontEnd/CampusCuisine.Core`.
+The frontend now has a dedicated automated test project at `CampusCuisine.Tests` backed by the plain .NET class library `CampusCuisine.Core`.
 
 Current implemented frontend automated tests cover:
 - `OrderState` add/remove/set/clear behavior
@@ -100,7 +100,7 @@ Current implemented frontend automated tests cover:
 - `ApiService` HTTP/network error translation
 
 Current validated result:
-- `34` frontend tests passing locally with `dotnet test`
+- `36` frontend tests passing locally with `dotnet test`
 - MAUI app build, core library build, and frontend test project build all succeed on the current branch
 
 ## Priority Test Cases
@@ -171,7 +171,7 @@ The app navigates to each selected flyout page correctly and does not remain stu
 
 ## Future GitHub Actions Plan
 - Re-enable backend CI with scoped triggers later, preferably pull requests only.
-- Add frontend/core validation using `FrontEnd/CampusCuisine.Tests` when the MAUI build pipeline is ready.
+- Add frontend/core validation using `CampusCuisine.Tests` when the MAUI build pipeline is ready.
 - Add packaging/release workflows later for the assessment deliverable.
 
 ## Evidence to Store in Repo
@@ -196,10 +196,10 @@ Direct backend test command:
 
 ### Frontend
 ```powershell
-dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
+dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
 ```
 
 Optional targeted frontend test run:
 ```powershell
-dotnet test ".\FrontEnd\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug --filter OrderState
+dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug --filter OrderState
 ```

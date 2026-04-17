@@ -85,10 +85,10 @@ This file translates the assignment brief into implementable requirements and li
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
 | TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |
 | TECH-12 | SHOULD | Animations/custom alerts/transitions | Add simple navigation or add-to-order animation | Adam | UX polish evidence |
-| TEST-01 | MUST | Unit tests for order logic | Backend pytest suite plus frontend `OrderState` tests cover add/remove/update/calculate totals | Shared | `backend/tests`, `FrontEnd/CampusCuisine.Tests/OrderStateTests.cs` |
-| TEST-02 | SHOULD | Test service/API data loading | Frontend tests cover menu loading, category mapping, and API response/error handling with fakes | Shared | `FrontEnd/CampusCuisine.Tests/ViewModel/MenuItemViewModelTests.cs`, `FrontEnd/CampusCuisine.Tests/Services/ApiServiceTests.cs` |
+| TEST-01 | MUST | Unit tests for order logic | Backend pytest suite plus frontend `OrderState` tests cover add/remove/update/calculate totals | Shared | `backend/tests`, `CampusCuisine.Tests/Services/OrderStateTests.cs` |
+| TEST-02 | SHOULD | Test service/API data loading | Frontend tests cover menu loading, category mapping, and API response/error handling with fakes | Shared | `CampusCuisine.Tests/ViewModel/MenuItemViewModelTests.cs`, `CampusCuisine.Tests/Services/ApiServiceTests.cs` |
 | TEST-03 | SHOULD | Test order state persistence across navigation | Currently covered by manual regression; automated page-navigation persistence tests remain future work | Adam | manual regression notes, future test backlog |
-| TEST-04 | MUST | All tests stored in dedicated test projects | Backend tests live under `backend/tests`; frontend tests live under `FrontEnd/CampusCuisine.Tests` | Shared | repo structure |
+| TEST-04 | MUST | All tests stored in dedicated test projects | Backend tests live under `backend/tests`; frontend tests live under `CampusCuisine.Tests` | Shared | repo structure |
 | TEST-05 | SHOULD | README explains how to run tests | Root README includes backend and frontend test commands | Shared | `README.md` |
 | TEST-06 | SHOULD | Edge case tests | Current automated tests cover invalid remove, zero/negative add quantity, API failures, and state edge cases | Shared | frontend test suite, backend test suite |
 | TEST-07 | MAY | CI automation | GitHub Actions runs a subset or all tests | Shared | workflow file |
