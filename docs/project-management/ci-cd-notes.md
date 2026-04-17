@@ -42,8 +42,9 @@ Observed local result:
 ## Re-enable Plan
 Re-enable CI/CD in this order later in the project:
 1. backend CI on pull requests only
-2. frontend build workflow
-3. packaging/release workflow for the two-track submission
+2. frontend test/build validation workflow
+3. cross-platform artifact workflow that builds Windows and Android outputs only after tests pass
+4. packaging/release workflow for the two-track submission
 
 ## Planned Future Pipelines
 ### Backend CI
@@ -55,6 +56,12 @@ Purpose:
 Purpose:
 - confirm the MAUI project still restores and builds
 - catch integration regressions early
+
+### Cross-Platform Artifact Pipeline
+Purpose:
+- build assessment-ready Windows and Android artifacts only after the automated test stage passes
+- keep expensive packaging work out of the day-to-day developer loop
+- support a later stretch goal of attaching a Windows runnable build and Android APK to a workflow run or release
 
 ### Packaging / Release Workflow
 Purpose:
@@ -69,5 +76,7 @@ The final delivery should still aim for:
 ## Notes For Later
 When CI/CD is expanded again:
 - prefer trigger scoping over running on every push
+- keep automated tests as the gate before any artifact-build stage
+- only start the Windows/Android artifact pipeline after all MUST requirements, SHOULD requirements, and likely most MAY work are stable enough to freeze the packaging target
 - use manual or tagged release workflows for expensive packaging steps
 - keep build artifacts out of the source tree and out of git

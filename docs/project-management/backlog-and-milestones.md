@@ -171,6 +171,24 @@ These items should only be started after the MVP order flow, Shell navigation, a
 2. Order Summary editing and validation are stable.
 3. Frontend tests are in place or planned closely enough to protect the refactor.
 
+### Expand GitHub Actions into a staged test-and-build pipeline
+**Priority:** MAY after all MUST requirements, SHOULD requirements, and likely most MAY work are complete
+**Owner:** Shared
+**Reason:** A fuller CI/CD pipeline is a worthwhile stretch goal, but it should not compete with completing the assessed application behaviour first. The intended later state is for GitHub Actions to run the automated test suite and, only on passing runs, build assessment-ready Windows and Android artifacts.
+
+**Scope:**
+1. Keep backend and frontend automated tests as the first pipeline gate.
+2. Add scoped GitHub Actions jobs for frontend/backend validation.
+3. Build a Windows runnable artifact only after the test stage passes.
+4. Build an Android APK only after the test stage passes.
+5. Keep expensive packaging or release publication on manual or tagged workflows.
+6. Update README and CI/CD notes with the final workflow structure.
+
+**Do not start until:**
+1. Frontend and backend test projects exist and run locally.
+2. Current MUST and SHOULD application behaviour is stable on the default branch.
+3. Packaging targets for Windows and Android are agreed.
+
 ## Task Allocation Summary
 
 | Area | Dan | Adam | Shared |

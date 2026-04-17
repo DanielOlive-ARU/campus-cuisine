@@ -40,6 +40,7 @@ If menu items are unavailable or if the backend cannot be reached, the app shoul
 - Real-time kitchen/preparation workflow
 - Analytics dashboard for popular items and conversion rates
 - Multi-branch restaurant support
+- Staged GitHub Actions pipeline that runs tests first and then builds Windows and Android assessment artifacts
 
 ## Reflection Prompts for Final Report
 - Which design decisions reduced risk the most?

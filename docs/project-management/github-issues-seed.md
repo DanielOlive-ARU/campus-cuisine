@@ -155,10 +155,11 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Owner:** Shared
 **Done when:** screenshots are placed into docs folders for final submission.
 
-### Issue 29: Expand GitHub Actions workflows when needed
+### Issue 29: Expand GitHub Actions into a staged test-and-build pipeline
 **Labels:** testing, may
 **Owner:** Shared
-**Done when:** the existing manual backend workflow has been reviewed and any later CI expansion uses scoped triggers rather than running on every change.
+**Description:** Expand the current manual-only CI position into a staged GitHub Actions pipeline once the assessed application behaviour is substantially complete. The later target is for backend/frontend tests to run first and for passing runs to be able to build a Windows runnable artifact and Android APK through scoped workflows.
+**Done when:** backend and frontend tests run in scoped workflows, passing runs can trigger Windows and Android artifact builds, and expensive packaging steps remain manual or tag-based rather than running on every change.
 
 ### Issue 30: Final README and viva prep
 **Labels:** documentation, must
