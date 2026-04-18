@@ -7,20 +7,26 @@
     BackgroundColor="White">
 
   <ContentPage.Resources>
-    <Style x:Key="HelpCard" TargetType="Border">
-      <Setter Property="BackgroundColor" Value="White" />
-      <Setter Property="Stroke" Value="{StaticResource Gray200}" />
+    <!--
+      Help-specific styles inherit shape/padding/typography from the
+      shared Brand* styles in Resources/Styles/ and only override the
+      things that are genuinely Help-specific (card corner radius is
+      smaller here to signal a denser "reference" layout).
+    -->
+    <Style x:Key="HelpCard" TargetType="Border" BasedOn="{StaticResource BrandCard}">
+      <Setter Property="BackgroundColor" Value="{StaticResource BrandCream}" />
+      <Setter Property="Stroke" Value="{StaticResource BrandBorder}" />
       <Setter Property="StrokeShape" Value="RoundRectangle 16" />
     </Style>
 
     <Style x:Key="HelpSectionTitle" TargetType="Label">
       <Setter Property="FontAttributes" Value="Bold" />
       <Setter Property="FontSize" Value="20" />
-      <Setter Property="TextColor" Value="{StaticResource MidnightBlue}" />
+      <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
     </Style>
 
     <Style x:Key="HelpBodyText" TargetType="Label">
-      <Setter Property="TextColor" Value="Black" />
+      <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
       <Setter Property="LineBreakMode" Value="WordWrap" />
     </Style>
   </ContentPage.Resources>
@@ -30,17 +36,21 @@
 
       <Border
           Padding="24"
-          Stroke="{StaticResource Primary}"
-          BackgroundColor="{StaticResource Secondary}"
+          Stroke="{StaticResource BrandAccent}"
+          BackgroundColor="{StaticResource BrandAccentSoft}"
           StrokeShape="RoundRectangle 20">
         <VerticalStackLayout Spacing="12">
           <Label
               Text="Help and Ordering Guide"
-              Style="{StaticResource Headline}" />
+              FontSize="32"
+              FontAttributes="Bold"
+              TextColor="{StaticResource BrandInk}"
+              HorizontalOptions="Center"
+              HorizontalTextAlignment="Center" />
 
           <Label
               Text="Use this page if you need a quick reminder of how ordering works in Campus Cuisine. The app is designed for quick guest ordering, and your order stays with you while you move between pages."
-              TextColor="Black"
+              TextColor="{StaticResource BrandInk}"
               FontSize="16"
               HorizontalTextAlignment="Center" />
         </VerticalStackLayout>

@@ -7,21 +7,23 @@
     Title="Starters"
     BackgroundColor="White">
 
-  <!-- Now three rows: header, content, footer summary bar -->
-  <Grid RowDefinitions="Auto,*,Auto" Padding="20">
-    <Label
-            Text="Starters"
-            FontSize="28"
-            FontAttributes="Bold"
-            TextColor="Black"
-            Grid.Row="0"
-            Margin="0,0,0,15" />
+  <Grid RowDefinitions="Auto,*,Auto" Padding="20" RowSpacing="16">
+    <VerticalStackLayout Grid.Row="0" Spacing="8">
+      <Label Text="Starters"
+             Style="{StaticResource BrandSubTitle}" />
+
+      <Label Text="Open lighter dishes and appetisers to set up the order."
+             Style="{StaticResource BrandBodyText}" />
+
+      <Label Text="{Binding ErrorMessage}"
+             IsVisible="{Binding HasError}"
+             Style="{StaticResource BrandErrorText}"
+             Margin="0,6,0,0" />
+    </VerticalStackLayout>
 
     <views:MenuItemView
             Grid.Row="1"
             Items="{Binding MenuItems}" />
-    
-      <Label Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="Red" Margin="0,50,0,10" />
 
     <views:OrderSummaryBar Grid.Row="2" />
   </Grid>

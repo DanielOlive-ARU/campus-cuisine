@@ -154,7 +154,13 @@
     </Style>
 
     <Style TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <!--
+          Force BrandInk instead of the template's AppThemeBinding.
+          The app's page background is also forced (see Page style),
+          so a dark-mode-aware Label text colour would render White on
+          the forced-white page and be invisible.
+        -->
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
