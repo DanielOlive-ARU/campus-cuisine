@@ -162,10 +162,8 @@ Implementation note:
 - otherwise use `float` and keep rounding behaviour consistent in responses and tests
 
 ### `models/order.py`
-Define MVP `OrderStatus` values:
+Define implemented `OrderStatus` values:
 - `confirmed`
-
-Future extension only:
 - `cancelled`
 
 Define `Order` table model:
@@ -215,6 +213,7 @@ Create:
 Create:
 - `OrderItemCreate`
 - `CreateOrderRequest`
+- `OrderStatusUpdate`
 - `OrderLineRead`
 - `OrderRead`
 - `OrderConfirmation`
@@ -227,6 +226,10 @@ Create:
 `CreateOrderRequest`:
 - `items: list[OrderItemCreate]`
 - validator: list must not be empty
+
+`OrderStatusUpdate`:
+- `status: OrderStatus`
+- used by the protected admin status endpoint
 
 `OrderLineRead`:
 - `menu_item_id`

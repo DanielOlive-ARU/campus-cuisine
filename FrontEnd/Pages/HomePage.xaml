@@ -6,55 +6,266 @@
     Title="Home"
     BackgroundColor="White">
 
+  <ContentPage.Resources>
+    <!--
+      Colour tokens and chrome styles come from Resources/Styles/
+      (Brand* palette and BrandCard/BrandStatCard/BrandTag). The
+      resources below are the only things genuinely unique to this
+      page: the subtle multi-stop page gradient, and the three
+      dessert-palette accents used by the Today's indulgence card so
+      it visually rhymes with the DessertsPage it navigates to.
+    -->
+    <Color x:Key="HomeDessertRose">#F6D9E5</Color>
+    <Color x:Key="HomeDessertBerry">#B64B78</Color>
+    <Color x:Key="HomeDessertInk">#3E2130</Color>
+
+    <LinearGradientBrush x:Key="HomePageBrush" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Color="#FFFDF8" Offset="0.0" />
+      <GradientStop Color="#FFF7EF" Offset="0.5" />
+      <GradientStop Color="#F9EFE4" Offset="1.0" />
+    </LinearGradientBrush>
+  </ContentPage.Resources>
+
   <ScrollView>
-    <VerticalStackLayout Padding="20" Spacing="20">
+    <VerticalStackLayout Padding="20" Spacing="20" Background="{StaticResource HomePageBrush}">
 
-      <Border
-        Stroke="Black"
-        StrokeShape="0"
-        Padding="20">
+      <Border Style="{StaticResource BrandCard}"
+              Stroke="{StaticResource BrandAccent}"
+              BackgroundColor="{StaticResource BrandPanel}">
 
-        <VerticalStackLayout Spacing="15">
+        <VerticalStackLayout Spacing="16">
           <Label
-            Text="Welcome to Campus Cuisine"
-            FontSize="28"
-            TextColor="Black"
-            FontAttributes="Bold"
-            HorizontalOptions="Center" />
-
-          <BoxView HeightRequest="1" BackgroundColor="Black" />
+              Text="Campus Cuisine"
+              FontSize="34"
+              TextColor="{StaticResource BrandInk}"
+              FontAttributes="Bold" />
 
           <Label
-            Text="Welcome to Campus Cuisine. Use the flyout navigation to browse Starters, Mains, and Desserts."
-            FontSize="16" />
+              Text="Order across Starters, Mains, and Desserts from one shared basket, then review everything before checkout."
+              FontSize="16"
+              TextColor="{StaticResource BrandInk}" />
 
+          <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Start">
+            <Border Style="{StaticResource BrandTag}">
+              <Label Text="Campus menu" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
+            </Border>
+
+            <Border Style="{StaticResource BrandTag}">
+              <Label Text="Made to order" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
+            </Border>
+          </FlexLayout>
         </VerticalStackLayout>
       </Border>
 
-      <!-- Current order status -->
-      <Border Stroke="LightGray" Padding="12">
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <VerticalStackLayout>
-            <Label Text="Current Order" FontAttributes="Bold" TextColor="Black" />
-            <Label Text="{Binding TotalItemsText}" TextColor="Black" />
-            <Label Text="{Binding GrandTotalText}" TextColor="Black" />
-          </VerticalStackLayout>
+      <Border IsVisible="{Binding FeaturedIsVisible}"
+              Style="{StaticResource BrandCard}"
+              BackgroundColor="{StaticResource BrandAccentSoft}"
+              Stroke="{StaticResource BrandAccent}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="Today's pick"
+                 FontAttributes="Bold"
+                 FontSize="22"
+                 TextColor="{StaticResource BrandInk}" />
 
-          <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="8">
+          <Grid ColumnDefinitions="Auto,*"
+                ColumnSpacing="14"
+                RowDefinitions="Auto,Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.RowSpan="3"
+                   Source="{Binding FeaturedImageUrl}"
+                   WidthRequest="96"
+                   HeightRequest="96"
+                   Aspect="AspectFill" />
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedName}"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="{StaticResource BrandInk}" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedDescription}"
+                   FontSize="13"
+                   TextColor="{StaticResource BrandInk}" />
+
+            <Label Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedPriceText}"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="{StaticResource BrandAccent}" />
+          </Grid>
+
+          <Button Text="View in Mains"
+                  Clicked="OnQuickNavigateClicked"
+                  CommandParameter="//MainsPage" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border IsVisible="{Binding IndulgenceIsVisible}"
+              Style="{StaticResource BrandCard}"
+              BackgroundColor="{StaticResource HomeDessertRose}"
+              Stroke="{StaticResource HomeDessertBerry}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="Today's indulgence"
+                 FontAttributes="Bold"
+                 FontSize="22"
+                 TextColor="{StaticResource HomeDessertInk}" />
+
+          <Grid ColumnDefinitions="Auto,*"
+                ColumnSpacing="14"
+                RowDefinitions="Auto,Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.RowSpan="3"
+                   Source="{Binding IndulgenceImageUrl}"
+                   WidthRequest="96"
+                   HeightRequest="96"
+                   Aspect="AspectFill" />
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding IndulgenceName}"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="{StaticResource HomeDessertInk}" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding IndulgenceDescription}"
+                   FontSize="13"
+                   TextColor="{StaticResource HomeDessertInk}" />
+
+            <Label Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding IndulgencePriceText}"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="{StaticResource HomeDessertBerry}" />
+          </Grid>
+
+          <Button Text="View in Desserts"
+                  Clicked="OnQuickNavigateClicked"
+                  CommandParameter="//DessertsPage" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Style="{StaticResource BrandCard}">
+        <VerticalStackLayout Spacing="16">
+          <Label
+              Text="Current Order"
+              FontAttributes="Bold"
+              FontSize="22"
+              TextColor="{StaticResource BrandInk}" />
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Border Grid.Column="0" Style="{StaticResource BrandStatCard}">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Items"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource BrandInkMuted}" />
+                <Label Text="{Binding TotalItemsText}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource BrandStatCard}">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Grand total"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource BrandInkMuted}" />
+                <Label Text="{Binding GrandTotalText}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+            </Border>
+          </Grid>
+
+          <Label
+              Text="Start a fresh basket or continue with the order already in progress."
+              TextColor="{StaticResource BrandInk}" />
+
+          <VerticalStackLayout Spacing="10">
             <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
             <Button Text="Continue Current Order"
                     Clicked="OnContinueOrderClicked"
                     IsVisible="{Binding HasOrder}"
                     IsEnabled="{Binding HasOrder}" />
           </VerticalStackLayout>
-        </Grid>
+        </VerticalStackLayout>
       </Border>
 
-      <VerticalStackLayout Spacing="12" Padding="20">
-        <!-- Secondary actions if needed -->
-        <Label Text="Quick access:" FontAttributes="Bold" />
-      </VerticalStackLayout>
+      <Border Style="{StaticResource BrandCard}">
+        <VerticalStackLayout Spacing="14">
+          <Label
+              Text="Quick access"
+              FontAttributes="Bold"
+              FontSize="22"
+              TextColor="{StaticResource BrandInk}" />
 
+          <Border Style="{StaticResource BrandStatCard}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Browse Starters" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Open lighter dishes and appetisers first." TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+              <Button Grid.Column="1"
+                      Text="Open"
+                      Clicked="OnQuickNavigateClicked"
+                      CommandParameter="//StartersPage"
+                      VerticalOptions="Center" />
+            </Grid>
+          </Border>
+
+          <Border Style="{StaticResource BrandStatCard}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Browse Mains" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Jump straight to main dishes and build the core of the order." TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+              <Button Grid.Column="1"
+                      Text="Open"
+                      Clicked="OnQuickNavigateClicked"
+                      CommandParameter="//MainsPage"
+                      VerticalOptions="Center" />
+            </Grid>
+          </Border>
+
+          <Border Style="{StaticResource BrandStatCard}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Browse Desserts" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Finish the basket with something sweet from the themed dessert page." TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+              <Button Grid.Column="1"
+                      Text="Open"
+                      Clicked="OnQuickNavigateClicked"
+                      CommandParameter="//DessertsPage"
+                      VerticalOptions="Center" />
+            </Grid>
+          </Border>
+
+          <Border Style="{StaticResource BrandStatCard}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+              <VerticalStackLayout Spacing="4">
+                <Label Text="Need help?" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Open the Help page for ordering guidance and recovery steps." TextColor="{StaticResource BrandInk}" />
+              </VerticalStackLayout>
+              <Button Grid.Column="1"
+                      Text="Help"
+                      Clicked="OnQuickNavigateClicked"
+                      CommandParameter="//HelpPage"
+                      VerticalOptions="Center" />
+            </Grid>
+          </Border>
+        </VerticalStackLayout>
+      </Border>
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

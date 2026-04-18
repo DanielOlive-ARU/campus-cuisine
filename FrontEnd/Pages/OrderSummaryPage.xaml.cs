@@ -7,7 +7,7 @@ namespace CampusCuisine.Pages;
 
 public partial class OrderSummaryPage : ContentPage
 {
-  private readonly OrderState _orderState;
+  private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
   private bool _isPlacingOrder;
 
@@ -20,7 +20,7 @@ public partial class OrderSummaryPage : ContentPage
   public OrderSummaryPage()
   {
     InitializeComponent();
-    _orderState = App.Services.GetRequiredService<OrderState>();
+    _orderState = App.Services.GetRequiredService<IOrderStateService>();
     _api = App.Services.GetRequiredService<IApiService>();
     BindingContext = this;
     SetPlaceOrderBusy(false);
@@ -186,7 +186,7 @@ public partial class OrderSummaryPage : ContentPage
       _orderState.Clear();
   }
 
-  private async void OnPlaceOrderClicked(object sender, EventArgs e)
+  private async void OnPlaceOrderClicked(object? sender, EventArgs e)
   {
     if (_isPlacingOrder)
       return;
@@ -198,6 +198,15 @@ public partial class OrderSummaryPage : ContentPage
     }
 
     var request = _orderState.ToCreateOrderRequest();
+
+    if (PlaceOrderButton is not null)
+    {
+      // Short press-feedback animation before the network call so the user
+      // sees the button acknowledge the tap.
+      await PlaceOrderButton.ScaleToAsync(0.96, 80);
+      await PlaceOrderButton.ScaleToAsync(1.0, 80);
+    }
+
     SetPlaceOrderBusy(true);
 
     try
@@ -209,7 +218,26 @@ public partial class OrderSummaryPage : ContentPage
         return;
       }
 
-      await DisplayAlertAsync("Order Confirmed", $"Order ID: {confirmation.Id}\nTotal items: {confirmation.TotalItems}\nTotal: £{confirmation.GrandTotal:F2}", "OK");
+      var confirmationLines = new List<string>
+      {
+        $"Order ID: {confirmation.Id}"
+      };
+
+      if (!string.IsNullOrWhiteSpace(confirmation.Status))
+      {
+        confirmationLines.Add($"Status: {confirmation.Status}");
+      }
+
+      confirmationLines.Add($"Total items: {confirmation.TotalItems}");
+      confirmationLines.Add($"Total: £{confirmation.GrandTotal:F2}");
+
+      if (confirmation.EstimatedPrepMinutes.HasValue)
+      {
+        confirmationLines.Add(
+          $"Estimated preparation time: about {confirmation.EstimatedPrepMinutes.Value} minutes");
+      }
+
+      await DisplayAlertAsync("Order Confirmed", string.Join('\n', confirmationLines), "OK");
       _orderState.Clear();
       await Shell.Current.GoToAsync("..");
     }

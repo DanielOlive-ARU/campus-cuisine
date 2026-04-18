@@ -20,12 +20,25 @@ namespace CampusCuisine
 
       var apiBaseUrl = GetApiBaseUrl();
 
-      builder.Services.AddHttpClient<IApiService, ApiService>(client =>
+      // Register the raw ApiService (HTTP client) as its concrete type so
+      // the CachedApiService decorator can resolve it, then expose
+      // IApiService as the decorated version. Every consumer transparently
+      // receives the offline-fallback behaviour without knowing about it,
+      // and the decorator stays platform-neutral (lives in
+      // CampusCuisine.Core and is covered by unit tests).
+      builder.Services.AddHttpClient<ApiService>(client =>
       {
         client.BaseAddress = new Uri(apiBaseUrl);
       });
 
+      builder.Services.AddSingleton<IMenuCache, PreferencesMenuCache>();
+
+      builder.Services.AddTransient<IApiService>(sp => new CachedApiService(
+        sp.GetRequiredService<ApiService>(),
+        sp.GetRequiredService<IMenuCache>()));
+
       builder.Services.AddSingleton<OrderState>();
+      builder.Services.AddSingleton<IOrderStateService>(sp => sp.GetRequiredService<OrderState>());
 
 #if DEBUG
       builder.Logging.AddDebug();

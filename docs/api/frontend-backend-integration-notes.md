@@ -118,7 +118,8 @@ Optional:
   "status": "confirmed",
   "total_items": 3,
   "grand_total": 21.97,
-  "message": "Order placed successfully"
+  "message": "Order placed successfully",
+  "estimated_prep_minutes": 15
 }
 ```
 
@@ -166,6 +167,7 @@ POST /api/orders
 - `total_items`
 - `grand_total`
 - `message`
+- `estimated_prep_minutes`
 
 6. if full order detail is needed after checkout, call:
 
@@ -176,6 +178,7 @@ GET /api/orders/{order_id}
 Important:
 - frontend totals are display-only until checkout
 - backend totals are the final truth
+- the prep-time estimate is confirmation-only in this slice and is not currently returned by `GET /api/orders/{order_id}`
 
 ## 6. Error handling expectations
 
@@ -222,4 +225,3 @@ The frontend still needs:
 4. Confirm `GET /api/menu?category=main` returns menu items
 5. Confirm a browser can load one image URL if image assets have been added
 6. Wire one MAUI page to live backend data before refactoring all pages
-

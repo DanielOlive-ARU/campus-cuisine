@@ -135,6 +135,9 @@ public class OrderConfirmationDto
 
   [JsonPropertyName("message")]
   public string Message { get; set; } = string.Empty;
+
+  [JsonPropertyName("estimated_prep_minutes")]
+  public int? EstimatedPrepMinutes { get; set; }
 }
 
 public class OrderReadDto

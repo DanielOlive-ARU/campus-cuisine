@@ -22,6 +22,9 @@ If menu items are unavailable or if the backend cannot be reached, the app shoul
 
 ## Future Development
 
+Recently delivered optional enhancement:
+- Order confirmation now includes a lightweight server-calculated preparation estimate. It is intentionally confirmation-only and does not yet model live kitchen progress or historical order retrieval.
+
 ### High Priority Extensions
 - Order history page
 - Reorder from previous order
@@ -32,7 +35,6 @@ If menu items are unavailable or if the backend cannot be reached, the app shoul
 ### Medium Priority Extensions
 - User accounts and profiles
 - Role-based admin UI
-- Estimated preparation time
 - In-app notifications
 
 ### Long-Term Extensions
@@ -40,6 +42,7 @@ If menu items are unavailable or if the backend cannot be reached, the app shoul
 - Real-time kitchen/preparation workflow
 - Analytics dashboard for popular items and conversion rates
 - Multi-branch restaurant support
+- Staged GitHub Actions pipeline that runs tests first and then builds Windows and Android assessment artifacts
 
 ## Reflection Prompts for Final Report
 - Which design decisions reduced risk the most?

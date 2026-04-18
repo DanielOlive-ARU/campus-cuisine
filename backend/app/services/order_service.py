@@ -9,7 +9,14 @@ from app.models import MenuItem, Order, OrderLine, OrderStatus
 from app.schemas import CreateOrderRequest
 
 
-def create_order(session: Session, payload: CreateOrderRequest) -> Order:
+def estimate_prep_minutes(total_items: int, distinct_lines: int) -> int:
+    """Estimate preparation time from basket size and distinct dish count."""
+
+    estimate = 8 + (2 * total_items) + (distinct_lines - 1)
+    return min(35, max(10, estimate))
+
+
+def create_order(session: Session, payload: CreateOrderRequest) -> tuple[Order, int]:
     """Create an order and its snapshot line items."""
 
     requested_item_ids = [item.menu_item_id for item in payload.items]
@@ -45,6 +52,7 @@ def create_order(session: Session, payload: CreateOrderRequest) -> Order:
     order_lines: list[OrderLine] = []
     total_items = 0
     grand_total = 0.0
+    distinct_lines = len(set(requested_item_ids))
 
     for requested_item in payload.items:
         menu_item = menu_items[requested_item.menu_item_id]
@@ -67,6 +75,7 @@ def create_order(session: Session, payload: CreateOrderRequest) -> Order:
         total_items=total_items,
         grand_total=grand_total,
     )
+    estimated_prep_minutes = estimate_prep_minutes(total_items, distinct_lines)
     session.add(order)
     session.flush()
 
@@ -76,7 +85,7 @@ def create_order(session: Session, payload: CreateOrderRequest) -> Order:
 
     session.commit()
     session.refresh(order)
-    return order
+    return order, estimated_prep_minutes
 
 
 def get_order_with_lines(session: Session, order_id: int) -> tuple[Order, list[OrderLine]]:
@@ -97,3 +106,32 @@ def get_order_with_lines(session: Session, order_id: int) -> tuple[Order, list[O
         ).all()
     )
     return order, lines
+
+
+def update_order_status(session: Session, order_id: int, new_status: OrderStatus) -> Order:
+    """Update one order status using the allowed minimal transition set."""
+
+    order = session.get(Order, order_id)
+    if order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Order not found",
+        )
+
+    if order.status == new_status.value:
+        return order
+
+    if (
+        order.status == OrderStatus.CONFIRMED.value
+        and new_status == OrderStatus.CANCELLED
+    ):
+        order.status = new_status.value
+        session.add(order)
+        session.commit()
+        session.refresh(order)
+        return order
+
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Transition from current status is not allowed",
+    )

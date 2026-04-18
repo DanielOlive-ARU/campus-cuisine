@@ -10,8 +10,7 @@
     <VerticalStackLayout Padding="20" Spacing="16">
 
       <Label Text="Order Summary"
-             FontSize="24"
-             FontAttributes="Bold" />
+             Style="{StaticResource BrandSubTitle}" />
 
       <CollectionView x:Name="SummaryCollection"
                       ItemsSource="{Binding Lines}">

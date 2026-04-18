@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="Campus Cuisine.csproj" />
+  <Project Path="..\CampusCuisine.Core\CampusCuisine.Core.csproj" />
+  <Project Path="..\CampusCuisine.Tests\CampusCuisine.Tests.csproj" />
 </Solution>

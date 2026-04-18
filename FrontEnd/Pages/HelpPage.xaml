@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CampusCuisine.Pages.HelpPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Help"
+    BackgroundColor="White">
+
+  <ContentPage.Resources>
+    <!--
+      Help-specific styles inherit shape/padding/typography from the
+      shared Brand* styles in Resources/Styles/ and only override the
+      things that are genuinely Help-specific (card corner radius is
+      smaller here to signal a denser "reference" layout).
+    -->
+    <Style x:Key="HelpCard" TargetType="Border" BasedOn="{StaticResource BrandCard}">
+      <Setter Property="BackgroundColor" Value="{StaticResource BrandCream}" />
+      <Setter Property="Stroke" Value="{StaticResource BrandBorder}" />
+      <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+    </Style>
+
+    <Style x:Key="HelpSectionTitle" TargetType="Label">
+      <Setter Property="FontAttributes" Value="Bold" />
+      <Setter Property="FontSize" Value="20" />
+      <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style x:Key="HelpBodyText" TargetType="Label">
+      <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+      <Setter Property="LineBreakMode" Value="WordWrap" />
+    </Style>
+  </ContentPage.Resources>
+
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="18">
+
+      <Border
+          Padding="24"
+          Stroke="{StaticResource BrandAccent}"
+          BackgroundColor="{StaticResource BrandAccentSoft}"
+          StrokeShape="RoundRectangle 20">
+        <VerticalStackLayout Spacing="12">
+          <Label
+              Text="Help and Ordering Guide"
+              FontSize="32"
+              FontAttributes="Bold"
+              TextColor="{StaticResource BrandInk}"
+              HorizontalOptions="Center"
+              HorizontalTextAlignment="Center" />
+
+          <Label
+              Text="Use this page if you need a quick reminder of how ordering works in Campus Cuisine. The app is designed for quick guest ordering, and your order stays with you while you move between pages."
+              TextColor="{StaticResource BrandInk}"
+              FontSize="16"
+              HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Padding="18" Style="{StaticResource HelpCard}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Getting Started" Style="{StaticResource HelpSectionTitle}" />
+          <Label Text="Start a new order from the Home page if you want to clear the current basket first." Style="{StaticResource HelpBodyText}" />
+          <Label Text="Use Continue Current Order when items already exist and you want to keep editing the same order." Style="{StaticResource HelpBodyText}" />
+          <Label Text="The flyout menu lets you move between Home, Starters, Mains, Desserts, Order Summary, and Help at any time." Style="{StaticResource HelpBodyText}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Padding="18" Style="{StaticResource HelpCard}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Browsing the Menu" Style="{StaticResource HelpSectionTitle}" />
+          <Label Text="Browse Starters, Mains, and Desserts from the flyout." Style="{StaticResource HelpBodyText}" />
+          <Label Text="Use the add and quantity controls on each menu card to build your order." Style="{StaticResource HelpBodyText}" />
+          <Label Text="The summary bar at the bottom of category pages shows the current item count and total price." Style="{StaticResource HelpBodyText}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Padding="18" Style="{StaticResource HelpCard}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Editing an Order" Style="{StaticResource HelpSectionTitle}" />
+          <Label Text="Open Order Summary from the flyout or from the summary bar on a category page." Style="{StaticResource HelpBodyText}" />
+          <Label Text="You can increase, decrease, remove, or directly edit quantities before placing the order." Style="{StaticResource HelpBodyText}" />
+          <Label Text="Removing an item or clearing the whole order asks for confirmation so accidental taps do not lose your work." Style="{StaticResource HelpBodyText}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Padding="18" Style="{StaticResource HelpCard}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="If Something Goes Wrong" Style="{StaticResource HelpSectionTitle}" />
+          <Label Text="If the menu cannot load, the app shows a message instead of failing silently." Style="{StaticResource HelpBodyText}" />
+          <Label Text="If the backend is unavailable while placing an order, review the message shown on screen and try again once the service is reachable." Style="{StaticResource HelpBodyText}" />
+          <Label Text="If you want to restart cleanly, return to Home and choose Start New Order." Style="{StaticResource HelpBodyText}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Padding="18" Style="{StaticResource HelpCard}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Accessibility and Good Use" Style="{StaticResource HelpSectionTitle}" />
+          <Label Text="Campus Cuisine is designed to keep totals visible, use readable text, and confirm destructive actions." Style="{StaticResource HelpBodyText}" />
+          <Label Text="Review item quantities and grand total before placing an order so the submitted basket matches what you expect." Style="{StaticResource HelpBodyText}" />
+          <Label Text="Tip: if you are comparing dishes, keep the flyout open for fast movement between categories without losing your order." Style="{StaticResource HelpBodyText}" />
+        </VerticalStackLayout>
+      </Border>
+
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

@@ -91,6 +91,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Labels:** frontend, must, architecture
 **Owner:** Adam
 **Description:** Refactor the currently duplicated category-page summary bar UI into a reusable `OrderSummaryBar` component.
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** the component displays item count and total, navigates to `OrderSummaryPage`, and is reused by Starters, Mains, and Desserts without breaking existing behaviour.
 
 ### Issue 17: Build Main Course page and bind to menu data
@@ -116,6 +117,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 ### Issue 21: Add styling, theme, and reusable resources
 **Labels:** frontend, should
 **Owner:** Adam
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** consistent branding and dessert page theme differences are visible.
 
 ### Issue 22: Add offline menu cache
@@ -155,10 +157,11 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Owner:** Shared
 **Done when:** screenshots are placed into docs folders for final submission.
 
-### Issue 29: Expand GitHub Actions workflows when needed
+### Issue 29: Expand GitHub Actions into a staged test-and-build pipeline
 **Labels:** testing, may
 **Owner:** Shared
-**Done when:** the existing manual backend workflow has been reviewed and any later CI expansion uses scoped triggers rather than running on every change.
+**Description:** Expand the current manual-only CI position into a staged GitHub Actions pipeline once the assessed application behaviour is substantially complete. The later target is for backend/frontend tests to run first and for passing runs to be able to build a Windows runnable artifact and Android APK through scoped workflows.
+**Done when:** backend and frontend tests run in scoped workflows, passing runs can trigger Windows and Android artifact builds, and expensive packaging steps remain manual or tag-based rather than running on every change.
 
 ### Issue 30: Final README and viva prep
 **Labels:** documentation, must
@@ -170,6 +173,7 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Owner:** Adam
 **Description:** Introduce `IOrderStateService` so pages/viewmodels can depend on an abstraction rather than the concrete `OrderState` class.
 **Reason:** Current MAUI DI registration is valid for the brief, but interface-based DI improves testability, separation of concerns, and viva defensibility.
+**Status:** Completed on `submission-hardening-and-testing`
 **Done when:** `OrderState` implements `IOrderStateService`, DI registers the interface, consumers use the abstraction where practical, and Windows build/manual order-flow regression passes.
 
 ### Issue 32: Move Order Summary quantity edit buffer into a view model
@@ -178,3 +182,17 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 **Description:** Remove the temporary `QuantityText` UI buffer from `OrderLineDto` and move editable quantity state into a dedicated order-summary or order-line view model.
 **Reason:** The current `QuantityText` buffer is a pragmatic MVP fix that keeps the quantity `Entry` in sync and prevents invalid values from mutating totals. It does not break the current solution, but a dedicated view-model layer would better align the frontend with a stricter MVVM design.
 **Done when:** editable quantity state no longer lives on `OrderLineDto`, Order Summary quantity editing still works, backend payload shape is unchanged, and Windows build/manual order-flow regression passes.
+
+### Issue 33: Add Help page to the customer app
+**Labels:** frontend, should
+**Owner:** Adam
+**Status:** Completed on `submission-hardening-and-testing`
+**Description:** Add a static Help page to the MAUI Shell flyout so the app includes an additional primary-style page with guidance on ordering and recovery flows.
+**Done when:** Help appears in the flyout, the page renders cleanly, and existing order navigation remains unaffected.
+
+### Issue 34: Add estimated preparation time to order confirmation
+**Labels:** shared, may, backend, frontend, documentation
+**Owner:** Shared
+**Status:** Completed on `submission-hardening-and-testing`
+**Description:** Return a lightweight server-calculated prep-time estimate in the `POST /api/orders` confirmation payload and show it in the frontend confirmation alert.
+**Done when:** backend confirmation includes `estimated_prep_minutes`, frontend displays it, tests pass, and docs explain that the estimate is confirmation-only in this slice.

@@ -23,11 +23,26 @@
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+        <!--
+          Mid-tone warm tan button (BrandAccentMid = #C7874D) with
+          BrandInk text. Sits between the heavier BrandAccent
+          orange-brown and the softer BrandAccentSoft cream, giving
+          buttons a distinct "warm tan pill" identity that reads
+          clearly as interactive on every surface in the app - white
+          pages, BrandCream cards, BrandAccentSoft featured card, and
+          the dessert-palette indulgence card - without competing
+          with content or vanishing into the palette.
+
+          Dark BrandInk text delivers strong contrast (~5:1 against
+          the tan fill, passes WCAG AA). No border - the filled tan
+          defines the button shape on its own. One tier only, no CTA
+          variant, no per-page markup.
+        -->
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandAccentMid}" />
+        <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="14,10"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
@@ -38,8 +53,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver" />
@@ -154,7 +169,13 @@
     </Style>
 
     <Style TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <!--
+          Force BrandInk instead of the template's AppThemeBinding.
+          The app's page background is also forced (see Page style),
+          so a dark-mode-aware Label text colour would render White on
+          the forced-white page and be invisible.
+        -->
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
@@ -402,7 +423,14 @@
 
     <Style TargetType="Page" ApplyToDerivedTypes="True">
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+        <!--
+          Force a single brand background. Campus Cuisine does not
+          currently design for dark mode, so the AppThemeBinding that
+          ships with the MAUI template was allowing the Order Summary
+          page (the only page that does not explicitly set a background)
+          to switch to the dark OffBlack on devices running dark theme.
+        -->
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandPageBackground}" />
     </Style>
 
     <Style TargetType="Shell" ApplyToDerivedTypes="True">
@@ -429,6 +457,76 @@
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
+    </Style>
+
+    <!--
+      Campus Cuisine shared typography styles. Each page consumes these
+      via {StaticResource BrandPageTitle} etc. rather than redeclaring
+      FontSize/FontAttributes/TextColor inline per-label.
+    -->
+    <Style TargetType="Label" x:Key="BrandPageTitle">
+        <Setter Property="FontSize" Value="34" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="BrandSubTitle">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="BrandSectionTitle">
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="BrandBodyText">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="BrandSecondaryText">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="BrandErrorText">
+        <Setter Property="TextColor" Value="{StaticResource BrandError}" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+    </Style>
+
+    <!--
+      Campus Cuisine shared chrome styles. BrandCard is the canonical
+      Border treatment used for primary panels on every page. Categories
+      that need a distinct theme (the Dessert page) derive from BrandCard
+      via BasedOn and override only the colours, which keeps padding,
+      corner radius, and stroke thickness consistent app-wide.
+    -->
+    <Style x:Key="BrandCard" TargetType="Border">
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandCream}" />
+        <Setter Property="Stroke" Value="{StaticResource BrandBorder}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+        <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+
+    <Style x:Key="BrandStatCard" TargetType="Border">
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandPanelAlt}" />
+        <Setter Property="Stroke" Value="{StaticResource BrandBorder}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+        <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+
+    <Style x:Key="BrandTag" TargetType="Border">
+        <Setter Property="Margin" Value="0,0,10,10" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandAccentSoft}" />
+        <Setter Property="Stroke" Value="{StaticResource BrandAccent}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="StrokeThickness" Value="1" />
     </Style>
 
 </ResourceDictionary>

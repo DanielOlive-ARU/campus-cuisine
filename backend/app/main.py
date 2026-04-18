@@ -12,6 +12,7 @@ from app.db.engine import get_engine
 from app.db.init_db import create_db_and_tables
 from app.db.seed import seed_menu_items
 from app.routers.admin_menu import router as admin_menu_router
+from app.routers.admin_orders import router as admin_orders_router
 from app.routers.health import router as health_router
 from app.routers.menu import router as menu_router
 from app.routers.orders import router as orders_router
@@ -57,6 +58,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(menu_router)
     app.include_router(admin_menu_router)
+    app.include_router(admin_orders_router)
     app.include_router(orders_router)
 
     return app

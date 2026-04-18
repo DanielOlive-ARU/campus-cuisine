@@ -116,43 +116,130 @@ This backlog is structured so that all **MUST** requirements are completed befor
 - Tests pass locally
 - Both students can explain their code and design decisions confidently
 
+## Delivered SHOULD/MAY Enhancements
+
+### Completed: add Help page and frontend presentation polish
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Adam
+**Outcome:** The app now includes a Help page in the Shell flyout, a more polished Home page, and a visually distinct Desserts page theme that improves perceived completeness without reopening the core order flow.
+
+**Delivered scope:**
+1. Added a Help page with ordering guidance, recovery steps, and safe-use reminders.
+2. Added a real flyout navigation entry for Help.
+3. Polished the Home page with a stronger hero, current-order stat cards, and quick navigation actions.
+4. Added a meaningful dessert-specific visual theme while keeping category-page behaviour unchanged.
+5. Re-ran Windows build, frontend tests, and manual navigation/order-flow regression checks.
+
+### Completed: add estimated preparation time to order confirmation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Order confirmation now includes a lightweight server-calculated preparation estimate that is returned by `POST /api/orders` and displayed in the frontend confirmation alert.
+
+**Delivered scope:**
+1. Added a backend prep-time helper and confirmation response field.
+2. Kept the estimate confirmation-only and out of the persisted order model for now.
+3. Updated backend and frontend tests to cover the new response field.
+4. Updated the frontend confirmation alert to display the estimate when present.
+5. Re-ran backend validation, Windows build, and frontend tests.
+
+### Completed: add admin order status update endpoint
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Dan
+**Outcome:** Order status tracking is now demonstrably complete. An admin-protected `PATCH /api/admin/orders/{order_id}/status` endpoint allows `confirmed → cancelled` transitions; same-status updates are idempotent; reverse transitions return 400. Closes the MUST for order status tracking with a proper API surface.
+
+**Delivered scope:**
+1. Added `routers/admin_orders.py` mirroring the `admin_menu.py` pattern (router-level admin API key dependency).
+2. Added `OrderStatusUpdate` request schema and `update_order_status` service helper (pure primitives, single-responsibility).
+3. Added six API-level tests (unauthorised, cancel happy path, GET-after-cancel, invalid-reverse, 404, idempotent same-status) plus four service-level unit tests.
+4. Updated `api-contract.md`, `backend-status.md`, and `requirements-mapping.md` to document the new endpoint and its intentional confirmation-only asymmetry with `GET /api/orders/{id}`.
+
+### Completed: brand vocabulary and consistent styling
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** A shared `Brand*` design vocabulary - colour tokens, chrome styles, typography styles - now lives in `Resources/Styles/` and is consumed by every page. The dark-mode OrderSummary background leak is fixed at the Page style level and the app is explicitly pinned to Light theme so every MAUI template control resolves consistently. Mains, Starters, Order Summary, and Help gained matching page chrome. The Dessert page retains its sanctioned distinct palette expressed as `BrandCard`/`BrandTag` overrides via `BasedOn`, preserving structure and only overriding colour.
+
+**Delivered scope:**
+1. Promoted the HomePage palette into shared `Brand*` tokens and default Page background.
+2. Replaced the Shell's AppThemeBinding leak by pinning `UserAppTheme = AppTheme.Light` and overriding the default Label text colour to `BrandInk`.
+3. Migrated `HomePage` and `DessertsPage` to consume the shared vocabulary; dessert styles extend `Brand*` via `BasedOn`.
+4. Added consistent chrome (brand sub-title, body text, error style) to Mains, Starters, Order Summary, and Help; removed the stock MAUI template purple/blue references from Help.
+5. Adapted `Shell.ForegroundColor` and `Shell.TitleColor` on app start to the device `PlatformAppTheme`, so the OS title-bar hamburger and page title remain readable on dark-mode devices without un-pinning the app.
+6. Restyled the default Button as a warm-tan `BrandAccentMid` fill with dark text; added the `BrandAccentMid` token.
+7. Hid the Shell NavBar on Windows only (via `OnPlatform`) so pages render a single branded title; kept NavBar visible on Android so the flyout hamburger stays accessible.
+8. Trimmed each hero card to two menu-prose tag chips (Home: `Campus menu` / `Made to order`; Desserts: `Sweet finish` / `Rich flavours`).
+
+### Completed: featured cards on Home
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Adam
+**Outcome:** Home now surfaces menu variety through two featured cards, reducing the need to navigate into category pages to see what's available.
+
+**Delivered scope:**
+1. Added "Today's pick" card showing a random main course fetched from the backend menu API.
+2. Added "Today's indulgence" card showing a random dessert, styled in the Dessert palette so it visually rhymes with the DessertsPage it navigates to.
+3. Implemented a shared pattern: per-session list cache with per-visit random pick re-roll - the cache holds the list, not the chosen item, so randomness is preserved without repeated network calls.
+4. Silent graceful degradation - the cards stay hidden if the backend is unreachable or the category is empty.
+
+### Completed: order status display in confirmation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** The order confirmation alert on Order Summary now includes the backend-returned `Status` field, closing the SHOULD for displaying order status updates to the user.
+
+**Delivered scope:**
+1. Extended the confirmation alert text to show the status line between Order ID and totals.
+2. Guarded against empty status so older or misconfigured backends do not surface a blank line.
+
+### Completed: Place Order button press animation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Closes the SHOULD for animations / transitions / custom alerts. A short scale-down / scale-up animation on Place Order gives tactile click feedback before the network call, via MAUI's `ScaleToAsync` extension.
+
+### Completed: order-state singleton persistence tests
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Three xUnit tests in `CampusCuisine.Tests/Services/OrderStatePersistenceTests.cs` pin down the DI singleton contract - resolving `IOrderStateService` twice returns the same instance, and mutations are visible after a fresh resolution. Stands in for the manual navigation-persistence regression previously referenced under `TEST-03`.
+
+### Completed: offline menu browsing (SHOULD)
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Closes the last outstanding SHOULD. Menu category responses are transparently cached on every successful fetch and silently re-used when the backend is unreachable, so Starters, Mains, and Desserts render real menu content even on a dropped connection provided at least one successful fetch has happened during the app's lifetime.
+
+**Delivered scope:**
+1. Added `IMenuCache` interface in `CampusCuisine.Core/Services/` - single-responsibility: get/save a per-category list.
+2. Added `CachedApiService` decorator in `CampusCuisine.Core/Services/` that wraps `IApiService`; successful `GetMenuByCategoryAsync` persists the list, failed calls fall back to the cached list if one exists or re-throw if not.
+3. Added `PreferencesMenuCache` in the MAUI project, backed by `Microsoft.Maui.Storage.Preferences` with JSON-serialised per-category keys.
+4. Wired DI in `MauiProgram.cs` using the decorator pattern: the raw `ApiService` is registered as its concrete type, `IApiService` resolves to `CachedApiService` wrapping it. No page or view-model changes.
+5. Added `CachedApiServiceTests` with five unit tests (happy-path caches, failure-with-cache returns cached, failure-without-cache re-throws, successful fetch overwrites stale cache, `GetMenuItemAsync` passes through without caching).
+6. Fallback is deliberately silent - no "offline" banner - so the user experience is indistinguishable from online when cached data is available.
+7. `GetMenuItemAsync` and `PostOrderAsync` pass through unchanged; order placement and single-item lookup still require the backend (the server is the price authority).
+
 ## Technical Debt / Hardening Backlog
 
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.
 
-### Introduce `IOrderStateService`
-**Priority:** Planned pre-submission hardening after MVP stability
+### Completed: introduce `IOrderStateService`
+**Status:** Completed on `submission-hardening-and-testing`
 **Owner:** Adam
-**Reason:** The frontend currently registers and resolves the concrete `OrderState` singleton through MAUI DI. This satisfies the dependency injection requirement, but an `IOrderStateService` abstraction would make the design cleaner, easier to test, and easier to defend as formal dependency injection.
+**Outcome:** The frontend now uses `IOrderStateService` over the shared `OrderState` singleton, improving DI clarity without changing runtime behaviour.
 
-**Scope:**
-1. Add `IOrderStateService`.
-2. Make `OrderState` implement `IOrderStateService`.
-3. Register `builder.Services.AddSingleton<IOrderStateService, OrderState>();`.
-4. Update consumers to depend on `IOrderStateService` where practical.
-5. Run full Windows build and order-flow regression tests.
+**Delivered scope:**
+1. Added `IOrderStateService`.
+2. Made `OrderState` implement `IOrderStateService`.
+3. Registered `IOrderStateService` to resolve the same underlying `OrderState` singleton instance.
+4. Updated frontend consumers to depend on `IOrderStateService` where practical.
+5. Added notification-contract tests for aggregate `PropertyChanged` updates.
+6. Re-ran Windows build, core build, frontend tests, and manual order-flow regression checks.
 
-**Do not start until:**
-1. MVP order flow is stable.
-2. Shell navigation fix is validated.
-3. Order Summary editing is stable.
-
-### Refactor category summary bars into reusable `OrderSummaryBar`
-**Priority:** Planned pre-submission hardening after MVP stability
+### Completed: refactor category summary bars into reusable `OrderSummaryBar`
+**Status:** Completed on `submission-hardening-and-testing`
 **Owner:** Adam
-**Reason:** The application already implements summary-bar behaviour on category pages, but the current implementation duplicates the UI across pages. Refactoring this into a reusable `OrderSummaryBar` would better satisfy the reusable UI component requirement and produce a cleaner frontend architecture for submission.
+**Outcome:** Category-page summary bar duplication has been removed. A reusable `OrderSummaryBar` component now owns the shared totals display and navigation behaviour for Starters, Mains, and Desserts.
 
-**Scope:**
-1. Create reusable `OrderSummaryBar` component.
-2. Move current count/total/navigation behaviour out of page-specific duplicated XAML.
-3. Reuse the component on Starters, Mains, and Desserts.
-4. Re-run Windows build and manual order-flow regression tests.
-5. Update requirements and architecture documentation to reference the reusable component directly.
-
-**Do not start until:**
-1. Current MVP order flow remains stable.
-2. Home page and Order Summary behaviour are validated.
-3. Refactor can be tested before merge.
+**Delivered scope:**
+1. Created reusable `OrderSummaryBar` component.
+2. Moved count/total/navigation behaviour out of page-specific duplicated XAML.
+3. Reused the component on Starters, Mains, and Desserts.
+4. Re-ran Windows build, frontend tests, and manual order-flow regression checks.
+5. Updated requirements and architecture documentation to reference the reusable component directly.
 
 ### Move Order Summary quantity edit buffer into a view model layer
 **Priority:** SHOULD after MVP stability
@@ -170,6 +257,24 @@ These items should only be started after the MVP order flow, Shell navigation, a
 1. MVP order flow is stable.
 2. Order Summary editing and validation are stable.
 3. Frontend tests are in place or planned closely enough to protect the refactor.
+
+### Expand GitHub Actions into a staged test-and-build pipeline
+**Priority:** MAY after all MUST requirements, SHOULD requirements, and likely most MAY work are complete
+**Owner:** Shared
+**Reason:** A fuller CI/CD pipeline is a worthwhile stretch goal, but it should not compete with completing the assessed application behaviour first. The intended later state is for GitHub Actions to run the automated test suite and, only on passing runs, build assessment-ready Windows and Android artifacts.
+
+**Scope:**
+1. Keep backend and frontend automated tests as the first pipeline gate.
+2. Add scoped GitHub Actions jobs for frontend/backend validation.
+3. Build a Windows runnable artifact only after the test stage passes.
+4. Build an Android APK only after the test stage passes.
+5. Keep expensive packaging or release publication on manual or tagged workflows.
+6. Update README and CI/CD notes with the final workflow structure.
+
+**Do not start until:**
+1. Frontend and backend test projects exist and run locally.
+2. Current MUST and SHOULD application behaviour is stable on the default branch.
+3. Packaging targets for Windows and Android are agreed.
 
 ## Task Allocation Summary
 
