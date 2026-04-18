@@ -55,6 +55,7 @@
     <Color x:Key="BrandInk">#1F2430</Color>
     <Color x:Key="BrandInkMuted">#4E6330</Color>
     <Color x:Key="BrandAccent">#A7652A</Color>
+    <Color x:Key="BrandAccentMid">#C7874D</Color>
     <Color x:Key="BrandAccentSoft">#F5E0CB</Color>
     <Color x:Key="BrandCream">#FFFDF8</Color>
     <Color x:Key="BrandPanel">#FFF7EF</Color>

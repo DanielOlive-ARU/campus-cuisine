@@ -23,11 +23,26 @@
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+        <!--
+          Mid-tone warm tan button (BrandAccentMid = #C7874D) with
+          BrandInk text. Sits between the heavier BrandAccent
+          orange-brown and the softer BrandAccentSoft cream, giving
+          buttons a distinct "warm tan pill" identity that reads
+          clearly as interactive on every surface in the app - white
+          pages, BrandCream cards, BrandAccentSoft featured card, and
+          the dessert-palette indulgence card - without competing
+          with content or vanishing into the palette.
+
+          Dark BrandInk text delivers strong contrast (~5:1 against
+          the tan fill, passes WCAG AA). No border - the filled tan
+          defines the button shape on its own. One tier only, no CTA
+          variant, no per-page markup.
+        -->
+        <Setter Property="TextColor" Value="{StaticResource BrandInk}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BrandAccentMid}" />
+        <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="14,10"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
@@ -38,8 +53,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver" />
