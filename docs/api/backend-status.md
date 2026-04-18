@@ -7,7 +7,7 @@ Phase 7 implemented; Phase 1 to Phase 7 validated locally, with Phase 1 to Phase
 - Canonical backend folder structure agreed.
 - Root `docs/` is the source of truth.
 - `FrontEnd/docs/` has been removed as a duplicate documentation tree.
-- MVP order status is `confirmed`.
+- Order status now supports `confirmed` and admin-driven `cancelled`.
 - `image_url` values are relative paths.
 - Admin routes use the `x-admin-key` header.
 - GitHub Actions validation is retained as a manual workflow only.
@@ -32,3 +32,4 @@ Remove the temporary workflow workaround from the branch, then prepare the PR an
 | 2026-03-26 | 7 | Hardened workflow/script naming and aligned backend docs with the implemented API state | `backend/.venv/Scripts/python.exe -m pytest backend/tests -q`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/test-stage12.ps1`, `powershell.exe -NoProfile -ExecutionPolicy Bypass -File backend/scripts/smoke-stage12.ps1` | Backend validation naming is now generic, local artifacts use backend-wide names, and docs point to the manual validation workflow |
 | 2026-03-26 | 7 CI | GitHub Actions validated the post-Phase-7 backend in a clean environment | `pytest backend/tests -q --junitxml=backend-test-results.xml` | Workflow `backend-validation` succeeded on commit `397beaa`; 37 tests passed and artifact `backend-test-results-run-1-attempt-1` was uploaded |
 | 2026-04-17 | optional enhancement | Added server-calculated estimated preparation time to `POST /api/orders` confirmation payload | `backend/.venv/Scripts/python.exe -m pytest backend/tests -q` | Backend suite now passes with 41 tests; the estimate is confirmation-only and is not yet persisted or returned by `GET /api/orders/{order_id}` |
+| 2026-04-18 | status tracking | Added protected admin order status update endpoint for `confirmed -> cancelled` transitions | `backend/.venv/Scripts/python.exe -m pytest backend/tests -q` | Backend now exposes explicit minimal order status tracking via `/api/admin/orders/{order_id}/status`; same-status updates are idempotent, reverse transitions return 400, and the backend suite passes with 51 tests |

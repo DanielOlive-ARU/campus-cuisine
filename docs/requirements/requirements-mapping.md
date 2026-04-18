@@ -70,7 +70,7 @@ This file translates the assignment brief into implementable requirements and li
 | ORD-05 | MAY | Reorder from history | Deferred unless optional order history complete | Shared | backlog |
 | API-01 | MUST | RESTful menu retrieval | `/api/menu` endpoints returning menu data | Dan | FastAPI routers |
 | API-02 | MUST | CRUD for food items via OpenAPI webpage | Admin menu endpoints in FastAPI swagger docs | Dan | `/docs` screenshot |
-| API-03 | MUST | Order status tracking | Order entity includes status field and status endpoint | Dan | API tests |
+| API-03 | MUST | Order status tracking | Order entity includes status field and protected admin status endpoint for `confirmed -> cancelled` updates | Dan | API tests, `/api/admin/orders/{order_id}/status` |
 | API-04 | MUST | Validation and sanitisation | Pydantic schemas, value limits, string cleanup | Dan | schema code + tests |
 | API-05 | SHOULD | Role-based access for admin actions | Simple API key / bearer token for admin routes | Dan | security doc + tests |
 | API-06 | MAY | Analytics | Out of scope unless finished early | Dan | backlog |

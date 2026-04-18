@@ -106,3 +106,32 @@ def get_order_with_lines(session: Session, order_id: int) -> tuple[Order, list[O
         ).all()
     )
     return order, lines
+
+
+def update_order_status(session: Session, order_id: int, new_status: OrderStatus) -> Order:
+    """Update one order status using the allowed minimal transition set."""
+
+    order = session.get(Order, order_id)
+    if order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Order not found",
+        )
+
+    if order.status == new_status.value:
+        return order
+
+    if (
+        order.status == OrderStatus.CONFIRMED.value
+        and new_status == OrderStatus.CANCELLED
+    ):
+        order.status = new_status.value
+        session.add(order)
+        session.commit()
+        session.refresh(order)
+        return order
+
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Transition from current status is not allowed",
+    )

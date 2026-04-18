@@ -47,6 +47,12 @@ class CreateOrderRequest(OrderRequestBase):
         return self
 
 
+class OrderStatusUpdate(OrderRequestBase):
+    """Order status update request body."""
+
+    status: OrderStatus
+
+
 class OrderLineRead(OrderSchemaBase):
     """Order line response schema."""
 

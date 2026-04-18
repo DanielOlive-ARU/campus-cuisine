@@ -93,7 +93,8 @@ Creates a new order.
   "status": "confirmed",
   "total_items": 3,
   "grand_total": 21.97,
-  "message": "Order placed successfully"
+  "message": "Order placed successfully",
+  "estimated_prep_minutes": 15
 }
 ```
 
@@ -154,6 +155,41 @@ Updates a menu item.
 ### DELETE /api/admin/menu-items/{item_id}
 Deletes a menu item.
 
+### PATCH /api/admin/orders/{order_id}/status
+Updates one order status through the protected admin API.
+
+#### Request Body
+```json
+{
+  "status": "cancelled"
+}
+```
+
+#### Success Response
+```json
+{
+  "id": 101,
+  "status": "cancelled",
+  "total_items": 3,
+  "grand_total": 21.97,
+  "created_at": "2026-03-23T12:00:00Z",
+  "items": [
+    {
+      "menu_item_id": 1,
+      "name": "Grilled Chicken Burger",
+      "unit_price": 8.99,
+      "quantity": 2,
+      "line_total": 17.98
+    }
+  ]
+}
+```
+
+Allowed transitions for this slice:
+- `confirmed -> cancelled`
+- same-status updates are idempotent
+- reverse transitions return `400`
+
 ## Validation Rules
 - `name`: required, trimmed, max length 100
 - `description`: required, trimmed, max length 500
@@ -165,8 +201,6 @@ Deletes a menu item.
 ## Implemented Backend Status Values
 Implemented now:
 - `confirmed`
-
-Future extension:
 - `cancelled`
 
 ## Frontend DTOs

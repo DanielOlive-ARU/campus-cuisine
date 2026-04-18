@@ -168,7 +168,7 @@ Represents a placed customer order.
 | Field | Type | Notes |
 |---|---|---|
 | id | int | primary key |
-| status | str/enum | MVP value is `confirmed` |
+| status | str/enum | implemented values are `confirmed` and `cancelled` |
 | created_at | datetime | generated server-side |
 | total_items | int | calculated server-side |
 | grand_total | decimal/float | calculated server-side |
@@ -187,7 +187,7 @@ Represents one menu item within an order.
 | line_total | decimal/float | calculated server-side |
 
 ### Status Note
-The MVP only implements `confirmed` when an order is created. `cancelled` can be added later if a cancel endpoint is introduced.
+Orders are created as `confirmed`. Admins can update an order to `cancelled` through the protected status endpoint. Same-status updates are idempotent and reverse transitions are rejected.
 
 ### Why snapshot fields matter
 Order lines should keep a copy of the item name and price at the time the order was placed. That prevents historic orders changing when the menu is edited later.
@@ -209,6 +209,14 @@ Example response:
 - `GET /api/menu/{item_id}`
 - `POST /api/orders`
 - `GET /api/orders/{order_id}`
+
+### Protected Admin Endpoints
+- `GET /api/admin/menu-items`
+- `GET /api/admin/menu-items/{item_id}`
+- `POST /api/admin/menu-items`
+- `PUT /api/admin/menu-items/{item_id}`
+- `DELETE /api/admin/menu-items/{item_id}`
+- `PATCH /api/admin/orders/{order_id}/status`
 
 ### `GET /api/menu`
 Returns available menu items by default.
