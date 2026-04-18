@@ -16,6 +16,12 @@
     <Color x:Key="HomePanelAlt">#FFF4E7</Color>
     <Color x:Key="HomeBorder">#E8D1BC</Color>
 
+    <!-- Dessert-palette accents used only by the Today's indulgence card so
+         its visual identity matches the DessertsPage it navigates to. -->
+    <Color x:Key="HomeDessertRose">#F6D9E5</Color>
+    <Color x:Key="HomeDessertBerry">#B64B78</Color>
+    <Color x:Key="HomeDessertInk">#3E2130</Color>
+
     <LinearGradientBrush x:Key="HomePageBrush" StartPoint="0,0" EndPoint="0,1">
       <GradientStop Color="#FFFDF8" Offset="0.0" />
       <GradientStop Color="#FFF7EF" Offset="0.5" />
@@ -127,6 +133,53 @@
           <Button Text="View in Mains"
                   Clicked="OnQuickNavigateClicked"
                   CommandParameter="//MainsPage" />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border IsVisible="{Binding IndulgenceIsVisible}"
+              Style="{StaticResource HomePanelCard}"
+              BackgroundColor="{StaticResource HomeDessertRose}"
+              Stroke="{StaticResource HomeDessertBerry}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="Today's indulgence"
+                 FontAttributes="Bold"
+                 FontSize="22"
+                 TextColor="{StaticResource HomeDessertInk}" />
+
+          <Grid ColumnDefinitions="Auto,*"
+                ColumnSpacing="14"
+                RowDefinitions="Auto,Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.RowSpan="3"
+                   Source="{Binding IndulgenceImageUrl}"
+                   WidthRequest="96"
+                   HeightRequest="96"
+                   Aspect="AspectFill" />
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding IndulgenceName}"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="{StaticResource HomeDessertInk}" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding IndulgenceDescription}"
+                   FontSize="13"
+                   TextColor="{StaticResource HomeDessertInk}" />
+
+            <Label Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding IndulgencePriceText}"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="{StaticResource HomeDessertBerry}" />
+          </Grid>
+
+          <Button Text="View in Desserts"
+                  Clicked="OnQuickNavigateClicked"
+                  CommandParameter="//DessertsPage" />
         </VerticalStackLayout>
       </Border>
 

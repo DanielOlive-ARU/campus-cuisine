@@ -1,3 +1,4 @@
+using CampusCuisine.Models;
 using CampusCuisine.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
@@ -6,13 +7,10 @@ namespace CampusCuisine.Pages;
 
 public partial class HomePage : ContentPage
 {
-  // Hardcoded featured menu item id for the MVP. A future iteration would
-  // drive this from a backend "featured" flag or a date-based rotation.
-  private const int FeaturedMenuItemId = 1;
-
   private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
-  private bool _featuredLoaded;
+  private List<MenuItemModel>? _cachedMains;
+  private List<MenuItemModel>? _cachedDesserts;
 
   public HomePage()
   {
@@ -32,9 +30,10 @@ public partial class HomePage : ContentPage
     _orderState.PropertyChanged += OrderState_PropertyChanged;
     UpdateOrderInfo();
 
-    // Fire-and-forget; LoadFeaturedAsync handles its own errors silently so
-    // a backend outage does not surface a broken panel on the home page.
+    // Fire-and-forget; both loaders handle their own errors silently so
+    // a backend outage does not surface broken panels on the home page.
     _ = LoadFeaturedAsync();
+    _ = LoadIndulgenceAsync();
   }
 
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -177,29 +176,139 @@ public partial class HomePage : ContentPage
 
   private async Task LoadFeaturedAsync()
   {
-    if (_featuredLoaded)
-      return;
-
+    // Same pattern as LoadIndulgenceAsync: cache the category list once per
+    // session (no repeat network calls) but re-roll the random pick on
+    // every appearance so visits to Home keep surfacing variety.
     try
     {
-      var item = await _api.GetMenuItemAsync(FeaturedMenuItemId);
-      if (item is null)
-        return;
+      if (_cachedMains is null)
+      {
+        var mains = await _api.GetMenuByCategoryAsync("main");
+        if (mains is null || mains.Count == 0)
+          return;
+
+        _cachedMains = mains;
+      }
+
+      var pick = _cachedMains[Random.Shared.Next(_cachedMains.Count)];
 
       MainThread.BeginInvokeOnMainThread(() =>
       {
-        FeaturedName = item.Name;
-        FeaturedDescription = item.Description;
-        FeaturedPriceText = $"£{item.Price:F2}";
-        FeaturedImageUrl = item.ImageUrl;
+        FeaturedName = pick.Name;
+        FeaturedDescription = pick.Description;
+        FeaturedPriceText = $"£{pick.Price:F2}";
+        FeaturedImageUrl = pick.ImageUrl;
         FeaturedIsVisible = true;
-        _featuredLoaded = true;
       });
     }
     catch
     {
-      // Silent: if the backend is unreachable or the item is missing the
-      // card stays hidden rather than showing a broken panel.
+      // Silent: if the backend is unreachable or no mains are available
+      // the card stays hidden rather than showing a broken panel.
+    }
+  }
+
+  private string _indulgenceName = string.Empty;
+  public string IndulgenceName
+  {
+    get => _indulgenceName;
+    set
+    {
+      if (_indulgenceName != value)
+      {
+        _indulgenceName = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _indulgenceDescription = string.Empty;
+  public string IndulgenceDescription
+  {
+    get => _indulgenceDescription;
+    set
+    {
+      if (_indulgenceDescription != value)
+      {
+        _indulgenceDescription = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _indulgencePriceText = string.Empty;
+  public string IndulgencePriceText
+  {
+    get => _indulgencePriceText;
+    set
+    {
+      if (_indulgencePriceText != value)
+      {
+        _indulgencePriceText = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _indulgenceImageUrl = string.Empty;
+  public string IndulgenceImageUrl
+  {
+    get => _indulgenceImageUrl;
+    set
+    {
+      if (_indulgenceImageUrl != value)
+      {
+        _indulgenceImageUrl = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private bool _indulgenceIsVisible;
+  public bool IndulgenceIsVisible
+  {
+    get => _indulgenceIsVisible;
+    set
+    {
+      if (_indulgenceIsVisible != value)
+      {
+        _indulgenceIsVisible = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private async Task LoadIndulgenceAsync()
+  {
+    // Cache the dessert list once per session (no repeat network calls)
+    // but re-roll the random pick on every appearance so visits to Home
+    // keep surfacing variety — the cache does not interfere with
+    // randomness because the cache holds the list, not the chosen item.
+    try
+    {
+      if (_cachedDesserts is null)
+      {
+        var desserts = await _api.GetMenuByCategoryAsync("dessert");
+        if (desserts is null || desserts.Count == 0)
+          return;
+
+        _cachedDesserts = desserts;
+      }
+
+      var pick = _cachedDesserts[Random.Shared.Next(_cachedDesserts.Count)];
+
+      MainThread.BeginInvokeOnMainThread(() =>
+      {
+        IndulgenceName = pick.Name;
+        IndulgenceDescription = pick.Description;
+        IndulgencePriceText = $"£{pick.Price:F2}";
+        IndulgenceImageUrl = pick.ImageUrl;
+        IndulgenceIsVisible = true;
+      });
+    }
+    catch
+    {
+      // Silent: keep the card hidden if desserts cannot be loaded.
     }
   }
 
