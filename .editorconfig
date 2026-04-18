@@ -1,0 +1,31 @@
+root = true
+
+# Frontend files: Visual Studio / Windows line endings.
+[FrontEnd/*.{cs,xaml,csproj,slnx,xml,json,plist,manifest,appxmanifest,svg,txt,xcprivacy,resx,props,targets}]
+end_of_line = crlf
+insert_final_newline = true
+
+[FrontEnd/**/*.{cs,xaml,csproj,slnx,xml,json,plist,manifest,appxmanifest,svg,txt,xcprivacy,resx,props,targets}]
+end_of_line = crlf
+insert_final_newline = true
+
+# Backend and docs: LF.
+[backend/**/*]
+end_of_line = lf
+insert_final_newline = true
+
+[docs/**/*]
+end_of_line = lf
+insert_final_newline = true
+
+[.github/**/*]
+end_of_line = lf
+insert_final_newline = true
+
+[*.{md,yml,yaml,py,sh}]
+end_of_line = lf
+insert_final_newline = true
+
+[*.ps1]
+end_of_line = crlf
+insert_final_newline = true

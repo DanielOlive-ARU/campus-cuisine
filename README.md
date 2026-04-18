@@ -31,6 +31,7 @@ docs/
   api/
   meetings/
   project-management/
+  reflection/
   requirements/
   team/
   testing/
@@ -54,6 +55,8 @@ docs/
 - `docs/team/roles-and-responsibilities.md`
 - `docs/meetings/meeting-template.md`
 - `docs/meetings/decision-log-template.md`
+- `docs/meetings/decision-log.md`
+- `docs/reflection/development-reflection.md`
 - `docs/wireframes/wireframe-notes.md`
 - `docs/viva/presentation-outline.md`
 - `docs/ethics-and-future-development.md`

@@ -4,6 +4,7 @@ obj/
 *.user
 *.rsuser
 *.suo
+.codex
 backend/.venv/
 backend/.env
 backend/.artifacts/

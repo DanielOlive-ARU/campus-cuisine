@@ -1,0 +1,33 @@
+# Default: let Git detect text files.
+* text=auto
+
+# Backend, docs, CI, and Unix-oriented files: LF.
+backend/** text eol=lf
+docs/** text eol=lf
+.github/** text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+
+# Windows scripts can use CRLF.
+*.ps1 text eol=crlf
+
+# Frontend: Visual Studio / Windows style in the working tree.
+# Binary overrides below protect image/font assets from text normalization.
+FrontEnd/** text eol=crlf
+
+# Binary files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary

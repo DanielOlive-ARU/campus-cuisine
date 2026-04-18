@@ -15,15 +15,15 @@ This file translates the assignment brief into implementable requirements and li
 | GEN-02 | MUST | App runs without crashing | Stable navigation, validation, error handling | Shared | test evidence, demo video/screenshots |
 | GEN-03 | MUST | At least four primary pages | Welcome, Main Course, Dessert/Appetizer, Order Summary | Adam | `/Views`, wireframes |
 | GEN-04 | MUST | All primary pages accessible from flyout | Shell flyout items for each main page | Adam | `AppShell.xaml` |
-| GEN-05 | MUST | Persistent order state during navigation | Shared `IOrderStateService` singleton injected into ViewModels | Adam | service code, state tests |
+| GEN-05 | MUST | Persistent order state during navigation | Shared `OrderState` singleton registered in MAUI DI and resolved by pages/viewmodels | Adam | service code, state tests |
 | GEN-06 | MUST | Support creating and managing customer orders | Frontend add/update/remove/clear order + backend order endpoint | Shared | service code, API tests |
 | GEN-07 | MUST | User can place an order | Order Summary page submits order to backend and shows confirmation | Shared | integration demo |
 | GEN-08 | SHOULD | Consistent branding | Shared styles, colours, typography resource dictionaries | Adam | `/Styles` |
 | GEN-09 | MAY | View past orders | Optional order history page backed by saved orders | Shared | optional feature evidence |
 | GEN-10 | MAY | Authentication or guest checkout | Defer unless all core features complete | Shared | backlog decision log |
-| PAGE-01 | MUST | Welcome page included | Separate landing page with restaurant intro and CTAs | Adam | `WelcomePage.xaml` |
-| PAGE-02 | MUST | Main Course page included | Category page loads mains from backend | Adam | `MainCoursePage.xaml` |
-| PAGE-03 | MUST | Dessert/Appetizer page included | Category page loads desserts/appetizers from backend | Adam | `DessertPage.xaml` |
+| PAGE-01 | MUST | Welcome page included | Separate landing page with restaurant intro and CTAs | Adam | `HomePage.xaml` |
+| PAGE-02 | MUST | Main Course page included | Category page loads mains from backend | Adam | `MainsPage.xaml` |
+| PAGE-03 | MUST | Dessert/Appetizer page included | Category page loads desserts/appetizers from backend | Adam | `DessertsPage.xaml` |
 | PAGE-04 | MUST | Order Summary page included | Editable order summary and checkout action | Adam | `OrderSummaryPage.xaml` |
 | PAGE-05 | SHOULD | Additional page such as Help/Profile/History | Add Help page if time allows | Adam | optional page |
 | HOME-01 | MUST | Welcome page displays restaurant name | Static heading bound or configured in app constants | Adam | wireframe + view |
@@ -38,17 +38,17 @@ This file translates the assignment brief into implementable requirements and li
 | MAIN-03 | MUST | Add item option | Add button on each dish card | Adam | component + service |
 | MAIN-04 | MUST | Increase/decrease quantity | Plus/minus controls update shared state | Adam | component + tests |
 | MAIN-05 | MUST | Removing item updates immediately | Order state notifies UI instantly | Adam | state tests |
-| MAIN-06 | MUST | Order summary bar displayed | Reusable bottom summary bar component | Adam | `OrderSummaryBar` |
-| MAIN-07 | MUST | Summary bar shows total items + total price | Bound to shared order totals | Adam | component |
-| MAIN-08 | MUST | Summary bar navigates to Order Summary page | Tapping bar routes to summary page | Adam | component + shell routing |
+| MAIN-06 | MUST | Order summary bar displayed | Bottom summary bar currently implemented on category pages; planned pre-submission hardening is a reusable `OrderSummaryBar` component | Adam | `MainsPage.xaml`, `StartersPage.xaml`, issue tracker |
+| MAIN-07 | MUST | Summary bar shows total items + total price | Bound to shared order totals on category pages | Adam | category page XAML/code-behind |
+| MAIN-08 | MUST | Summary bar navigates to Order Summary page | Summary bar routes to `OrderSummaryPage` via Shell navigation | Adam | category pages + `AppShell.xaml` |
 | MAIN-09 | SHOULD | Images loaded dynamically from backend | Image URLs returned by API and displayed in app | Shared | API sample + page screenshots |
 | DESS-01 | MUST | Dessert page displays desserts | GET menu by category = dessert/appetizer | Shared | page + API |
 | DESS-02 | MUST | Name, description, price shown | Reuse DishCard component | Adam | component |
 | DESS-03 | MUST | Added to same shared order | Same order state service across all pages | Adam | state tests |
 | DESS-04 | MUST | Multiple quantity supported | Quantity buttons and aggregation logic | Adam | service tests |
-| DESS-05 | MUST | Summary bar displayed | Same reusable component | Adam | component |
-| DESS-06 | MUST | Summary bar shows items + total | Shared state binding | Adam | component |
-| DESS-07 | MUST | Summary bar navigates to summary page | Reuse same action as main course page | Adam | component |
+| DESS-05 | MUST | Summary bar displayed | Bottom summary bar currently implemented on category pages; planned pre-submission hardening is a reusable `OrderSummaryBar` component | Adam | `DessertsPage.xaml`, issue tracker |
+| DESS-06 | MUST | Summary bar shows items + total | Shared state binding on category pages | Adam | category page XAML/code-behind |
+| DESS-07 | MUST | Summary bar navigates to summary page | Reuses the same Shell route to `OrderSummaryPage` | Adam | category pages + `AppShell.xaml` |
 | DESS-08 | SHOULD | Distinct colour theme | Different accent styling for desserts page | Adam | styles |
 | DESS-09 | SHOULD | Images from backend | Same image strategy as mains | Shared | screenshots |
 | SUM-01 | MUST | Display all current order items | Collection view bound to order items | Adam | page + VM |
@@ -64,7 +64,7 @@ This file translates the assignment brief into implementable requirements and li
 | SUM-11 | MUST | Allow direct quantity editing | Stepper/buttons/text entry with validation | Adam | page |
 | ORD-01 | MUST | Multiple quantities supported | Shared order service aggregates by item id | Adam | unit tests |
 | ORD-02 | MUST | Accurate totals | Business logic covered by tests | Shared | unit tests |
-| ORD-03 | MUST | Consistent order across pages | Singleton state service + VM bindings | Adam | navigation/state tests |
+| ORD-03 | MUST | Consistent order across pages | `OrderState` singleton service + UI/ViewModel bindings | Adam | navigation/state tests |
 | ORD-04 | SHOULD | Order cancellation before checkout | Cancel action resets pending order before submission | Adam | optional feature |
 | ORD-05 | MAY | Reorder from history | Deferred unless optional order history complete | Shared | backlog |
 | API-01 | MUST | RESTful menu retrieval | `/api/menu` endpoints returning menu data | Dan | FastAPI routers |
@@ -75,13 +75,13 @@ This file translates the assignment brief into implementable requirements and li
 | API-06 | MAY | Analytics | Out of scope unless finished early | Dan | backlog |
 | TECH-01 | MUST | Use .NET MAUI | Frontend project built in MAUI | Adam | project file |
 | TECH-02 | MUST | Use XAML + C# | XAML views and C# viewmodels/services | Adam | repo structure |
-| TECH-03 | MUST | Shared service/state management | `IOrderStateService` registered in DI | Adam | service registration |
+| TECH-03 | MUST | Shared service/state management | Current implementation uses concrete `OrderState` registered as a singleton in MAUI DI; planned pre-submission hardening introduces `IOrderStateService` abstraction | Adam | service registration, decision log, issue tracker |
 | TECH-04 | MUST | Add food items without code changes | Menu stored in SQLite and managed by CRUD | Dan | DB + admin endpoints |
 | TECH-05 | MUST | Communicate with backend via REST | API service uses HTTP client and DTO mapping | Shared | API service |
 | TECH-06 | MUST | Structured architecture pattern | MVVM on frontend; layered API backend | Shared | architecture section in README |
 | TECH-07 | MUST | Separate UI, business logic, data access | Views/VMs/Services in app; routers/services/repositories in API | Shared | repo structure |
-| TECH-08 | MUST | Dependency injection | MAUI DI and FastAPI dependency pattern | Shared | startup code |
-| TECH-09 | MUST | Reusable UI components/styles | DishCard and OrderSummaryBar with shared resources | Adam | component folder |
+| TECH-08 | MUST | Dependency injection | MAUI DI currently registers `IApiService` and concrete `OrderState`; backend uses FastAPI `Depends(...)`. Planned pre-submission hardening introduces `IOrderStateService` on the frontend | Shared | startup code, backend routers, decision log |
+| TECH-09 | MUST | Reusable UI components/styles | `MenuItemView` is implemented; category summary bar functionality is currently page-level and is planned to be refactored into a reusable `OrderSummaryBar` before final submission | Adam | `Views/MenuItemView.xaml`, issue tracker, decision log |
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
 | TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |
 | TECH-12 | SHOULD | Animations/custom alerts/transitions | Add simple navigation or add-to-order animation | Adam | UX polish evidence |
@@ -113,5 +113,5 @@ These features can remain in the backlog under **MAY** or **future work** unless
 1. **SQLite** is used so menu items can be added without code changes.
 2. **FastAPI** is used because it provides REST support, validation, and automatic OpenAPI documentation.
 3. **MAUI Shell + MVVM** supports the flyout navigation requirement and keeps UI logic separate.
-4. **Shared Order State Service** is the core mechanism for maintaining persistent order state across pages.
+4. **Shared Order State Service** is registered through MAUI DI and is the core mechanism for maintaining persistent order state across pages.
 5. **Reusable UI Components** reduce duplication and improve consistency between category pages.
