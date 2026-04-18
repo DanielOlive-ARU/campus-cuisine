@@ -211,10 +211,16 @@ public partial class OrderSummaryPage : ContentPage
 
       var confirmationLines = new List<string>
       {
-        $"Order ID: {confirmation.Id}",
-        $"Total items: {confirmation.TotalItems}",
-        $"Total: £{confirmation.GrandTotal:F2}"
+        $"Order ID: {confirmation.Id}"
       };
+
+      if (!string.IsNullOrWhiteSpace(confirmation.Status))
+      {
+        confirmationLines.Add($"Status: {confirmation.Status}");
+      }
+
+      confirmationLines.Add($"Total items: {confirmation.TotalItems}");
+      confirmationLines.Add($"Total: £{confirmation.GrandTotal:F2}");
 
       if (confirmation.EstimatedPrepMinutes.HasValue)
       {
