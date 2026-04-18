@@ -7,9 +7,29 @@
     Shell.FlyoutBehavior="Flyout"
     Title="Campus Cuisine">
 
+  <!--
+    Shell.NavBarIsVisible is set per-platform on every ShellContent:
+    hidden on Windows (WinUI), visible everywhere else.
+
+    On Windows the flyout hamburger lives in the OS title bar, so
+    hiding the secondary Shell NavBar just removes a redundant
+    "white strip" that otherwise rendered the page Title beneath
+    the OS title bar. Each page's title is already provided via a
+    brand-styled in-page Label (BrandSubTitle / BrandPageTitle),
+    so the NavBar is redundant on Windows.
+
+    On Android the flyout hamburger is rendered by the NavBar /
+    toolbar itself, so hiding the NavBar would also remove the
+    flyout access. On that platform we accept the small cosmetic
+    cost of the page Title appearing both in the NavBar and in the
+    in-page branded label, in exchange for keeping the hamburger
+    available.
+  -->
+
   <FlyoutItem Title="Home">
     <ShellContent
             Title="Home"
+            Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
             ContentTemplate="{DataTemplate pages:HomePage}"
             Route="HomePage" />
   </FlyoutItem>
@@ -17,6 +37,7 @@
   <FlyoutItem Title="Starters">
     <ShellContent
             Title="Starters"
+            Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
             ContentTemplate="{DataTemplate pages:StartersPage}"
             Route="StartersPage" />
   </FlyoutItem>
@@ -24,6 +45,7 @@
   <FlyoutItem Title="Mains">
     <ShellContent
             Title="Mains"
+            Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
             ContentTemplate="{DataTemplate pages:MainsPage}"
             Route="MainsPage" />
   </FlyoutItem>
@@ -31,6 +53,7 @@
   <FlyoutItem Title="Desserts">
     <ShellContent
             Title="Desserts"
+            Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
             ContentTemplate="{DataTemplate pages:DessertsPage}"
             Route="DessertsPage" />
   </FlyoutItem>
@@ -38,6 +61,7 @@
   <FlyoutItem Title="Order Summary">
     <ShellContent
         Title="Order Summary"
+        Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
         Route="OrderSummaryPage"
         ContentTemplate="{DataTemplate pages:OrderSummaryPage}" />
   </FlyoutItem>
@@ -45,6 +69,7 @@
   <FlyoutItem Title="Help">
     <ShellContent
         Title="Help"
+        Shell.NavBarIsVisible="{OnPlatform Default=True, WinUI=False}"
         Route="HelpPage"
         ContentTemplate="{DataTemplate pages:HelpPage}" />
   </FlyoutItem>
