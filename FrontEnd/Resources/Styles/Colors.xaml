@@ -41,4 +41,25 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!--
+      Campus Cuisine brand tokens.
+      These are the single source of truth for page chrome, typography
+      colours, and card surfaces across every page. Values are lifted
+      from the HomePage palette since that was the most developed
+      restaurant-style treatment; promoting them here aligns Mains,
+      Starters, Order Summary, and Help with the same visual identity
+      while the Dessert page keeps its sanctioned distinct palette
+      (see DessertsPage.xaml resources).
+    -->
+    <Color x:Key="BrandInk">#1F2430</Color>
+    <Color x:Key="BrandInkMuted">#4E6330</Color>
+    <Color x:Key="BrandAccent">#A7652A</Color>
+    <Color x:Key="BrandAccentSoft">#F5E0CB</Color>
+    <Color x:Key="BrandCream">#FFFDF8</Color>
+    <Color x:Key="BrandPanel">#FFF7EF</Color>
+    <Color x:Key="BrandPanelAlt">#FFF4E7</Color>
+    <Color x:Key="BrandBorder">#E8D1BC</Color>
+    <Color x:Key="BrandPageBackground">White</Color>
+    <Color x:Key="BrandError">#B3261E</Color>
 </ResourceDictionary>
