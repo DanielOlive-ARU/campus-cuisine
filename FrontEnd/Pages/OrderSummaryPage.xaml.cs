@@ -198,6 +198,15 @@ public partial class OrderSummaryPage : ContentPage
     }
 
     var request = _orderState.ToCreateOrderRequest();
+
+    if (PlaceOrderButton is not null)
+    {
+      // Short press-feedback animation before the network call so the user
+      // sees the button acknowledge the tap.
+      await PlaceOrderButton.ScaleTo(0.96, 80);
+      await PlaceOrderButton.ScaleTo(1.0, 80);
+    }
+
     SetPlaceOrderBusy(true);
 
     try
