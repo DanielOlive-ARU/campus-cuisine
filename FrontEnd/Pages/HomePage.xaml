@@ -47,15 +47,11 @@
 
           <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Start">
             <Border Style="{StaticResource BrandTag}">
-              <Label Text="Fast ordering" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
+              <Label Text="Campus menu" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
             </Border>
 
             <Border Style="{StaticResource BrandTag}">
-              <Label Text="Shared basket" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
-            </Border>
-
-            <Border Style="{StaticResource BrandTag}">
-              <Label Text="Clear totals" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
+              <Label Text="Made to order" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
             </Border>
           </FlexLayout>
         </VerticalStackLayout>

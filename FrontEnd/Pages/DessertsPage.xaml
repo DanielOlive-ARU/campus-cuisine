@@ -71,10 +71,6 @@
           <Border Style="{StaticResource DessertTag}">
             <Label Text="Rich flavours" TextColor="{StaticResource DessertInk}" FontAttributes="Bold" />
           </Border>
-
-          <Border Style="{StaticResource DessertTag}">
-            <Label Text="Just for you" TextColor="{StaticResource DessertInk}" FontAttributes="Bold" />
-          </Border>
         </FlexLayout>
       </VerticalStackLayout>
     </Border>
