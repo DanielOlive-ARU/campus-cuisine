@@ -6,13 +6,20 @@ namespace CampusCuisine.Pages;
 
 public partial class HomePage : ContentPage
 {
+  // Hardcoded featured menu item id for the MVP. A future iteration would
+  // drive this from a backend "featured" flag or a date-based rotation.
+  private const int FeaturedMenuItemId = 1;
+
   private readonly IOrderStateService _orderState;
+  private readonly IApiService _api;
+  private bool _featuredLoaded;
 
   public HomePage()
   {
     InitializeComponent();
 
     _orderState = App.Services.GetRequiredService<IOrderStateService>();
+    _api = App.Services.GetRequiredService<IApiService>();
 
     BindingContext = this;
     UpdateOrderInfo();
@@ -24,6 +31,10 @@ public partial class HomePage : ContentPage
     _orderState.PropertyChanged -= OrderState_PropertyChanged;
     _orderState.PropertyChanged += OrderState_PropertyChanged;
     UpdateOrderInfo();
+
+    // Fire-and-forget; LoadFeaturedAsync handles its own errors silently so
+    // a backend outage does not surface a broken panel on the home page.
+    _ = LoadFeaturedAsync();
   }
 
   private void OrderState_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -91,6 +102,104 @@ public partial class HomePage : ContentPage
         _hasOrder = value;
         OnPropertyChanged();
       }
+    }
+  }
+
+  private bool _featuredIsVisible;
+  public bool FeaturedIsVisible
+  {
+    get => _featuredIsVisible;
+    set
+    {
+      if (_featuredIsVisible != value)
+      {
+        _featuredIsVisible = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _featuredName = string.Empty;
+  public string FeaturedName
+  {
+    get => _featuredName;
+    set
+    {
+      if (_featuredName != value)
+      {
+        _featuredName = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _featuredDescription = string.Empty;
+  public string FeaturedDescription
+  {
+    get => _featuredDescription;
+    set
+    {
+      if (_featuredDescription != value)
+      {
+        _featuredDescription = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _featuredPriceText = string.Empty;
+  public string FeaturedPriceText
+  {
+    get => _featuredPriceText;
+    set
+    {
+      if (_featuredPriceText != value)
+      {
+        _featuredPriceText = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private string _featuredImageUrl = string.Empty;
+  public string FeaturedImageUrl
+  {
+    get => _featuredImageUrl;
+    set
+    {
+      if (_featuredImageUrl != value)
+      {
+        _featuredImageUrl = value;
+        OnPropertyChanged();
+      }
+    }
+  }
+
+  private async Task LoadFeaturedAsync()
+  {
+    if (_featuredLoaded)
+      return;
+
+    try
+    {
+      var item = await _api.GetMenuItemAsync(FeaturedMenuItemId);
+      if (item is null)
+        return;
+
+      MainThread.BeginInvokeOnMainThread(() =>
+      {
+        FeaturedName = item.Name;
+        FeaturedDescription = item.Description;
+        FeaturedPriceText = $"£{item.Price:F2}";
+        FeaturedImageUrl = item.ImageUrl;
+        FeaturedIsVisible = true;
+        _featuredLoaded = true;
+      });
+    }
+    catch
+    {
+      // Silent: if the backend is unreachable or the item is missing the
+      // card stays hidden rather than showing a broken panel.
     }
   }
 

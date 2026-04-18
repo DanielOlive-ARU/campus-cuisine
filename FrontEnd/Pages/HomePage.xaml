@@ -83,6 +83,53 @@
         </VerticalStackLayout>
       </Border>
 
+      <Border IsVisible="{Binding FeaturedIsVisible}"
+              Style="{StaticResource HomePanelCard}"
+              BackgroundColor="{StaticResource HomeAccentSoft}"
+              Stroke="{StaticResource HomeAccent}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="Today's pick"
+                 FontAttributes="Bold"
+                 FontSize="22"
+                 TextColor="{StaticResource HomeInk}" />
+
+          <Grid ColumnDefinitions="Auto,*"
+                ColumnSpacing="14"
+                RowDefinitions="Auto,Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.RowSpan="3"
+                   Source="{Binding FeaturedImageUrl}"
+                   WidthRequest="96"
+                   HeightRequest="96"
+                   Aspect="AspectFill" />
+
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedName}"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="{StaticResource HomeInk}" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedDescription}"
+                   FontSize="13"
+                   TextColor="{StaticResource HomeInk}" />
+
+            <Label Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding FeaturedPriceText}"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="{StaticResource HomeAccent}" />
+          </Grid>
+
+          <Button Text="View in Mains"
+                  Clicked="OnQuickNavigateClicked"
+                  CommandParameter="//MainsPage" />
+        </VerticalStackLayout>
+      </Border>
+
       <Border Style="{StaticResource HomePanelCard}">
         <VerticalStackLayout Spacing="16">
           <Label
