@@ -142,6 +142,62 @@ This backlog is structured so that all **MUST** requirements are completed befor
 4. Updated the frontend confirmation alert to display the estimate when present.
 5. Re-ran backend validation, Windows build, and frontend tests.
 
+### Completed: add admin order status update endpoint
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Dan
+**Outcome:** Order status tracking is now demonstrably complete. An admin-protected `PATCH /api/admin/orders/{order_id}/status` endpoint allows `confirmed → cancelled` transitions; same-status updates are idempotent; reverse transitions return 400. Closes the MUST for order status tracking with a proper API surface.
+
+**Delivered scope:**
+1. Added `routers/admin_orders.py` mirroring the `admin_menu.py` pattern (router-level admin API key dependency).
+2. Added `OrderStatusUpdate` request schema and `update_order_status` service helper (pure primitives, single-responsibility).
+3. Added six API-level tests (unauthorised, cancel happy path, GET-after-cancel, invalid-reverse, 404, idempotent same-status) plus four service-level unit tests.
+4. Updated `api-contract.md`, `backend-status.md`, and `requirements-mapping.md` to document the new endpoint and its intentional confirmation-only asymmetry with `GET /api/orders/{id}`.
+
+### Completed: brand vocabulary and consistent styling
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** A shared `Brand*` design vocabulary - colour tokens, chrome styles, typography styles - now lives in `Resources/Styles/` and is consumed by every page. The dark-mode OrderSummary background leak is fixed at the Page style level and the app is explicitly pinned to Light theme so every MAUI template control resolves consistently. Mains, Starters, Order Summary, and Help gained matching page chrome. The Dessert page retains its sanctioned distinct palette expressed as `BrandCard`/`BrandTag` overrides via `BasedOn`, preserving structure and only overriding colour.
+
+**Delivered scope:**
+1. Promoted the HomePage palette into shared `Brand*` tokens and default Page background.
+2. Replaced the Shell's AppThemeBinding leak by pinning `UserAppTheme = AppTheme.Light` and overriding the default Label text colour to `BrandInk`.
+3. Migrated `HomePage` and `DessertsPage` to consume the shared vocabulary; dessert styles extend `Brand*` via `BasedOn`.
+4. Added consistent chrome (brand sub-title, body text, error style) to Mains, Starters, Order Summary, and Help; removed the stock MAUI template purple/blue references from Help.
+5. Adapted `Shell.ForegroundColor` and `Shell.TitleColor` on app start to the device `PlatformAppTheme`, so the OS title-bar hamburger and page title remain readable on dark-mode devices without un-pinning the app.
+6. Restyled the default Button as a warm-tan `BrandAccentMid` fill with dark text; added the `BrandAccentMid` token.
+7. Hid the Shell NavBar on Windows only (via `OnPlatform`) so pages render a single branded title; kept NavBar visible on Android so the flyout hamburger stays accessible.
+8. Trimmed each hero card to two menu-prose tag chips (Home: `Campus menu` / `Made to order`; Desserts: `Sweet finish` / `Rich flavours`).
+
+### Completed: featured cards on Home
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Adam
+**Outcome:** Home now surfaces menu variety through two featured cards, reducing the need to navigate into category pages to see what's available.
+
+**Delivered scope:**
+1. Added "Today's pick" card showing a random main course fetched from the backend menu API.
+2. Added "Today's indulgence" card showing a random dessert, styled in the Dessert palette so it visually rhymes with the DessertsPage it navigates to.
+3. Implemented a shared pattern: per-session list cache with per-visit random pick re-roll - the cache holds the list, not the chosen item, so randomness is preserved without repeated network calls.
+4. Silent graceful degradation - the cards stay hidden if the backend is unreachable or the category is empty.
+
+### Completed: order status display in confirmation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** The order confirmation alert on Order Summary now includes the backend-returned `Status` field, closing the SHOULD for displaying order status updates to the user.
+
+**Delivered scope:**
+1. Extended the confirmation alert text to show the status line between Order ID and totals.
+2. Guarded against empty status so older or misconfigured backends do not surface a blank line.
+
+### Completed: Place Order button press animation
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Closes the SHOULD for animations / transitions / custom alerts. A short scale-down / scale-up animation on Place Order gives tactile click feedback before the network call, via MAUI's `ScaleToAsync` extension.
+
+### Completed: order-state singleton persistence tests
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Three xUnit tests in `CampusCuisine.Tests/Services/OrderStatePersistenceTests.cs` pin down the DI singleton contract - resolving `IOrderStateService` twice returns the same instance, and mutations are visible after a fresh resolution. Stands in for the manual navigation-persistence regression previously referenced under `TEST-03`.
+
 ## Technical Debt / Hardening Backlog
 
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.

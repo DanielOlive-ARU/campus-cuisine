@@ -191,7 +191,7 @@ dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
 ```
 
 Current frontend suite status:
-- `39` tests passing
+- `42` tests passing
 
 Optional targeted frontend test run:
 

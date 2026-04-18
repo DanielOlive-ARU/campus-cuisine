@@ -18,7 +18,7 @@ This file translates the assignment brief into implementable requirements and li
 | GEN-05 | MUST | Persistent order state during navigation | Shared `OrderState` singleton registered in MAUI DI and resolved by pages/viewmodels | Adam | service code, state tests |
 | GEN-06 | MUST | Support creating and managing customer orders | Frontend add/update/remove/clear order + backend order endpoint | Shared | service code, API tests |
 | GEN-07 | MUST | User can place an order | Order Summary page submits order to backend and shows confirmation | Shared | integration demo |
-| GEN-08 | SHOULD | Consistent branding | Shared styles, colours, typography resource dictionaries | Adam | `/Styles` |
+| GEN-08 | SHOULD | Consistent branding | `Brand*` colour tokens in `Colors.xaml` and shared `Brand*` chrome and typography styles in `Styles.xaml` are consumed by every page; the Dessert page retains its sanctioned distinct palette by extending `BrandCard`/`BrandTag` via `BasedOn` overrides | Shared | `FrontEnd/Resources/Styles/Colors.xaml`, `FrontEnd/Resources/Styles/Styles.xaml`, per-page XAML |
 | GEN-09 | MAY | View past orders | Optional order history page backed by saved orders | Shared | optional feature evidence |
 | GEN-10 | MAY | Authentication or guest checkout | Defer unless all core features complete | Shared | backlog decision log |
 | PAGE-01 | MUST | Welcome page included | Separate landing page with restaurant intro and CTAs | Adam | `HomePage.xaml` |
@@ -32,7 +32,7 @@ This file translates the assignment brief into implementable requirements and li
 | HOME-04 | MUST | Start New Order button | Clears order after confirmation and navigates to menu | Adam | view logic |
 | HOME-05 | MUST | Continue Current Order button when order exists | Conditional visibility based on item count > 0 | Adam | VM/UI behaviour |
 | HOME-06 | SHOULD | Professional restaurant-style interface | Home page now uses a branded hero, stat cards, and quick-navigation panels for a clearer restaurant landing experience | Adam | `FrontEnd/Pages/HomePage.xaml` |
-| HOME-07 | MAY | Promotions/featured dishes | Optional featured section loaded from backend flags | Shared | optional feature |
+| HOME-07 | MAY | Promotions/featured dishes | Home now shows two live featured cards ("Today's pick" = random main, "Today's indulgence" = random dessert) loaded from the backend menu API; each caches its category list per session and re-rolls the random pick on each visit | Adam | `FrontEnd/Pages/HomePage.xaml`, `FrontEnd/Pages/HomePage.xaml.cs` |
 | MAIN-01 | MUST | List of main course dishes | GET menu by category = main | Shared | API contract + page |
 | MAIN-02 | MUST | Name, description, price shown | Dish card component shows required fields | Adam | `DishCard` |
 | MAIN-03 | MUST | Add item option | Add button on each dish card | Adam | component + service |
@@ -84,11 +84,11 @@ This file translates the assignment brief into implementable requirements and li
 | TECH-08 | MUST | Dependency injection | MAUI DI registers `IApiService`, concrete `OrderState`, and `IOrderStateService` mapped to the same singleton instance; backend uses FastAPI `Depends(...)` | Shared | startup code, backend routers, decision log |
 | TECH-09 | MUST | Reusable UI components/styles | `MenuItemView` and reusable `OrderSummaryBar` are implemented and shared across the category pages | Adam | `Views/MenuItemView.xaml`, `Views/OrderSummaryBar.xaml`, decision log |
 | TECH-10 | MUST | Dynamic dish images from backend | Image URLs served by backend and displayed by app | Shared | integration evidence |
-| TECH-11 | SHOULD | Offline browsing | Cache last menu response locally | Adam | optional implementation |
-| TECH-12 | SHOULD | Animations/custom alerts/transitions | Add simple navigation or add-to-order animation | Adam | UX polish evidence |
+| TECH-11 | SHOULD | Offline browsing | Not implemented; deliberately deferred to keep the working Windows path stable. Documented as a known limitation in the README "Known Limitations" section | Adam | `README.md` (known limitations) |
+| TECH-12 | SHOULD | Animations/custom alerts/transitions | Place Order button now plays a short scale-down/scale-up press animation (80ms + 80ms) via `ScaleToAsync` before the network call, giving tactile click feedback | Shared | `FrontEnd/Pages/OrderSummaryPage.xaml.cs` |
 | TEST-01 | MUST | Unit tests for order logic | Backend pytest suite plus frontend `OrderState` tests cover add/remove/update/calculate totals | Shared | `backend/tests`, `CampusCuisine.Tests/Services/OrderStateTests.cs` |
 | TEST-02 | SHOULD | Test service/API data loading | Frontend tests cover menu loading, category mapping, and API response/error handling with fakes | Shared | `CampusCuisine.Tests/ViewModel/MenuItemViewModelTests.cs`, `CampusCuisine.Tests/Services/ApiServiceTests.cs` |
-| TEST-03 | SHOULD | Test order state persistence across navigation | Currently covered by manual regression; automated page-navigation persistence tests remain future work | Adam | manual regression notes, future test backlog |
+| TEST-03 | SHOULD | Test order state persistence across navigation | Three xUnit tests in `OrderStatePersistenceTests.cs` pin the DI singleton contract: `IOrderStateService` resolved twice returns the same instance, and state mutations survive a fresh resolution - simulating the navigation-persistence guarantee | Shared | `CampusCuisine.Tests/Services/OrderStatePersistenceTests.cs` |
 | TEST-04 | MUST | All tests stored in dedicated test projects | Backend tests live under `backend/tests`; frontend tests live under `CampusCuisine.Tests` | Shared | repo structure |
 | TEST-05 | SHOULD | README explains how to run tests | Root README includes backend and frontend test commands | Shared | `README.md` |
 | TEST-06 | SHOULD | Edge case tests | Current automated tests cover invalid remove, zero/negative add quantity, API failures, and state edge cases | Shared | frontend test suite, backend test suite |
@@ -101,6 +101,7 @@ This file translates the assignment brief into implementable requirements and li
 | ETH-01 | SHOULD | Explain ethics considerations | Accessibility, security, trust, data handling | Shared | ethics doc |
 | FUT-01 | SHOULD | Explain future development | Prioritised roadmap beyond MVP | Shared | ethics/future doc |
 | COL-01 | SHOULD | Commit history from each member | Regular commits from Dan and Adam | Shared | Git history |
+| NOTIF-01 | SHOULD | Display order status updates to user | Order confirmation alert now includes the backend-returned `Status` field, displayed verbatim between the Order ID and totals | Shared | `FrontEnd/Pages/OrderSummaryPage.xaml.cs` |
 
 ## Requirements That Should Be Explicitly Declared Out of Scope
 - Full payment gateway integration
