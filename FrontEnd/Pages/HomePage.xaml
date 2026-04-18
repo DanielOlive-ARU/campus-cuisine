@@ -7,17 +7,14 @@
     BackgroundColor="White">
 
   <ContentPage.Resources>
-    <Color x:Key="HomeInk">#1F2430</Color>
-    <Color x:Key="HomeAccent">#A7652A</Color>
-    <Color x:Key="HomeAccentSoft">#F5E0CB</Color>
-    <Color x:Key="HomeOlive">#4E6330</Color>
-    <Color x:Key="HomeCream">#FFFDF8</Color>
-    <Color x:Key="HomePanel">#FFF7EF</Color>
-    <Color x:Key="HomePanelAlt">#FFF4E7</Color>
-    <Color x:Key="HomeBorder">#E8D1BC</Color>
-
-    <!-- Dessert-palette accents used only by the Today's indulgence card so
-         its visual identity matches the DessertsPage it navigates to. -->
+    <!--
+      Colour tokens and chrome styles come from Resources/Styles/
+      (Brand* palette and BrandCard/BrandStatCard/BrandTag). The
+      resources below are the only things genuinely unique to this
+      page: the subtle multi-stop page gradient, and the three
+      dessert-palette accents used by the Today's indulgence card so
+      it visually rhymes with the DessertsPage it navigates to.
+    -->
     <Color x:Key="HomeDessertRose">#F6D9E5</Color>
     <Color x:Key="HomeDessertBerry">#B64B78</Color>
     <Color x:Key="HomeDessertInk">#3E2130</Color>
@@ -27,77 +24,52 @@
       <GradientStop Color="#FFF7EF" Offset="0.5" />
       <GradientStop Color="#F9EFE4" Offset="1.0" />
     </LinearGradientBrush>
-
-    <Style x:Key="HomePanelCard" TargetType="Border">
-      <Setter Property="Padding" Value="20" />
-      <Setter Property="BackgroundColor" Value="{StaticResource HomeCream}" />
-      <Setter Property="Stroke" Value="{StaticResource HomeBorder}" />
-      <Setter Property="StrokeShape" Value="RoundRectangle 24" />
-      <Setter Property="StrokeThickness" Value="1" />
-    </Style>
-
-    <Style x:Key="HomeTag" TargetType="Border">
-      <Setter Property="Margin" Value="0,0,10,10" />
-      <Setter Property="Padding" Value="10,6" />
-      <Setter Property="BackgroundColor" Value="{StaticResource HomeAccentSoft}" />
-      <Setter Property="Stroke" Value="{StaticResource HomeAccent}" />
-      <Setter Property="StrokeShape" Value="RoundRectangle 999" />
-      <Setter Property="StrokeThickness" Value="1" />
-    </Style>
-
-    <Style x:Key="HomeStatCard" TargetType="Border">
-      <Setter Property="Padding" Value="14" />
-      <Setter Property="BackgroundColor" Value="{StaticResource HomePanelAlt}" />
-      <Setter Property="Stroke" Value="{StaticResource HomeBorder}" />
-      <Setter Property="StrokeShape" Value="RoundRectangle 18" />
-      <Setter Property="StrokeThickness" Value="1" />
-    </Style>
   </ContentPage.Resources>
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="20" Background="{StaticResource HomePageBrush}">
 
-      <Border Style="{StaticResource HomePanelCard}"
-              Stroke="{StaticResource HomeAccent}"
-              BackgroundColor="{StaticResource HomePanel}">
+      <Border Style="{StaticResource BrandCard}"
+              Stroke="{StaticResource BrandAccent}"
+              BackgroundColor="{StaticResource BrandPanel}">
 
         <VerticalStackLayout Spacing="16">
           <Label
               Text="Campus Cuisine"
               FontSize="34"
-              TextColor="{StaticResource HomeInk}"
+              TextColor="{StaticResource BrandInk}"
               FontAttributes="Bold" />
 
           <Label
               Text="Order across Starters, Mains, and Desserts from one shared basket, then review everything before checkout."
               FontSize="16"
-              TextColor="{StaticResource HomeInk}" />
+              TextColor="{StaticResource BrandInk}" />
 
           <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Start">
-            <Border Style="{StaticResource HomeTag}">
-              <Label Text="Fast ordering" TextColor="{StaticResource HomeInk}" FontAttributes="Bold" />
+            <Border Style="{StaticResource BrandTag}">
+              <Label Text="Fast ordering" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
             </Border>
 
-            <Border Style="{StaticResource HomeTag}">
-              <Label Text="Shared basket" TextColor="{StaticResource HomeInk}" FontAttributes="Bold" />
+            <Border Style="{StaticResource BrandTag}">
+              <Label Text="Shared basket" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
             </Border>
 
-            <Border Style="{StaticResource HomeTag}">
-              <Label Text="Clear totals" TextColor="{StaticResource HomeInk}" FontAttributes="Bold" />
+            <Border Style="{StaticResource BrandTag}">
+              <Label Text="Clear totals" TextColor="{StaticResource BrandInk}" FontAttributes="Bold" />
             </Border>
           </FlexLayout>
         </VerticalStackLayout>
       </Border>
 
       <Border IsVisible="{Binding FeaturedIsVisible}"
-              Style="{StaticResource HomePanelCard}"
-              BackgroundColor="{StaticResource HomeAccentSoft}"
-              Stroke="{StaticResource HomeAccent}">
+              Style="{StaticResource BrandCard}"
+              BackgroundColor="{StaticResource BrandAccentSoft}"
+              Stroke="{StaticResource BrandAccent}">
         <VerticalStackLayout Spacing="14">
           <Label Text="Today's pick"
                  FontAttributes="Bold"
                  FontSize="22"
-                 TextColor="{StaticResource HomeInk}" />
+                 TextColor="{StaticResource BrandInk}" />
 
           <Grid ColumnDefinitions="Auto,*"
                 ColumnSpacing="14"
@@ -114,20 +86,20 @@
                    Text="{Binding FeaturedName}"
                    FontAttributes="Bold"
                    FontSize="18"
-                   TextColor="{StaticResource HomeInk}" />
+                   TextColor="{StaticResource BrandInk}" />
 
             <Label Grid.Row="1"
                    Grid.Column="1"
                    Text="{Binding FeaturedDescription}"
                    FontSize="13"
-                   TextColor="{StaticResource HomeInk}" />
+                   TextColor="{StaticResource BrandInk}" />
 
             <Label Grid.Row="2"
                    Grid.Column="1"
                    Text="{Binding FeaturedPriceText}"
                    FontAttributes="Bold"
                    FontSize="16"
-                   TextColor="{StaticResource HomeAccent}" />
+                   TextColor="{StaticResource BrandAccent}" />
           </Grid>
 
           <Button Text="View in Mains"
@@ -137,7 +109,7 @@
       </Border>
 
       <Border IsVisible="{Binding IndulgenceIsVisible}"
-              Style="{StaticResource HomePanelCard}"
+              Style="{StaticResource BrandCard}"
               BackgroundColor="{StaticResource HomeDessertRose}"
               Stroke="{StaticResource HomeDessertBerry}">
         <VerticalStackLayout Spacing="14">
@@ -183,45 +155,45 @@
         </VerticalStackLayout>
       </Border>
 
-      <Border Style="{StaticResource HomePanelCard}">
+      <Border Style="{StaticResource BrandCard}">
         <VerticalStackLayout Spacing="16">
           <Label
               Text="Current Order"
               FontAttributes="Bold"
               FontSize="22"
-              TextColor="{StaticResource HomeInk}" />
+              TextColor="{StaticResource BrandInk}" />
 
           <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-            <Border Grid.Column="0" Style="{StaticResource HomeStatCard}">
+            <Border Grid.Column="0" Style="{StaticResource BrandStatCard}">
               <VerticalStackLayout Spacing="4">
                 <Label Text="Items"
                        FontSize="12"
                        FontAttributes="Bold"
-                       TextColor="{StaticResource HomeOlive}" />
+                       TextColor="{StaticResource BrandInkMuted}" />
                 <Label Text="{Binding TotalItemsText}"
                        FontSize="18"
                        FontAttributes="Bold"
-                       TextColor="{StaticResource HomeInk}" />
+                       TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
             </Border>
 
-            <Border Grid.Column="1" Style="{StaticResource HomeStatCard}">
+            <Border Grid.Column="1" Style="{StaticResource BrandStatCard}">
               <VerticalStackLayout Spacing="4">
                 <Label Text="Grand total"
                        FontSize="12"
                        FontAttributes="Bold"
-                       TextColor="{StaticResource HomeOlive}" />
+                       TextColor="{StaticResource BrandInkMuted}" />
                 <Label Text="{Binding GrandTotalText}"
                        FontSize="18"
                        FontAttributes="Bold"
-                       TextColor="{StaticResource HomeInk}" />
+                       TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
             </Border>
           </Grid>
 
           <Label
               Text="Start a fresh basket or continue with the order already in progress."
-              TextColor="{StaticResource HomeInk}" />
+              TextColor="{StaticResource BrandInk}" />
 
           <VerticalStackLayout Spacing="10">
             <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
@@ -233,19 +205,19 @@
         </VerticalStackLayout>
       </Border>
 
-      <Border Style="{StaticResource HomePanelCard}">
+      <Border Style="{StaticResource BrandCard}">
         <VerticalStackLayout Spacing="14">
           <Label
               Text="Quick access"
               FontAttributes="Bold"
               FontSize="22"
-              TextColor="{StaticResource HomeInk}" />
+              TextColor="{StaticResource BrandInk}" />
 
-          <Border Style="{StaticResource HomeStatCard}">
+          <Border Style="{StaticResource BrandStatCard}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
               <VerticalStackLayout Spacing="4">
-                <Label Text="Browse Starters" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource HomeInk}" />
-                <Label Text="Open lighter dishes and appetisers first." TextColor="{StaticResource HomeInk}" />
+                <Label Text="Browse Starters" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Open lighter dishes and appetisers first." TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
@@ -255,11 +227,11 @@
             </Grid>
           </Border>
 
-          <Border Style="{StaticResource HomeStatCard}">
+          <Border Style="{StaticResource BrandStatCard}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
               <VerticalStackLayout Spacing="4">
-                <Label Text="Browse Mains" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource HomeInk}" />
-                <Label Text="Jump straight to main dishes and build the core of the order." TextColor="{StaticResource HomeInk}" />
+                <Label Text="Browse Mains" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Jump straight to main dishes and build the core of the order." TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
@@ -269,11 +241,11 @@
             </Grid>
           </Border>
 
-          <Border Style="{StaticResource HomeStatCard}">
+          <Border Style="{StaticResource BrandStatCard}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
               <VerticalStackLayout Spacing="4">
-                <Label Text="Browse Desserts" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource HomeInk}" />
-                <Label Text="Finish the basket with something sweet from the themed dessert page." TextColor="{StaticResource HomeInk}" />
+                <Label Text="Browse Desserts" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Finish the basket with something sweet from the themed dessert page." TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
@@ -283,11 +255,11 @@
             </Grid>
           </Border>
 
-          <Border Style="{StaticResource HomeStatCard}">
+          <Border Style="{StaticResource BrandStatCard}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
               <VerticalStackLayout Spacing="4">
-                <Label Text="Need help?" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource HomeInk}" />
-                <Label Text="Open the Help page for ordering guidance and recovery steps." TextColor="{StaticResource HomeInk}" />
+                <Label Text="Need help?" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource BrandInk}" />
+                <Label Text="Open the Help page for ordering guidance and recovery steps." TextColor="{StaticResource BrandInk}" />
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Help"

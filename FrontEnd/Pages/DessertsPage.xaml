@@ -22,21 +22,22 @@
       <GradientStop Color="#FFF1E0" Offset="1.0" />
     </LinearGradientBrush>
 
-    <Style x:Key="DessertTag" TargetType="Border">
-      <Setter Property="Margin" Value="0,0,10,10" />
-      <Setter Property="Padding" Value="10,6" />
+    <!--
+      Sanctioned distinct theme: structural shape is inherited from the
+      shared Brand* styles so padding, corner radius, and stroke thickness
+      stay consistent across the app; only colour setters are overridden
+      to keep the Dessert page visually differentiated as the brief
+      explicitly allows.
+    -->
+    <Style x:Key="DessertTag" TargetType="Border" BasedOn="{StaticResource BrandTag}">
       <Setter Property="BackgroundColor" Value="{StaticResource DessertRose}" />
       <Setter Property="Stroke" Value="{StaticResource DessertBerry}" />
-      <Setter Property="StrokeShape" Value="RoundRectangle 999" />
-      <Setter Property="StrokeThickness" Value="1" />
     </Style>
 
-    <Style x:Key="DessertSectionCard" TargetType="Border">
+    <Style x:Key="DessertSectionCard" TargetType="Border" BasedOn="{StaticResource BrandCard}">
       <Setter Property="Padding" Value="18" />
       <Setter Property="BackgroundColor" Value="{StaticResource DessertPanel}" />
       <Setter Property="Stroke" Value="{StaticResource DessertRose}" />
-      <Setter Property="StrokeShape" Value="RoundRectangle 24" />
-      <Setter Property="StrokeThickness" Value="1" />
     </Style>
   </ContentPage.Resources>
 
@@ -83,7 +84,7 @@
         <Label Grid.Row="0"
                Text="{Binding ErrorMessage}"
                IsVisible="{Binding HasError}"
-               TextColor="#B42318"
+               TextColor="{StaticResource BrandError}"
                FontAttributes="Bold"
                Margin="0,0,0,12" />
 
