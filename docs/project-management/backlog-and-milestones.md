@@ -198,6 +198,20 @@ This backlog is structured so that all **MUST** requirements are completed befor
 **Owner:** Shared
 **Outcome:** Three xUnit tests in `CampusCuisine.Tests/Services/OrderStatePersistenceTests.cs` pin down the DI singleton contract - resolving `IOrderStateService` twice returns the same instance, and mutations are visible after a fresh resolution. Stands in for the manual navigation-persistence regression previously referenced under `TEST-03`.
 
+### Completed: offline menu browsing (SHOULD)
+**Status:** Completed on `submission-hardening-and-testing`
+**Owner:** Shared
+**Outcome:** Closes the last outstanding SHOULD. Menu category responses are transparently cached on every successful fetch and silently re-used when the backend is unreachable, so Starters, Mains, and Desserts render real menu content even on a dropped connection provided at least one successful fetch has happened during the app's lifetime.
+
+**Delivered scope:**
+1. Added `IMenuCache` interface in `CampusCuisine.Core/Services/` - single-responsibility: get/save a per-category list.
+2. Added `CachedApiService` decorator in `CampusCuisine.Core/Services/` that wraps `IApiService`; successful `GetMenuByCategoryAsync` persists the list, failed calls fall back to the cached list if one exists or re-throw if not.
+3. Added `PreferencesMenuCache` in the MAUI project, backed by `Microsoft.Maui.Storage.Preferences` with JSON-serialised per-category keys.
+4. Wired DI in `MauiProgram.cs` using the decorator pattern: the raw `ApiService` is registered as its concrete type, `IApiService` resolves to `CachedApiService` wrapping it. No page or view-model changes.
+5. Added `CachedApiServiceTests` with five unit tests (happy-path caches, failure-with-cache returns cached, failure-without-cache re-throws, successful fetch overwrites stale cache, `GetMenuItemAsync` passes through without caching).
+6. Fallback is deliberately silent - no "offline" banner - so the user experience is indistinguishable from online when cached data is available.
+7. `GetMenuItemAsync` and `PostOrderAsync` pass through unchanged; order placement and single-item lookup still require the backend (the server is the price authority).
+
 ## Technical Debt / Hardening Backlog
 
 These items should only be started after the MVP order flow, Shell navigation, and Order Summary editing are stable.

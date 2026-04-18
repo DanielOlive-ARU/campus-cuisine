@@ -191,7 +191,7 @@ dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
 ```
 
 Current frontend suite status:
-- `42` tests passing
+- `47` tests passing
 
 Optional targeted frontend test run:
 
@@ -240,8 +240,12 @@ Order status tracking is intentionally minimal in this slice:
 - Windows is the primary validated frontend target for this submission.
 - Android currently has a local image-loading limitation related to local HTTP access; the Windows build is the reference implementation.
 - Automatic CI is currently disabled to control usage costs; local validation is the primary development workflow and a manual GitHub Actions backend workflow is retained.
-- Offline menu caching is not implemented.
 - Real-time order status updates, user accounts, payment integration, analytics, and order history are intentionally out of scope for the submitted MVP.
+
+## Offline Menu Browsing
+Category menu responses are cached per category using MAUI `Preferences`. On every successful call to `GET /api/menu?category=...` the frontend silently stores the returned list; on a later call that fails (network down, backend unreachable, timeout) the frontend falls back to the most recent cached list instead of showing an empty or error state. Order placement itself still requires the backend - the server remains the price authority and the only valid write path.
+
+Implementation lives in `CampusCuisine.Core/Services/CachedApiService.cs` (platform-neutral decorator over `IApiService`) backed by `FrontEnd/PreferencesMenuCache.cs` (MAUI `Preferences`-backed `IMenuCache`). The decorator is unit-tested end-to-end in `CampusCuisine.Tests/Services/CachedApiServiceTests.cs`.
 
 ## Assessment-Oriented Notes
 - Core MUST requirements have been prioritised first.
