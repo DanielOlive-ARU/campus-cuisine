@@ -8,7 +8,6 @@ public class OrderLineDto : INotifyPropertyChanged
 {
   private int _menuItemId;
   private int _quantity;
-  private string _quantityText = "0";
   private string _name = string.Empty;
   private string _description = string.Empty;
   private double _unitPrice;
@@ -36,24 +35,8 @@ public class OrderLineDto : INotifyPropertyChanged
       if (_quantity != value)
       {
         _quantity = value;
-        _quantityText = _quantity.ToString();
         OnPropertyChanged();
-        OnPropertyChanged(nameof(QuantityText));
         OnPropertyChanged(nameof(LineTotal));
-      }
-    }
-  }
-
-  [JsonIgnore]
-  public string QuantityText
-  {
-    get => _quantityText;
-    set
-    {
-      if (_quantityText != value)
-      {
-        _quantityText = value;
-        OnPropertyChanged();
       }
     }
   }
