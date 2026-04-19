@@ -1,4 +1,5 @@
 using CampusCuisine.Models;
+using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
 using Xunit;
 
@@ -129,5 +130,67 @@ public class MenuItemCardViewModelTests
     vm.Price = 10.5m;
 
     Assert.Contains(nameof(MenuItemCardViewModel.Price), raised);
+  }
+
+  [Fact]
+  public void AddCommand_WithOrderState_AddsLineWithSnapshot()
+  {
+    var state = new OrderState();
+    var source = new MenuItemModel { Id = 7, Name = "Burger", Description = "Tasty", Price = 8.5m };
+    var vm = new MenuItemCardViewModel(source, quantity: 0, orderState: state);
+
+    vm.AddCommand.Execute(null);
+
+    var line = Assert.Single(state.Lines);
+    Assert.Equal(7, line.MenuItemId);
+    Assert.Equal("Burger", line.Name);
+    Assert.Equal("Tasty", line.Description);
+    Assert.Equal(8.5, line.UnitPrice);
+    Assert.Equal(1, line.Quantity);
+  }
+
+  [Fact]
+  public void AddCommand_CalledTwice_AggregatesQuantity()
+  {
+    var state = new OrderState();
+    var source = new MenuItemModel { Id = 1, Name = "A", Price = 2m };
+    var vm = new MenuItemCardViewModel(source, quantity: 0, orderState: state);
+
+    vm.AddCommand.Execute(null);
+    vm.AddCommand.Execute(null);
+
+    Assert.Equal(2, state.GetQuantityForMenuItem(1));
+  }
+
+  [Fact]
+  public void DecreaseCommand_WithOrderState_DecrementsLine()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "A", unitPrice: 2.0, quantity: 3);
+    var source = new MenuItemModel { Id = 1, Name = "A", Price = 2m };
+    var vm = new MenuItemCardViewModel(source, quantity: 3, orderState: state);
+
+    vm.DecreaseCommand.Execute(null);
+
+    Assert.Equal(2, state.GetQuantityForMenuItem(1));
+  }
+
+  [Fact]
+  public void AddCommand_WithoutOrderState_DoesNotThrow()
+  {
+    var source = new MenuItemModel { Id = 1, Name = "A", Price = 1m };
+    var vm = new MenuItemCardViewModel(source);
+
+    vm.AddCommand.Execute(null);
+    vm.DecreaseCommand.Execute(null);
+  }
+
+  [Fact]
+  public void Parameterless_Ctor_CommandsAreNoOp()
+  {
+    var vm = new MenuItemCardViewModel();
+
+    vm.AddCommand.Execute(null);
+    vm.DecreaseCommand.Execute(null);
   }
 }

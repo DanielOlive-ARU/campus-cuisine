@@ -54,27 +54,4 @@ public partial class MenuItemView : ContentView
       _sync = new MenuItemCardSync(Items, _orderState, DisplayItems);
     }
   }
-
-  private void OnAddClicked(object? sender, EventArgs e)
-  {
-    if (sender is Button button &&
-        button.CommandParameter is int menuItemId)
-    {
-      var card = DisplayItems.FirstOrDefault(c => c.Id == menuItemId);
-      var name = card?.Name ?? string.Empty;
-      var unitPrice = (double)(card?.Price ?? 0m);
-      var description = card?.Description ?? string.Empty;
-
-      _orderState.AddLine(menuItemId, name, unitPrice, description: description);
-    }
-  }
-
-  private void OnDecreaseClicked(object? sender, EventArgs e)
-  {
-    if (sender is Button button &&
-        button.CommandParameter is int menuItemId)
-    {
-      _orderState.RemoveLine(menuItemId);
-    }
-  }
 }

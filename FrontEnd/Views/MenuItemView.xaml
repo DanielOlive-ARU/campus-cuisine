@@ -45,15 +45,13 @@
                     Text="-"
                     WidthRequest="50"
                     IsVisible="{Binding HasQuantity}"
-                    Clicked="OnDecreaseClicked"
-                    CommandParameter="{Binding Id}" />
+                    Command="{Binding DecreaseCommand}" />
 
               <Button Grid.Row="0"
                     Grid.Column="2"
                     Text="+"
                     WidthRequest="50"
-                    Clicked="OnAddClicked"
-                    CommandParameter="{Binding Id}" />
+                    Command="{Binding AddCommand}" />
 
               <Label Grid.Row="1"
                    Grid.Column="0"

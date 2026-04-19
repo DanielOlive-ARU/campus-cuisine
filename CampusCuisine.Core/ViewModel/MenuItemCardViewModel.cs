@@ -1,11 +1,15 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using CampusCuisine.Models;
+using CampusCuisine.Services;
 
 namespace CampusCuisine.ViewModel
 {
   public class MenuItemCardViewModel : INotifyPropertyChanged
   {
+    private readonly IOrderStateService? _orderState;
+
     private int _id;
     private string _name = string.Empty;
     private string _description = string.Empty;
@@ -15,12 +19,17 @@ namespace CampusCuisine.ViewModel
 
     public MenuItemCardViewModel()
     {
+      AddCommand = new RelayCommand(Add);
+      DecreaseCommand = new RelayCommand(Decrease);
     }
 
-    public MenuItemCardViewModel(MenuItemModel source, int quantity = 0)
+    public MenuItemCardViewModel(MenuItemModel source, int quantity = 0, IOrderStateService? orderState = null)
+      : this()
     {
       if (source is null)
         throw new ArgumentNullException(nameof(source));
+
+      _orderState = orderState;
 
       Id = source.Id;
       Name = source.Name;
@@ -113,6 +122,20 @@ namespace CampusCuisine.ViewModel
     public bool HasQuantity => _quantity > 0;
 
     public string QuantityText => $"In order: {_quantity}";
+
+    public ICommand AddCommand { get; }
+
+    public ICommand DecreaseCommand { get; }
+
+    private void Add()
+    {
+      _orderState?.AddLine(Id, Name, (double)Price, description: Description);
+    }
+
+    private void Decrease()
+    {
+      _orderState?.RemoveLine(Id);
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

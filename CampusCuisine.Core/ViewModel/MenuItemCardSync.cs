@@ -52,7 +52,7 @@ namespace CampusCuisine.ViewModel
     private void AddVmForItem(MenuItemModel item)
     {
       var currentQuantity = _orderState.GetQuantityForMenuItem(item.Id);
-      var vm = new MenuItemCardViewModel(item, currentQuantity);
+      var vm = new MenuItemCardViewModel(item, currentQuantity, _orderState);
       _target.Add(vm);
       _vmByMenuItemId[item.Id] = vm;
     }
