@@ -8,6 +8,7 @@ public partial class OrderSummaryPage : ContentPage
 {
   private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
+  private readonly IDialogService _dialogService;
   private readonly OrderSummaryPageViewModel _vm;
   private bool _isPlacingOrder;
 
@@ -16,7 +17,8 @@ public partial class OrderSummaryPage : ContentPage
     InitializeComponent();
     _orderState = App.Services.GetRequiredService<IOrderStateService>();
     _api = App.Services.GetRequiredService<IApiService>();
-    _vm = new OrderSummaryPageViewModel(_orderState);
+    _dialogService = App.Services.GetRequiredService<IDialogService>();
+    _vm = new OrderSummaryPageViewModel(_orderState, _dialogService);
     BindingContext = _vm;
     SetPlaceOrderBusy(false);
   }
@@ -31,16 +33,6 @@ public partial class OrderSummaryPage : ContentPage
   {
     _vm.Detach();
     base.OnDisappearing();
-  }
-
-  private static int? GetMenuItemId(object? commandParameter)
-  {
-    return commandParameter switch
-    {
-      int i => i,
-      string s when int.TryParse(s, out var pi) => pi,
-      _ => null
-    };
   }
 
   private async Task HandleQuantityEntryAsync(Entry entry, bool showValidationAlerts)
@@ -71,67 +63,6 @@ public partial class OrderSummaryPage : ContentPage
   {
     if (sender is Entry entry)
       await HandleQuantityEntryAsync(entry, showValidationAlerts: false);
-  }
-
-  private async void OnDecreaseQuantityClicked(object? sender, EventArgs e)
-  {
-    if (sender is not Button b)
-      return;
-
-    int? id = GetMenuItemId(b.CommandParameter);
-
-    if (!id.HasValue)
-      return;
-
-    var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
-    if (existing is null)
-      return;
-
-    if (existing.Quantity > 1)
-    {
-      _orderState.SetQuantity(id.Value, existing.Quantity - 1);
-      return;
-    }
-
-    var confirm = await DisplayAlertAsync("Remove Item", $"Remove '{existing.Name}' from your order?", "Remove", "Cancel");
-    if (confirm)
-      _orderState.RemoveLine(id.Value, existing.Quantity);
-  }
-
-  private void OnIncreaseQuantityClicked(object? sender, EventArgs e)
-  {
-    if (sender is not Button b)
-      return;
-
-    int? id = GetMenuItemId(b.CommandParameter);
-
-    if (!id.HasValue)
-      return;
-
-    var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
-    if (existing is null)
-      return;
-
-    _orderState.SetQuantity(id.Value, existing.Quantity + 1);
-  }
-
-  private async void OnRemoveItemClicked(object? sender, EventArgs e)
-  {
-    if (sender is not Button b)
-      return;
-
-    int? id = GetMenuItemId(b.CommandParameter);
-
-    if (!id.HasValue)
-      return;
-
-    var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
-    if (existing != null)
-    {
-      var confirm = await DisplayAlertAsync("Remove Item", $"Remove '{existing.Name}' from your order?", "Remove", "Cancel");
-      if (confirm)
-        _orderState.RemoveLine(id.Value, existing.Quantity);
-    }
   }
 
   private async void OnClearOrderClicked(object? sender, EventArgs e)

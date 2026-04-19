@@ -8,6 +8,7 @@ namespace CampusCuisine.ViewModel
   public class OrderSummaryPageViewModel : INotifyPropertyChanged, IDisposable
   {
     private readonly IOrderStateService _orderState;
+    private readonly IDialogService? _dialogService;
     private OrderSummaryLineSync? _sync;
     private bool _disposed;
 
@@ -20,8 +21,14 @@ namespace CampusCuisine.ViewModel
     public bool HasOrder => _orderState.HasOrder;
 
     public OrderSummaryPageViewModel(IOrderStateService orderState)
+      : this(orderState, dialogService: null)
+    {
+    }
+
+    public OrderSummaryPageViewModel(IOrderStateService orderState, IDialogService? dialogService)
     {
       _orderState = orderState ?? throw new ArgumentNullException(nameof(orderState));
+      _dialogService = dialogService;
     }
 
     public void Attach()
@@ -36,7 +43,7 @@ namespace CampusCuisine.ViewModel
       _sync = null;
       Lines.Clear();
 
-      _sync = new OrderSummaryLineSync(_orderState, Lines);
+      _sync = new OrderSummaryLineSync(_orderState, Lines, _dialogService);
       _orderState.PropertyChanged += OnOrderStatePropertyChanged;
 
       NotifyTotals();

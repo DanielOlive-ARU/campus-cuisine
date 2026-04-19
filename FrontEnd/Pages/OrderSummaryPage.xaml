@@ -52,8 +52,7 @@
                 <HorizontalStackLayout Spacing="8">
                   <Button Text="-"
                           WidthRequest="50"
-                          Clicked="OnDecreaseQuantityClicked"
-                          CommandParameter="{Binding MenuItemId}" />
+                          Command="{Binding DecreaseCommand}" />
 
                   <Entry WidthRequest="70"
                          Keyboard="Numeric"
@@ -64,12 +63,10 @@
 
                   <Button Text="+"
                           WidthRequest="50"
-                          Clicked="OnIncreaseQuantityClicked"
-                          CommandParameter="{Binding MenuItemId}" />
+                          Command="{Binding IncreaseCommand}" />
 
                   <Button Text="Remove"
-                          Clicked="OnRemoveItemClicked"
-                          CommandParameter="{Binding MenuItemId}" />
+                          Command="{Binding RemoveCommand}" />
                 </HorizontalStackLayout>
 
               </VerticalStackLayout>

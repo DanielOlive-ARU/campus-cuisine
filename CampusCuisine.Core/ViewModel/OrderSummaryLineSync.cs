@@ -9,15 +9,25 @@ namespace CampusCuisine.ViewModel
   public sealed class OrderSummaryLineSync : IDisposable
   {
     private readonly IOrderStateService _orderState;
+    private readonly IDialogService? _dialogService;
     private readonly ObservableCollection<OrderSummaryLineViewModel> _target;
     private readonly Dictionary<OrderLineEntry, OrderSummaryLineViewModel> _map = new();
     private readonly INotifyCollectionChanged? _linesNotifier;
     private bool _disposed;
 
     public OrderSummaryLineSync(IOrderStateService orderState, ObservableCollection<OrderSummaryLineViewModel> target)
+      : this(orderState, target, dialogService: null)
+    {
+    }
+
+    public OrderSummaryLineSync(
+      IOrderStateService orderState,
+      ObservableCollection<OrderSummaryLineViewModel> target,
+      IDialogService? dialogService)
     {
       _orderState = orderState ?? throw new ArgumentNullException(nameof(orderState));
       _target = target ?? throw new ArgumentNullException(nameof(target));
+      _dialogService = dialogService;
 
       foreach (var entry in _orderState.Lines)
       {
@@ -33,7 +43,7 @@ namespace CampusCuisine.ViewModel
 
     private void SubscribeAndAdd(OrderLineEntry entry, int index)
     {
-      var vm = new OrderSummaryLineViewModel(entry);
+      var vm = new OrderSummaryLineViewModel(entry, _orderState, _dialogService);
       if (index < 0 || index > _target.Count)
       {
         _target.Add(vm);

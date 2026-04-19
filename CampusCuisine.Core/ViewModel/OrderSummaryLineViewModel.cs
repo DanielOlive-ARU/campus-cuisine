@@ -1,17 +1,46 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using CampusCuisine.Models;
+using CampusCuisine.Services;
 
 namespace CampusCuisine.ViewModel
 {
   public class OrderSummaryLineViewModel : INotifyPropertyChanged
   {
+    private readonly IOrderStateService? _orderState;
+    private readonly IDialogService? _dialogService;
+
     private int _menuItemId;
     private string _name = string.Empty;
     private string _description = string.Empty;
     private double _unitPrice;
     private int _quantity;
     private string _quantityText = "0";
+
+    public OrderSummaryLineViewModel()
+    {
+      IncreaseCommand = new RelayCommand(Increase);
+      DecreaseCommand = new AsyncRelayCommand(DecreaseAsync);
+      RemoveCommand = new AsyncRelayCommand(RemoveAsync);
+    }
+
+    public OrderSummaryLineViewModel(OrderLineEntry source)
+      : this()
+    {
+      UpdateFrom(source);
+    }
+
+    public OrderSummaryLineViewModel(
+      OrderLineEntry source,
+      IOrderStateService? orderState,
+      IDialogService? dialogService)
+      : this()
+    {
+      _orderState = orderState;
+      _dialogService = dialogService;
+      UpdateFrom(source);
+    }
 
     public int MenuItemId
     {
@@ -97,14 +126,11 @@ namespace CampusCuisine.ViewModel
 
     public double LineTotal => _unitPrice * _quantity;
 
-    public OrderSummaryLineViewModel()
-    {
-    }
+    public ICommand IncreaseCommand { get; }
 
-    public OrderSummaryLineViewModel(OrderLineEntry source)
-    {
-      UpdateFrom(source);
-    }
+    public ICommand DecreaseCommand { get; }
+
+    public ICommand RemoveCommand { get; }
 
     public void UpdateFrom(OrderLineEntry source)
     {
@@ -141,6 +167,58 @@ namespace CampusCuisine.ViewModel
 
       validated = parsed;
       return true;
+    }
+
+    private void Increase()
+    {
+      if (_orderState is null) return;
+      _orderState.SetQuantity(MenuItemId, Quantity + 1);
+    }
+
+    private async Task DecreaseAsync()
+    {
+      if (_orderState is null) return;
+
+      if (Quantity > 1)
+      {
+        _orderState.SetQuantity(MenuItemId, Quantity - 1);
+        return;
+      }
+
+      if (_dialogService is null)
+      {
+        _orderState.RemoveLine(MenuItemId, Quantity);
+        return;
+      }
+
+      var confirm = await _dialogService.ConfirmAsync(
+        "Remove Item",
+        $"Remove '{Name}' from your order?",
+        "Remove",
+        "Cancel");
+
+      if (confirm)
+        _orderState.RemoveLine(MenuItemId, Quantity);
+    }
+
+    private async Task RemoveAsync()
+    {
+      if (_orderState is null) return;
+
+      if (_dialogService is null)
+      {
+        _orderState.RemoveLine(MenuItemId, Quantity);
+        return;
+      }
+
+      var confirm = await _dialogService.ConfirmAsync(
+        "Remove Item",
+        $"Remove '{Name}' from your order?",
+        "Remove",
+        "Cancel");
+
+      if (confirm)
+        _orderState.RemoveLine(MenuItemId, Quantity);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

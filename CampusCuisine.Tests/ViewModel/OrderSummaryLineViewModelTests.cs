@@ -1,4 +1,6 @@
 using CampusCuisine.Models;
+using CampusCuisine.Services;
+using CampusCuisine.Tests.TestDoubles;
 using CampusCuisine.ViewModel;
 using Xunit;
 
@@ -150,5 +152,138 @@ public class OrderSummaryLineViewModelTests
     Assert.False(ok);
     Assert.Equal(0, validated);
     Assert.Equal("Quantity is too large.", err);
+  }
+
+  [Fact]
+  public void IncreaseCommand_WithOrderState_IncrementsQuantity()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "X", unitPrice: 2.0, quantity: 3);
+    var entry = state.Lines[0];
+    var vm = new OrderSummaryLineViewModel(entry, state, dialogService: null);
+
+    vm.IncreaseCommand.Execute(null);
+
+    Assert.Equal(4, state.GetQuantityForMenuItem(1));
+  }
+
+  [Fact]
+  public void IncreaseCommand_WithoutOrderState_NoOp()
+  {
+    var vm = new OrderSummaryLineViewModel();
+    vm.Quantity = 2;
+
+    vm.IncreaseCommand.Execute(null);
+  }
+
+  [Fact]
+  public async Task DecreaseCommand_QuantityGreaterThanOne_DecrementsWithoutDialog()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "X", unitPrice: 2.0, quantity: 5);
+    var entry = state.Lines[0];
+    var dialog = new FakeDialogService();
+    var vm = new OrderSummaryLineViewModel(entry, state, dialog);
+
+    await ((AsyncRelayCommand)vm.DecreaseCommand).ExecuteAsync(null);
+
+    Assert.Equal(4, state.GetQuantityForMenuItem(1));
+    Assert.Empty(dialog.ConfirmCalls);
+  }
+
+  [Fact]
+  public async Task DecreaseCommand_QuantityOne_ConfirmAccept_RemovesLine()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 2.0, quantity: 1);
+    var entry = state.Lines[0];
+    var dialog = new FakeDialogService { NextConfirmResponse = true };
+    var vm = new OrderSummaryLineViewModel(entry, state, dialog);
+
+    await ((AsyncRelayCommand)vm.DecreaseCommand).ExecuteAsync(null);
+
+    Assert.Equal(0, state.GetQuantityForMenuItem(1));
+    var call = Assert.Single(dialog.ConfirmCalls);
+    Assert.Equal("Remove Item", call.Title);
+    Assert.Contains("Burger", call.Message);
+  }
+
+  [Fact]
+  public async Task DecreaseCommand_QuantityOne_ConfirmCancel_KeepsLine()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 2.0, quantity: 1);
+    var entry = state.Lines[0];
+    var dialog = new FakeDialogService { NextConfirmResponse = false };
+    var vm = new OrderSummaryLineViewModel(entry, state, dialog);
+
+    await ((AsyncRelayCommand)vm.DecreaseCommand).ExecuteAsync(null);
+
+    Assert.Equal(1, state.GetQuantityForMenuItem(1));
+    Assert.Single(dialog.ConfirmCalls);
+  }
+
+  [Fact]
+  public async Task DecreaseCommand_QuantityOne_NoDialogService_RemovesLine()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 2.0, quantity: 1);
+    var entry = state.Lines[0];
+    var vm = new OrderSummaryLineViewModel(entry, state, dialogService: null);
+
+    await ((AsyncRelayCommand)vm.DecreaseCommand).ExecuteAsync(null);
+
+    Assert.Equal(0, state.GetQuantityForMenuItem(1));
+  }
+
+  [Fact]
+  public async Task RemoveCommand_ConfirmAccept_RemovesLineEntirely()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 2.0, quantity: 5);
+    var entry = state.Lines[0];
+    var dialog = new FakeDialogService { NextConfirmResponse = true };
+    var vm = new OrderSummaryLineViewModel(entry, state, dialog);
+
+    await ((AsyncRelayCommand)vm.RemoveCommand).ExecuteAsync(null);
+
+    Assert.Equal(0, state.GetQuantityForMenuItem(1));
+    Assert.Empty(state.Lines);
+  }
+
+  [Fact]
+  public async Task RemoveCommand_ConfirmCancel_KeepsLine()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 2.0, quantity: 5);
+    var entry = state.Lines[0];
+    var dialog = new FakeDialogService { NextConfirmResponse = false };
+    var vm = new OrderSummaryLineViewModel(entry, state, dialog);
+
+    await ((AsyncRelayCommand)vm.RemoveCommand).ExecuteAsync(null);
+
+    Assert.Equal(5, state.GetQuantityForMenuItem(1));
+  }
+
+  [Fact]
+  public async Task RemoveCommand_WithoutOrderState_NoOp()
+  {
+    var vm = new OrderSummaryLineViewModel();
+    vm.Quantity = 3;
+
+    await ((AsyncRelayCommand)vm.RemoveCommand).ExecuteAsync(null);
+  }
+
+  [Fact]
+  public async Task RemoveCommand_WithoutDialog_RemovesLineImmediately()
+  {
+    var state = new OrderState();
+    state.AddLine(1, quantity: 4);
+    var entry = state.Lines[0];
+    var vm = new OrderSummaryLineViewModel(entry, state, dialogService: null);
+
+    await ((AsyncRelayCommand)vm.RemoveCommand).ExecuteAsync(null);
+
+    Assert.Empty(state.Lines);
   }
 }
