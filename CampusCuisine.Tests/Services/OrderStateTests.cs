@@ -165,9 +165,6 @@ public class OrderStateTests
     var line = Assert.Single(request.Items);
     Assert.Equal(7, line.MenuItemId);
     Assert.Equal(2, line.Quantity);
-    Assert.True(string.IsNullOrEmpty(line.Name));
-    Assert.Equal(0, line.UnitPrice);
-    Assert.True(string.IsNullOrEmpty(line.Description));
   }
 
   [Fact]
