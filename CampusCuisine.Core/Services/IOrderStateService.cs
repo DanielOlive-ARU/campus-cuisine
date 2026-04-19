@@ -6,7 +6,7 @@ namespace CampusCuisine.Services;
 
 public interface IOrderStateService : INotifyPropertyChanged
 {
-  ObservableCollection<OrderLineDto> Lines { get; }
+  ObservableCollection<OrderLineEntry> Lines { get; }
 
   int TotalItems { get; }
 

@@ -10,7 +10,7 @@ namespace CampusCuisine.ViewModel
   {
     private readonly IOrderStateService _orderState;
     private readonly ObservableCollection<OrderSummaryLineViewModel> _target;
-    private readonly Dictionary<OrderLineDto, OrderSummaryLineViewModel> _map = new();
+    private readonly Dictionary<OrderLineEntry, OrderSummaryLineViewModel> _map = new();
     private readonly INotifyCollectionChanged? _linesNotifier;
     private bool _disposed;
 
@@ -19,9 +19,9 @@ namespace CampusCuisine.ViewModel
       _orderState = orderState ?? throw new ArgumentNullException(nameof(orderState));
       _target = target ?? throw new ArgumentNullException(nameof(target));
 
-      foreach (var dto in _orderState.Lines)
+      foreach (var entry in _orderState.Lines)
       {
-        SubscribeAndAdd(dto, _target.Count);
+        SubscribeAndAdd(entry, _target.Count);
       }
 
       _linesNotifier = _orderState.Lines as INotifyCollectionChanged;
@@ -31,9 +31,9 @@ namespace CampusCuisine.ViewModel
       }
     }
 
-    private void SubscribeAndAdd(OrderLineDto dto, int index)
+    private void SubscribeAndAdd(OrderLineEntry entry, int index)
     {
-      var vm = new OrderSummaryLineViewModel(dto);
+      var vm = new OrderSummaryLineViewModel(entry);
       if (index < 0 || index > _target.Count)
       {
         _target.Add(vm);
@@ -42,17 +42,17 @@ namespace CampusCuisine.ViewModel
       {
         _target.Insert(index, vm);
       }
-      _map[dto] = vm;
-      dto.PropertyChanged += OnLinePropertyChanged;
+      _map[entry] = vm;
+      entry.PropertyChanged += OnEntryPropertyChanged;
     }
 
-    private void UnsubscribeAndRemove(OrderLineDto dto)
+    private void UnsubscribeAndRemove(OrderLineEntry entry)
     {
-      dto.PropertyChanged -= OnLinePropertyChanged;
-      if (_map.TryGetValue(dto, out var vm))
+      entry.PropertyChanged -= OnEntryPropertyChanged;
+      if (_map.TryGetValue(entry, out var vm))
       {
         _target.Remove(vm);
-        _map.Remove(dto);
+        _map.Remove(entry);
       }
     }
 
@@ -64,9 +64,9 @@ namespace CampusCuisine.ViewModel
           if (e.NewItems != null)
           {
             var index = e.NewStartingIndex;
-            foreach (OrderLineDto dto in e.NewItems)
+            foreach (OrderLineEntry entry in e.NewItems)
             {
-              SubscribeAndAdd(dto, index);
+              SubscribeAndAdd(entry, index);
               if (index >= 0) index++;
             }
           }
@@ -75,9 +75,9 @@ namespace CampusCuisine.ViewModel
         case NotifyCollectionChangedAction.Remove:
           if (e.OldItems != null)
           {
-            foreach (OrderLineDto dto in e.OldItems)
+            foreach (OrderLineEntry entry in e.OldItems)
             {
-              UnsubscribeAndRemove(dto);
+              UnsubscribeAndRemove(entry);
             }
           }
           break;
@@ -85,16 +85,16 @@ namespace CampusCuisine.ViewModel
         case NotifyCollectionChangedAction.Reset:
           // ObservableCollection.Clear() raises Reset without OldItems,
           // so we rely on our own map to unsubscribe cleanly.
-          foreach (var dto in _map.Keys)
+          foreach (var entry in _map.Keys)
           {
-            dto.PropertyChanged -= OnLinePropertyChanged;
+            entry.PropertyChanged -= OnEntryPropertyChanged;
           }
           _map.Clear();
           _target.Clear();
 
-          foreach (var dto in _orderState.Lines)
+          foreach (var entry in _orderState.Lines)
           {
-            SubscribeAndAdd(dto, _target.Count);
+            SubscribeAndAdd(entry, _target.Count);
           }
           break;
 
@@ -104,24 +104,24 @@ namespace CampusCuisine.ViewModel
       }
     }
 
-    private void OnLinePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnEntryPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-      if (sender is not OrderLineDto dto) return;
-      if (!_map.TryGetValue(dto, out var vm)) return;
+      if (sender is not OrderLineEntry entry) return;
+      if (!_map.TryGetValue(entry, out var vm)) return;
 
       switch (e.PropertyName)
       {
-        case nameof(OrderLineDto.Quantity):
-          if (vm.Quantity != dto.Quantity) vm.Quantity = dto.Quantity;
+        case nameof(OrderLineEntry.Quantity):
+          if (vm.Quantity != entry.Quantity) vm.Quantity = entry.Quantity;
           break;
-        case nameof(OrderLineDto.UnitPrice):
-          if (vm.UnitPrice != dto.UnitPrice) vm.UnitPrice = dto.UnitPrice;
+        case nameof(OrderLineEntry.UnitPrice):
+          if (vm.UnitPrice != entry.UnitPrice) vm.UnitPrice = entry.UnitPrice;
           break;
-        case nameof(OrderLineDto.Name):
-          if (vm.Name != dto.Name) vm.Name = dto.Name;
+        case nameof(OrderLineEntry.Name):
+          if (vm.Name != entry.Name) vm.Name = entry.Name;
           break;
-        case nameof(OrderLineDto.Description):
-          if (vm.Description != dto.Description) vm.Description = dto.Description;
+        case nameof(OrderLineEntry.Description):
+          if (vm.Description != entry.Description) vm.Description = entry.Description;
           break;
       }
     }
@@ -136,9 +136,9 @@ namespace CampusCuisine.ViewModel
         _linesNotifier.CollectionChanged -= OnLinesCollectionChanged;
       }
 
-      foreach (var dto in _map.Keys)
+      foreach (var entry in _map.Keys)
       {
-        dto.PropertyChanged -= OnLinePropertyChanged;
+        entry.PropertyChanged -= OnEntryPropertyChanged;
       }
       _map.Clear();
     }

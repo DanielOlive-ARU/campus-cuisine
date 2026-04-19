@@ -101,12 +101,12 @@ namespace CampusCuisine.ViewModel
     {
     }
 
-    public OrderSummaryLineViewModel(OrderLineDto source)
+    public OrderSummaryLineViewModel(OrderLineEntry source)
     {
       UpdateFrom(source);
     }
 
-    public void UpdateFrom(OrderLineDto source)
+    public void UpdateFrom(OrderLineEntry source)
     {
       MenuItemId = source.MenuItemId;
       Name = source.Name;

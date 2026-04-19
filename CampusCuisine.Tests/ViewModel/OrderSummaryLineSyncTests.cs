@@ -163,7 +163,7 @@ public class OrderSummaryLineSyncTests
   }
 
   [Fact]
-  public void DirectDtoQuantityMutation_MirrorsIntoVm()
+  public void DirectEntryQuantityMutation_MirrorsIntoVm()
   {
     var state = new OrderState();
     state.AddLine(1, unitPrice: 2.0, quantity: 1);

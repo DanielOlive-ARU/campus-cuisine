@@ -39,14 +39,7 @@ public class OrderSummaryLineViewModelTests
   [Fact]
   public void UpdateFrom_CopiesAllFields()
   {
-    var source = new OrderLineDto
-    {
-      MenuItemId = 11,
-      Name = "Burger",
-      Description = "With cheese",
-      UnitPrice = 9.5,
-      Quantity = 2
-    };
+    var source = new OrderLineEntry(11, new MenuItemSnapshot("Burger", "With cheese", 9.5), 2);
     var vm = new OrderSummaryLineViewModel();
 
     vm.UpdateFrom(source);
@@ -67,13 +60,7 @@ public class OrderSummaryLineViewModelTests
     vm.Quantity = 3;
     vm.QuantityText = "mid-edit";
 
-    var source = new OrderLineDto
-    {
-      MenuItemId = 1,
-      Name = "X",
-      UnitPrice = 5,
-      Quantity = 3
-    };
+    var source = new OrderLineEntry(1, new MenuItemSnapshot("X", "", 5), 3);
 
     vm.UpdateFrom(source);
 
@@ -83,14 +70,7 @@ public class OrderSummaryLineViewModelTests
   [Fact]
   public void Ctor_WithSource_SeedsAllFields()
   {
-    var source = new OrderLineDto
-    {
-      MenuItemId = 42,
-      Name = "Pie",
-      Description = "Apple",
-      UnitPrice = 3.0,
-      Quantity = 4
-    };
+    var source = new OrderLineEntry(42, new MenuItemSnapshot("Pie", "Apple", 3.0), 4);
 
     var vm = new OrderSummaryLineViewModel(source);
 
