@@ -241,22 +241,23 @@ These items should only be started after the MVP order flow, Shell navigation, a
 4. Re-ran Windows build, frontend tests, and manual order-flow regression checks.
 5. Updated requirements and architecture documentation to reference the reusable component directly.
 
-### Move Order Summary quantity edit buffer into a view model layer
-**Priority:** SHOULD after MVP stability
+### Completed: Move Order Summary quantity edit buffer into a view model layer
+**Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
 **Owner:** Adam
-**Reason:** The current frontend uses a temporary `QuantityText` buffer on `OrderLineDto` so the editable quantity `Entry` in Order Summary can stay in sync without letting invalid values affect totals. This is acceptable for MVP, but it mixes UI editing state into the DTO and is weaker than a cleaner MVVM design.
+**Outcome:** The `QuantityText` UI buffer has been lifted off `OrderLineDto` onto a dedicated `OrderSummaryLineViewModel`. A separate `OrderSummaryLineSync` projects `IOrderStateService.Lines` into the page's observable collection via match-by-MenuItemId incremental diff, preserving view-model instance identity so the quantity `Entry` never loses focus during unrelated updates. `OrderLineDto` is now a minimal serialisation contract (`MenuItemId` + `Quantity` only) and the frontend line representation lives on a new `OrderLineEntry` + immutable `MenuItemSnapshot` pair.
 
-**Scope:**
-1. Introduce a dedicated order-summary view model or order-line view model for editable quantity state.
-2. Move `QuantityText` or equivalent UI-buffer behaviour out of `OrderLineDto`.
-3. Keep backend payloads unchanged.
-4. Re-run Windows build and manual order-flow regression tests.
-5. Update documentation to explain the final MVVM structure.
+**Delivered scope:**
+1. Added `OrderSummaryLineViewModel` with INPC and a pure `TryValidateQuantity` helper covering the three existing validation rules (non-numeric / non-positive / greater than 999).
+2. Added `OrderSummaryLineSync` with `Dictionary`-backed subscription tracking and idempotent mirror setters.
+3. Rewired `OrderSummaryPage.xaml.cs` to bind an `ObservableCollection<OrderSummaryLineViewModel>` and use `TryValidateQuantity` for a thin validation path.
+4. Introduced `MenuItemSnapshot` (immutable record) and `OrderLineEntry` (INPC wrapper) and migrated `OrderState` onto them atomically in a single commit.
+5. Stripped `OrderLineDto` to `MenuItemId` + `Quantity` only; frontend display state and LineTotal now live on `OrderLineEntry` and its Snapshot.
+6. Extracted a pure `OrderConfirmationPresenter` for the place-order confirmation message, pinned to invariant culture for consistent `£` formatting.
+7. Extracted `HomePageViewModel` (collapsing the 358-line `HomePage.xaml.cs` to ~60 lines) and `MenuItemCardViewModel` + `MenuItemCardSync` (replacing `MenuItemView`'s wholesale rebuild).
+8. Ran `dotnet build` on `net10.0-windows10.0.19041.0` (0 warnings / 0 errors) and `dotnet test` on the full suite (47 existing + 101 new = 148 passing) after every commit. Windows GUI smoke test passed end-to-end.
+9. Updated `docs/meetings/decision-log.md`, `docs/reflection/development-reflection.md`, `README.md`, and added `docs/viva/frontend-mvvm-refactor-notes.md`.
 
-**Do not start until:**
-1. MVP order flow is stable.
-2. Order Summary editing and validation are stable.
-3. Frontend tests are in place or planned closely enough to protect the refactor.
+Closes Issue 32.
 
 ### Expand GitHub Actions into a staged test-and-build pipeline
 **Priority:** MAY after all MUST requirements, SHOULD requirements, and likely most MAY work are complete

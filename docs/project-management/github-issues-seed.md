@@ -179,9 +179,11 @@ Copy these into GitHub Issues and assign them to the relevant team member.
 ### Issue 32: Move Order Summary quantity edit buffer into a view model
 **Labels:** frontend, should, architecture, testing
 **Owner:** Adam
+**Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
 **Description:** Remove the temporary `QuantityText` UI buffer from `OrderLineDto` and move editable quantity state into a dedicated order-summary or order-line view model.
 **Reason:** The current `QuantityText` buffer is a pragmatic MVP fix that keeps the quantity `Entry` in sync and prevents invalid values from mutating totals. It does not break the current solution, but a dedicated view-model layer would better align the frontend with a stricter MVVM design.
 **Done when:** editable quantity state no longer lives on `OrderLineDto`, Order Summary quantity editing still works, backend payload shape is unchanged, and Windows build/manual order-flow regression passes.
+**Delivered:** `OrderSummaryLineViewModel` owns `QuantityText`; `OrderSummaryLineSync` projects `IOrderStateService.Lines` into the page's VM collection; `OrderLineDto` is stripped to `MenuItemId` + `Quantity`. See `docs/project-management/backlog-and-milestones.md` and `docs/viva/frontend-mvvm-refactor-notes.md` for full delivered scope.
 
 ### Issue 33: Add Help page to the customer app
 **Labels:** frontend, should
