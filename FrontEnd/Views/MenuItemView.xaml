@@ -36,23 +36,34 @@
                  TextColor="Black"
                  FontSize="16" />
 
-            <Label Text="{Binding QuantityText}"
-                 IsVisible="{Binding HasQuantity}"
-                 TextColor="Black"
-                 FontAttributes="Bold" />
-
-            <HorizontalStackLayout Spacing="8">
-              <Button Text="-"
+            <Grid ColumnDefinitions="50,8,50"
+                  RowDefinitions="Auto,Auto"
+                  HorizontalOptions="Start"
+                  RowSpacing="4">
+              <Button Grid.Row="0"
+                    Grid.Column="0"
+                    Text="-"
                     WidthRequest="50"
                     IsVisible="{Binding HasQuantity}"
                     Clicked="OnDecreaseClicked"
                     CommandParameter="{Binding Id}" />
 
-              <Button Text="+"
+              <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Text="+"
                     WidthRequest="50"
                     Clicked="OnAddClicked"
                     CommandParameter="{Binding Id}" />
-            </HorizontalStackLayout>
+
+              <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   Text="{Binding QuantityText}"
+                   IsVisible="{Binding HasQuantity}"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   HorizontalOptions="End" />
+            </Grid>
 
           </VerticalStackLayout>
         </Border>
