@@ -1,7 +1,6 @@
 using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
 
 namespace CampusCuisine.Pages;
 
@@ -9,54 +8,29 @@ public partial class OrderSummaryPage : ContentPage
 {
   private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
-  private OrderSummaryLineSync? _sync;
+  private readonly OrderSummaryPageViewModel _vm;
   private bool _isPlacingOrder;
-
-  public ObservableCollection<OrderSummaryLineViewModel> Lines { get; } = new();
-
-  public string TotalItemsText => $"Total items: {_orderState.TotalItems}";
-
-  public string GrandTotalText => $"Grand total: £{_orderState.GrandTotal:F2}";
 
   public OrderSummaryPage()
   {
     InitializeComponent();
     _orderState = App.Services.GetRequiredService<IOrderStateService>();
     _api = App.Services.GetRequiredService<IApiService>();
-    BindingContext = this;
+    _vm = new OrderSummaryPageViewModel(_orderState);
+    BindingContext = _vm;
     SetPlaceOrderBusy(false);
   }
 
   protected override void OnAppearing()
   {
     base.OnAppearing();
-
-    _sync?.Dispose();
-    Lines.Clear();
-    _sync = new OrderSummaryLineSync(_orderState, Lines);
-
-    _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
-    _orderState.PropertyChanged += OnOrderStatePropertyChanged;
-    RefreshTotals();
+    _vm.Attach();
   }
 
   protected override void OnDisappearing()
   {
-    _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
-    _sync?.Dispose();
-    _sync = null;
+    _vm.Detach();
     base.OnDisappearing();
-  }
-
-  private void OnOrderStatePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-  {
-    RefreshTotals();
-  }
-
-  private void RefreshTotals()
-  {
-    OnPropertyChanged(nameof(TotalItemsText));
-    OnPropertyChanged(nameof(GrandTotalText));
   }
 
   private static int? GetMenuItemId(object? commandParameter)
