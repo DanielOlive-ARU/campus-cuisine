@@ -1,6 +1,5 @@
 using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CampusCuisine.Pages;
 
@@ -9,16 +8,11 @@ public partial class OrderSummaryPage : ContentPage
   private readonly IOrderStateService _orderState;
   private readonly OrderSummaryPageViewModel _vm;
 
-  public OrderSummaryPage()
+  public OrderSummaryPage(OrderSummaryPageViewModel vm, IOrderStateService orderState)
   {
     InitializeComponent();
-
-    _orderState = App.Services.GetRequiredService<IOrderStateService>();
-    var api = App.Services.GetRequiredService<IApiService>();
-    var dialogService = App.Services.GetRequiredService<IDialogService>();
-    var navigationService = App.Services.GetRequiredService<INavigationService>();
-
-    _vm = new OrderSummaryPageViewModel(_orderState, api, dialogService, navigationService);
+    _vm = vm ?? throw new ArgumentNullException(nameof(vm));
+    _orderState = orderState ?? throw new ArgumentNullException(nameof(orderState));
     BindingContext = _vm;
   }
 

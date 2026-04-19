@@ -1,6 +1,4 @@
-using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CampusCuisine.Pages;
 
@@ -8,17 +6,10 @@ public partial class HomePage : ContentPage
 {
   private readonly HomePageViewModel _vm;
 
-  public HomePage()
+  public HomePage(HomePageViewModel vm)
   {
     InitializeComponent();
-
-    var api = App.Services.GetRequiredService<IApiService>();
-    var orderState = App.Services.GetRequiredService<IOrderStateService>();
-    var dialogService = App.Services.GetRequiredService<IDialogService>();
-    var navigationService = App.Services.GetRequiredService<INavigationService>();
-
-    _vm = new HomePageViewModel(api, orderState, dialogService, navigationService);
-
+    _vm = vm ?? throw new ArgumentNullException(nameof(vm));
     BindingContext = _vm;
   }
 

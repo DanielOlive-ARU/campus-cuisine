@@ -1,16 +1,14 @@
 using CampusCuisine.Services;
 using CampusCuisine.ViewModel;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CampusCuisine.Pages;
 
 public partial class StartersPage : ContentPage
 {
-  public StartersPage()
+  public StartersPage(IApiService api)
   {
     InitializeComponent();
 
-    var api = App.Services.GetRequiredService<IApiService>();
     BindingContext = new MenuItemViewModel(api, "Starters");
   }
 
