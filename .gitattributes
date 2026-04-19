@@ -31,3 +31,8 @@ FrontEnd/** text eol=crlf
 *.otf binary
 *.woff binary
 *.woff2 binary
+
+# Office documents are ZIP containers - never text-normalize.
+*.pptx binary
+*.docx binary
+*.xlsx binary
