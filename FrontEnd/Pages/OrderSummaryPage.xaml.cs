@@ -200,26 +200,7 @@ public partial class OrderSummaryPage : ContentPage
         return;
       }
 
-      var confirmationLines = new List<string>
-      {
-        $"Order ID: {confirmation.Id}"
-      };
-
-      if (!string.IsNullOrWhiteSpace(confirmation.Status))
-      {
-        confirmationLines.Add($"Status: {confirmation.Status}");
-      }
-
-      confirmationLines.Add($"Total items: {confirmation.TotalItems}");
-      confirmationLines.Add($"Total: £{confirmation.GrandTotal:F2}");
-
-      if (confirmation.EstimatedPrepMinutes.HasValue)
-      {
-        confirmationLines.Add(
-          $"Estimated preparation time: about {confirmation.EstimatedPrepMinutes.Value} minutes");
-      }
-
-      await DisplayAlertAsync("Order Confirmed", string.Join('\n', confirmationLines), "OK");
+      await DisplayAlertAsync("Order Confirmed", OrderConfirmationPresenter.FormatMessage(confirmation), "OK");
       _orderState.Clear();
       await Shell.Current.GoToAsync("..");
     }
