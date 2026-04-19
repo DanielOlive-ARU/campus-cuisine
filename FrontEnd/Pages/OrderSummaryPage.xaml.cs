@@ -1,5 +1,5 @@
-using CampusCuisine.Models;
 using CampusCuisine.Services;
+using CampusCuisine.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
@@ -9,9 +9,10 @@ public partial class OrderSummaryPage : ContentPage
 {
   private readonly IOrderStateService _orderState;
   private readonly IApiService _api;
+  private OrderSummaryLineSync? _sync;
   private bool _isPlacingOrder;
 
-  public ObservableCollection<OrderLineDto> Lines => _orderState.Lines;
+  public ObservableCollection<OrderSummaryLineViewModel> Lines { get; } = new();
 
   public string TotalItemsText => $"Total items: {_orderState.TotalItems}";
 
@@ -29,6 +30,11 @@ public partial class OrderSummaryPage : ContentPage
   protected override void OnAppearing()
   {
     base.OnAppearing();
+
+    _sync?.Dispose();
+    Lines.Clear();
+    _sync = new OrderSummaryLineSync(_orderState, Lines);
+
     _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
     _orderState.PropertyChanged += OnOrderStatePropertyChanged;
     RefreshTotals();
@@ -37,6 +43,8 @@ public partial class OrderSummaryPage : ContentPage
   protected override void OnDisappearing()
   {
     _orderState.PropertyChanged -= OnOrderStatePropertyChanged;
+    _sync?.Dispose();
+    _sync = null;
     base.OnDisappearing();
   }
 
@@ -61,45 +69,22 @@ public partial class OrderSummaryPage : ContentPage
     };
   }
 
-  private bool TryGetLineFromEntry(Entry entry, out OrderLineDto? line)
-  {
-    line = entry.BindingContext as OrderLineDto;
-    return line is not null;
-  }
-
   private async Task HandleQuantityEntryAsync(Entry entry, bool showValidationAlerts)
   {
-    if (!TryGetLineFromEntry(entry, out var line) || line is null)
+    if (entry.BindingContext is not OrderSummaryLineViewModel vm)
       return;
 
-    var currentQuantity = line.Quantity;
-    var text = line.QuantityText?.Trim();
+    var current = vm.Quantity;
 
-    if (string.IsNullOrWhiteSpace(text) || !int.TryParse(text, out var parsedQuantity))
+    if (!OrderSummaryLineViewModel.TryValidateQuantity(vm.QuantityText, out var validated, out var errorMessage))
     {
-      line.QuantityText = currentQuantity.ToString();
-      if (showValidationAlerts)
-        await DisplayAlertAsync("Invalid Quantity", "Please enter a whole number quantity.", "OK");
+      vm.QuantityText = current.ToString();
+      if (showValidationAlerts && errorMessage is not null)
+        await DisplayAlertAsync("Invalid Quantity", errorMessage, "OK");
       return;
     }
 
-    if (parsedQuantity <= 0)
-    {
-      line.QuantityText = currentQuantity.ToString();
-      if (showValidationAlerts)
-        await DisplayAlertAsync("Invalid Quantity", "Quantity must be greater than zero.", "OK");
-      return;
-    }
-
-    if (parsedQuantity > 999)
-    {
-      line.QuantityText = currentQuantity.ToString();
-      if (showValidationAlerts)
-        await DisplayAlertAsync("Invalid Quantity", "Quantity is too large.", "OK");
-      return;
-    }
-
-    _orderState.SetQuantity(line.MenuItemId, parsedQuantity);
+    _orderState.SetQuantity(vm.MenuItemId, validated);
   }
 
   private async void OnQuantityEntryCompleted(object? sender, EventArgs e)
@@ -149,7 +134,6 @@ public partial class OrderSummaryPage : ContentPage
     if (!id.HasValue)
       return;
 
-    // capture existing snapshot if available
     var existing = _orderState.Lines.FirstOrDefault(x => x.MenuItemId == id.Value);
     if (existing is null)
       return;
@@ -201,8 +185,6 @@ public partial class OrderSummaryPage : ContentPage
 
     if (PlaceOrderButton is not null)
     {
-      // Short press-feedback animation before the network call so the user
-      // sees the button acknowledge the tap.
       await PlaceOrderButton.ScaleToAsync(0.96, 80);
       await PlaceOrderButton.ScaleToAsync(1.0, 80);
     }

@@ -3,7 +3,7 @@
     x:Class="CampusCuisine.Pages.OrderSummaryPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:model="clr-namespace:CampusCuisine.Models"
+    xmlns:vm="clr-namespace:CampusCuisine.ViewModel;assembly=CampusCuisine.Core"
     Title="Order Summary">
 
   <ScrollView>
@@ -19,7 +19,7 @@
         </CollectionView.EmptyView>
 
         <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="model:OrderLineDto">
+          <DataTemplate x:DataType="vm:OrderSummaryLineViewModel">
             <Border Padding="10" Margin="0,4">
               <VerticalStackLayout Spacing="8">
 
