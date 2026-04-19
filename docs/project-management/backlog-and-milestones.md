@@ -241,6 +241,23 @@ These items should only be started after the MVP order flow, Shell navigation, a
 4. Re-ran Windows build, frontend tests, and manual order-flow regression checks.
 5. Updated requirements and architecture documentation to reference the reusable component directly.
 
+### Completed: Close the remaining MVVM gaps - commands on view-models and constructor DI on pages
+**Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
+**Owner:** Adam
+**Outcome:** Every meaningful user-facing click now runs through an `ICommand` on the relevant view-model, and every Shell-declared page receives its dependencies through constructor injection rather than pulling them from `App.Services.GetRequiredService`. Both Order Summary and Home now follow the same `BindingContext = _vm` pattern. `CampusCuisine.Core` contains no reference to MAUI framework types; view-model commands reach dialogs and Shell navigation through `IDialogService` / `INavigationService` abstractions implemented in `FrontEnd/Services/`.
+
+**Delivered scope:**
+1. Extracted `OrderSummaryPageViewModel` owning the `Lines` collection, totals, `OrderSummaryLineSync` lifecycle, and `HasOrder`, with `Attach` / `Detach` methods exposed so the page can wire sync activation to its visibility.
+2. Added hand-rolled `RelayCommand` / `AsyncRelayCommand` types in `CampusCuisine.Core/ViewModel/Commands.cs` (no `CommunityToolkit.Mvvm` dependency) with 15 unit tests covering parameter passing, `CanExecute` gating, reentry guard, and exception resilience.
+3. Added `IDialogService` / `INavigationService` interfaces in `CampusCuisine.Core/Services/` plus MAUI-side implementations in `FrontEnd/Services/` wrapping `Shell.Current.DisplayAlertAsync` and `Shell.Current.GoToAsync`. Test doubles (`FakeDialogService`, `FakeNavigationService`) live in `CampusCuisine.Tests/TestDoubles/`.
+4. Moved every meaningful click handler onto the relevant view-model: `MenuItemCardViewModel.AddCommand` / `DecreaseCommand`; `OrderSummaryLineViewModel.IncreaseCommand` / `DecreaseCommand` / `RemoveCommand`; `OrderSummaryPageViewModel.ClearOrderCommand` / `PlaceOrderCommand`; `HomePageViewModel.StartNewOrderCommand` / `ContinueOrderCommand` / `NavigateToCommand`. The Place Order command drives `IsPlacingOrder` and a derived `PlaceOrderButtonText` binding so the button text and enabled state are VM-driven.
+5. Registered every Shell-declared page and the two stateful view-models as transient services in `MauiProgram.cs`; page constructors now accept their dependencies via constructor DI.
+6. Stabilised menu-card layout (fixed-height label row) so the card's `+` button position does not shift when quantity state changes.
+7. 47 new tests added; `210` passing frontend tests total on the branch. `dotnet build` on `net10.0-windows10.0.19041.0` → 0 warnings, 0 errors. Windows GUI smoke test passed end-to-end on home navigation, menu-card `+/-`, Order Summary commands, and Place Order.
+8. Updated `docs/meetings/decision-log.md`, `docs/viva/frontend-mvvm-refactor-notes.md`, and this backlog entry.
+
+Only three view-layer hooks remain in code-behind after this slice: the Place Order `ScaleToAsync` press animation (inherently view-scoped), the Entry `Completed` / `Unfocused` quantity-validation handlers (MAUI `Entry` has no `CompletedCommand`), and construction of `MenuItemViewModel(api, "Mains")` on the category pages (the category string is a runtime value, not DI-resolvable). Each is a conscious MAUI-ergonomics trade rather than architectural smell.
+
 ### Completed: Move Order Summary quantity edit buffer into a view model layer
 **Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
 **Owner:** Adam
