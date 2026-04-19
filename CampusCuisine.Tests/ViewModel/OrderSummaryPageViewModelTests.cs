@@ -1,4 +1,6 @@
+using CampusCuisine.Models;
 using CampusCuisine.Services;
+using CampusCuisine.Tests.TestDoubles;
 using CampusCuisine.ViewModel;
 using Xunit;
 
@@ -215,5 +217,160 @@ public class OrderSummaryPageViewModelTests
     vm.Dispose();
 
     Assert.Throws<ObjectDisposedException>(() => vm.Attach());
+  }
+
+  [Fact]
+  public void PlaceOrderButtonText_DefaultsToPlaceOrder()
+  {
+    var vm = new OrderSummaryPageViewModel(new OrderState());
+
+    Assert.Equal("Place Order", vm.PlaceOrderButtonText);
+    Assert.False(vm.IsPlacingOrder);
+  }
+
+  [Fact]
+  public async Task ClearOrderCommand_EmptyCart_DoesNothing()
+  {
+    var state = new OrderState();
+    var dialog = new FakeDialogService();
+    var vm = new OrderSummaryPageViewModel(state, api: null, dialogService: dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.ClearOrderCommand).ExecuteAsync(null);
+
+    Assert.Empty(dialog.ConfirmCalls);
+  }
+
+  [Fact]
+  public async Task ClearOrderCommand_WithOrder_ConfirmAccept_Clears()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 2.0, quantity: 3);
+    var dialog = new FakeDialogService { NextConfirmResponse = true };
+    var vm = new OrderSummaryPageViewModel(state, api: null, dialogService: dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.ClearOrderCommand).ExecuteAsync(null);
+
+    Assert.False(state.HasOrder);
+    Assert.Single(dialog.ConfirmCalls);
+  }
+
+  [Fact]
+  public async Task ClearOrderCommand_WithOrder_ConfirmCancel_KeepsOrder()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 2.0, quantity: 3);
+    var dialog = new FakeDialogService { NextConfirmResponse = false };
+    var vm = new OrderSummaryPageViewModel(state, api: null, dialogService: dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.ClearOrderCommand).ExecuteAsync(null);
+
+    Assert.True(state.HasOrder);
+    Assert.Equal(3, state.TotalItems);
+  }
+
+  [Fact]
+  public async Task PlaceOrderCommand_EmptyCart_ShowsAlertAndReturns()
+  {
+    var state = new OrderState();
+    var dialog = new FakeDialogService();
+    var api = new FakeApiService();
+    var vm = new OrderSummaryPageViewModel(state, api, dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.PlaceOrderCommand).ExecuteAsync(null);
+
+    var call = Assert.Single(dialog.ShowCalls);
+    Assert.Equal("Order Empty", call.Title);
+    Assert.Equal(0, api.GetMenuByCategoryAsyncCallCount);
+  }
+
+  [Fact]
+  public async Task PlaceOrderCommand_HappyPath_PostsConfirmsClearsAndNavigates()
+  {
+    var state = new OrderState();
+    state.AddLine(1, name: "Burger", unitPrice: 5.0, quantity: 2);
+    var dialog = new FakeDialogService();
+    var nav = new FakeNavigationService();
+    var api = new FakeApiService
+    {
+      PostOrderAsyncHandler = _ => Task.FromResult<OrderConfirmationDto?>(new OrderConfirmationDto
+      {
+        Id = 42,
+        Status = "confirmed",
+        TotalItems = 2,
+        GrandTotal = 10.0,
+        EstimatedPrepMinutes = 5
+      })
+    };
+    var vm = new OrderSummaryPageViewModel(state, api, dialog, nav);
+
+    await ((AsyncRelayCommand)vm.PlaceOrderCommand).ExecuteAsync(null);
+
+    Assert.False(state.HasOrder);
+    Assert.Contains("..", nav.Routes);
+    var confirmCall = Assert.Single(dialog.ShowCalls);
+    Assert.Equal("Order Confirmed", confirmCall.Title);
+    Assert.Contains("Order ID: 42", confirmCall.Message);
+  }
+
+  [Fact]
+  public async Task PlaceOrderCommand_ApiReturnsNull_ShowsOrderFailed()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 5.0, quantity: 1);
+    var dialog = new FakeDialogService();
+    var api = new FakeApiService
+    {
+      PostOrderAsyncHandler = _ => Task.FromResult<OrderConfirmationDto?>(null)
+    };
+    var vm = new OrderSummaryPageViewModel(state, api, dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.PlaceOrderCommand).ExecuteAsync(null);
+
+    var call = Assert.Single(dialog.ShowCalls);
+    Assert.Equal("Order Failed", call.Title);
+    Assert.True(state.HasOrder);
+  }
+
+  [Fact]
+  public async Task PlaceOrderCommand_ApiThrows_ShowsNetworkError()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 5.0, quantity: 1);
+    var dialog = new FakeDialogService();
+    var api = new FakeApiService
+    {
+      PostOrderAsyncHandler = _ => throw new HttpRequestException("boom")
+    };
+    var vm = new OrderSummaryPageViewModel(state, api, dialog, navigationService: null);
+
+    await ((AsyncRelayCommand)vm.PlaceOrderCommand).ExecuteAsync(null);
+
+    var call = Assert.Single(dialog.ShowCalls);
+    Assert.Equal("Network Error", call.Title);
+    Assert.True(state.HasOrder);
+  }
+
+  [Fact]
+  public async Task PlaceOrderCommand_IsPlacingOrder_TogglesAroundWork()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 5.0, quantity: 1);
+    var gate = new TaskCompletionSource<OrderConfirmationDto?>();
+    var api = new FakeApiService
+    {
+      PostOrderAsyncHandler = _ => gate.Task
+    };
+    var vm = new OrderSummaryPageViewModel(state, api, dialogService: new FakeDialogService(), navigationService: new FakeNavigationService());
+
+    var run = ((AsyncRelayCommand)vm.PlaceOrderCommand).ExecuteAsync(null);
+
+    Assert.True(vm.IsPlacingOrder);
+    Assert.Equal("Placing Order...", vm.PlaceOrderButtonText);
+
+    gate.SetResult(new OrderConfirmationDto { Id = 1, Status = "confirmed", TotalItems = 1, GrandTotal = 5.0 });
+    await run;
+
+    Assert.False(vm.IsPlacingOrder);
+    Assert.Equal("Place Order", vm.PlaceOrderButtonText);
   }
 }

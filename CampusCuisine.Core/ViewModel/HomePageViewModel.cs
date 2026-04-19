@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using CampusCuisine.Models;
 using CampusCuisine.Services;
 
@@ -9,6 +10,8 @@ namespace CampusCuisine.ViewModel
   {
     private readonly IApiService _api;
     private readonly IOrderStateService _orderState;
+    private readonly IDialogService? _dialogService;
+    private readonly INavigationService? _navigationService;
 
     private List<MenuItemModel>? _cachedMains;
     private List<MenuItemModel>? _cachedDesserts;
@@ -32,9 +35,24 @@ namespace CampusCuisine.ViewModel
     private bool _disposed;
 
     public HomePageViewModel(IApiService api, IOrderStateService orderState)
+      : this(api, orderState, dialogService: null, navigationService: null)
+    {
+    }
+
+    public HomePageViewModel(
+      IApiService api,
+      IOrderStateService orderState,
+      IDialogService? dialogService,
+      INavigationService? navigationService)
     {
       _api = api ?? throw new ArgumentNullException(nameof(api));
       _orderState = orderState ?? throw new ArgumentNullException(nameof(orderState));
+      _dialogService = dialogService;
+      _navigationService = navigationService;
+
+      StartNewOrderCommand = new AsyncRelayCommand(StartNewOrderAsync);
+      ContinueOrderCommand = new AsyncRelayCommand(ContinueOrderAsync);
+      NavigateToCommand = new AsyncRelayCommand(NavigateToAsync);
 
       _orderState.PropertyChanged += OnOrderStatePropertyChanged;
       UpdateOrderTotals();
@@ -209,6 +227,12 @@ namespace CampusCuisine.ViewModel
       }
     }
 
+    public ICommand StartNewOrderCommand { get; }
+
+    public ICommand ContinueOrderCommand { get; }
+
+    public ICommand NavigateToCommand { get; }
+
     public async Task InitializeAsync()
     {
       await Task.WhenAll(LoadFeaturedAsync(), LoadIndulgenceAsync());
@@ -266,6 +290,45 @@ namespace CampusCuisine.ViewModel
       {
         // Silent: keep the card hidden if desserts cannot be loaded.
       }
+    }
+
+    private async Task StartNewOrderAsync()
+    {
+      if (_orderState.HasOrder)
+      {
+        var confirm = _dialogService is null
+          ? true
+          : await _dialogService.ConfirmAsync(
+              "Start New Order",
+              "Start a new order? This will clear your current order.",
+              "Start New",
+              "Cancel");
+
+        if (!confirm)
+          return;
+
+        _orderState.Clear();
+      }
+
+      if (_navigationService is not null)
+        await _navigationService.GoToAsync("///StartersPage");
+    }
+
+    private async Task ContinueOrderAsync()
+    {
+      if (!_orderState.HasOrder)
+        return;
+
+      if (_navigationService is not null)
+        await _navigationService.GoToAsync("//OrderSummaryPage");
+    }
+
+    private async Task NavigateToAsync(object? parameter)
+    {
+      if (_navigationService is null) return;
+      if (parameter is not string route || string.IsNullOrWhiteSpace(route)) return;
+
+      await _navigationService.GoToAsync(route);
     }
 
     private void OnOrderStatePropertyChanged(object? sender, PropertyChangedEventArgs e)

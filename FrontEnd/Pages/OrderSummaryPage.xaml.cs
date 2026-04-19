@@ -7,20 +7,19 @@ namespace CampusCuisine.Pages;
 public partial class OrderSummaryPage : ContentPage
 {
   private readonly IOrderStateService _orderState;
-  private readonly IApiService _api;
-  private readonly IDialogService _dialogService;
   private readonly OrderSummaryPageViewModel _vm;
-  private bool _isPlacingOrder;
 
   public OrderSummaryPage()
   {
     InitializeComponent();
+
     _orderState = App.Services.GetRequiredService<IOrderStateService>();
-    _api = App.Services.GetRequiredService<IApiService>();
-    _dialogService = App.Services.GetRequiredService<IDialogService>();
-    _vm = new OrderSummaryPageViewModel(_orderState, _dialogService);
+    var api = App.Services.GetRequiredService<IApiService>();
+    var dialogService = App.Services.GetRequiredService<IDialogService>();
+    var navigationService = App.Services.GetRequiredService<INavigationService>();
+
+    _vm = new OrderSummaryPageViewModel(_orderState, api, dialogService, navigationService);
     BindingContext = _vm;
-    SetPlaceOrderBusy(false);
   }
 
   protected override void OnAppearing()
@@ -65,67 +64,15 @@ public partial class OrderSummaryPage : ContentPage
       await HandleQuantityEntryAsync(entry, showValidationAlerts: false);
   }
 
-  private async void OnClearOrderClicked(object? sender, EventArgs e)
-  {
-    if (!_orderState.HasOrder)
-      return;
-
-    var confirm = await DisplayAlertAsync("Clear Order", "Clear all items from your order?", "Clear", "Cancel");
-    if (confirm)
-      _orderState.Clear();
-  }
-
+  // Cosmetic press-feedback animation. The button's Command handles the
+  // order-placement logic independently; Clicked fires alongside Command
+  // on button tap so the animation plays while the API call begins.
   private async void OnPlaceOrderClicked(object? sender, EventArgs e)
   {
-    if (_isPlacingOrder)
+    if (PlaceOrderButton is null)
       return;
 
-    if (!_orderState.HasOrder)
-    {
-      await DisplayAlertAsync("Order Empty", "Your order is empty. Please add an item before placing an order.", "OK");
-      return;
-    }
-
-    var request = _orderState.ToCreateOrderRequest();
-
-    if (PlaceOrderButton is not null)
-    {
-      await PlaceOrderButton.ScaleToAsync(0.96, 80);
-      await PlaceOrderButton.ScaleToAsync(1.0, 80);
-    }
-
-    SetPlaceOrderBusy(true);
-
-    try
-    {
-      var confirmation = await _api.PostOrderAsync(request);
-      if (confirmation is null)
-      {
-        await DisplayAlertAsync("Order Failed", "Server returned an error placing your order.", "OK");
-        return;
-      }
-
-      await DisplayAlertAsync("Order Confirmed", OrderConfirmationPresenter.FormatMessage(confirmation), "OK");
-      _orderState.Clear();
-      await Shell.Current.GoToAsync("..");
-    }
-    catch (Exception ex)
-    {
-      await DisplayAlertAsync("Network Error", ex.Message, "OK");
-    }
-    finally
-    {
-      SetPlaceOrderBusy(false);
-    }
-  }
-
-  private void SetPlaceOrderBusy(bool isBusy)
-  {
-    _isPlacingOrder = isBusy;
-    if (PlaceOrderButton is not null)
-    {
-      PlaceOrderButton.IsEnabled = !isBusy;
-      PlaceOrderButton.Text = isBusy ? "Placing Order..." : "Place Order";
-    }
+    await PlaceOrderButton.ScaleToAsync(0.96, 80);
+    await PlaceOrderButton.ScaleToAsync(1.0, 80);
   }
 }

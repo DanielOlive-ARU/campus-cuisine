@@ -294,4 +294,105 @@ public class HomePageViewModelTests
     vm.Dispose();
     vm.Dispose();
   }
+
+  [Fact]
+  public async Task StartNewOrderCommand_EmptyCart_NavigatesWithoutDialog()
+  {
+    var nav = new FakeNavigationService();
+    var dialog = new FakeDialogService();
+    var vm = new HomePageViewModel(new FakeApiService(), new OrderState(), dialog, nav);
+
+    await ((AsyncRelayCommand)vm.StartNewOrderCommand).ExecuteAsync(null);
+
+    Assert.Empty(dialog.ConfirmCalls);
+    Assert.Contains("///StartersPage", nav.Routes);
+  }
+
+  [Fact]
+  public async Task StartNewOrderCommand_ExistingCart_ConfirmAccept_ClearsAndNavigates()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 2.0, quantity: 1);
+    var nav = new FakeNavigationService();
+    var dialog = new FakeDialogService { NextConfirmResponse = true };
+    var vm = new HomePageViewModel(new FakeApiService(), state, dialog, nav);
+
+    await ((AsyncRelayCommand)vm.StartNewOrderCommand).ExecuteAsync(null);
+
+    Assert.Single(dialog.ConfirmCalls);
+    Assert.False(state.HasOrder);
+    Assert.Contains("///StartersPage", nav.Routes);
+  }
+
+  [Fact]
+  public async Task StartNewOrderCommand_ExistingCart_ConfirmCancel_StaysPut()
+  {
+    var state = new OrderState();
+    state.AddLine(1, unitPrice: 2.0, quantity: 1);
+    var nav = new FakeNavigationService();
+    var dialog = new FakeDialogService { NextConfirmResponse = false };
+    var vm = new HomePageViewModel(new FakeApiService(), state, dialog, nav);
+
+    await ((AsyncRelayCommand)vm.StartNewOrderCommand).ExecuteAsync(null);
+
+    Assert.True(state.HasOrder);
+    Assert.Empty(nav.Routes);
+  }
+
+  [Fact]
+  public async Task ContinueOrderCommand_NoOrder_DoesNotNavigate()
+  {
+    var nav = new FakeNavigationService();
+    var vm = new HomePageViewModel(new FakeApiService(), new OrderState(), dialogService: null, navigationService: nav);
+
+    await ((AsyncRelayCommand)vm.ContinueOrderCommand).ExecuteAsync(null);
+
+    Assert.Empty(nav.Routes);
+  }
+
+  [Fact]
+  public async Task ContinueOrderCommand_HasOrder_NavigatesToSummary()
+  {
+    var state = new OrderState();
+    state.AddLine(1, quantity: 1);
+    var nav = new FakeNavigationService();
+    var vm = new HomePageViewModel(new FakeApiService(), state, dialogService: null, navigationService: nav);
+
+    await ((AsyncRelayCommand)vm.ContinueOrderCommand).ExecuteAsync(null);
+
+    Assert.Contains("//OrderSummaryPage", nav.Routes);
+  }
+
+  [Fact]
+  public async Task NavigateToCommand_WithRoute_Navigates()
+  {
+    var nav = new FakeNavigationService();
+    var vm = new HomePageViewModel(new FakeApiService(), new OrderState(), dialogService: null, navigationService: nav);
+
+    await ((AsyncRelayCommand)vm.NavigateToCommand).ExecuteAsync("//MainsPage");
+
+    Assert.Contains("//MainsPage", nav.Routes);
+  }
+
+  [Fact]
+  public async Task NavigateToCommand_NullParameter_DoesNotNavigate()
+  {
+    var nav = new FakeNavigationService();
+    var vm = new HomePageViewModel(new FakeApiService(), new OrderState(), dialogService: null, navigationService: nav);
+
+    await ((AsyncRelayCommand)vm.NavigateToCommand).ExecuteAsync(null);
+
+    Assert.Empty(nav.Routes);
+  }
+
+  [Fact]
+  public async Task NavigateToCommand_WhitespaceRoute_DoesNotNavigate()
+  {
+    var nav = new FakeNavigationService();
+    var vm = new HomePageViewModel(new FakeApiService(), new OrderState(), dialogService: null, navigationService: nav);
+
+    await ((AsyncRelayCommand)vm.NavigateToCommand).ExecuteAsync("   ");
+
+    Assert.Empty(nav.Routes);
+  }
 }

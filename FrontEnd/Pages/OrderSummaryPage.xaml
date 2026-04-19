@@ -83,11 +83,12 @@
              FontAttributes="Bold" />
 
       <Button Text="Clear Order"
-              Clicked="OnClearOrderClicked" />
+              Command="{Binding ClearOrderCommand}" />
 
       <Button x:Name="PlaceOrderButton"
-              Text="Place Order"
-              Clicked="OnPlaceOrderClicked" />
+              Text="{Binding PlaceOrderButtonText}"
+              Clicked="OnPlaceOrderClicked"
+              Command="{Binding PlaceOrderCommand}" />
 
     </VerticalStackLayout>
   </ScrollView>
