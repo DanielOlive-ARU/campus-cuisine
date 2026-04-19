@@ -37,7 +37,7 @@
                  FontSize="16" />
 
             <Grid ColumnDefinitions="50,8,50"
-                  RowDefinitions="Auto,Auto"
+                  RowDefinitions="Auto,24"
                   HorizontalOptions="Start"
                   RowSpacing="4">
               <Button Grid.Row="0"
