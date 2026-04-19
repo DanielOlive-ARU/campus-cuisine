@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using CampusCuisine.FrontEnd.Services;
 using CampusCuisine.Services;
 using Microsoft.Maui.Devices;
 
@@ -39,6 +40,13 @@ namespace CampusCuisine
 
       builder.Services.AddSingleton<OrderState>();
       builder.Services.AddSingleton<IOrderStateService>(sp => sp.GetRequiredService<OrderState>());
+
+      // MAUI-scoped abstractions over Shell.DisplayAlert and Shell.GoToAsync
+      // let view-model commands raise dialogs and navigate without taking
+      // a compile-time dependency on the MAUI framework types. Core stays
+      // platform-neutral; the implementations live in the FrontEnd project.
+      builder.Services.AddSingleton<IDialogService, MauiDialogService>();
+      builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
 
 #if DEBUG
       builder.Logging.AddDebug();
