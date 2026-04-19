@@ -3,7 +3,7 @@
     x:Class="CampusCuisine.Views.MenuItemView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CampusCuisine.Views"
+    xmlns:vm="clr-namespace:CampusCuisine.ViewModel;assembly=CampusCuisine.Core"
     x:Name="ThisView">
 
   <CollectionView x:Name="ItemsCollection"
@@ -14,7 +14,7 @@
     </CollectionView.EmptyView>
 
     <CollectionView.ItemTemplate>
-      <DataTemplate x:DataType="local:MenuItemCardViewModel">
+      <DataTemplate x:DataType="vm:MenuItemCardViewModel">
         <Border Margin="10" Padding="10">
           <VerticalStackLayout Spacing="8">
 
@@ -36,23 +36,32 @@
                  TextColor="Black"
                  FontSize="16" />
 
-            <Label Text="{Binding QuantityText}"
-                 IsVisible="{Binding HasQuantity}"
-                 TextColor="Black"
-                 FontAttributes="Bold" />
-
-            <HorizontalStackLayout Spacing="8">
-              <Button Text="-"
+            <Grid ColumnDefinitions="50,8,50"
+                  RowDefinitions="Auto,24"
+                  HorizontalOptions="Start"
+                  RowSpacing="4">
+              <Button Grid.Row="0"
+                    Grid.Column="0"
+                    Text="-"
                     WidthRequest="50"
                     IsVisible="{Binding HasQuantity}"
-                    Clicked="OnDecreaseClicked"
-                    CommandParameter="{Binding Id}" />
+                    Command="{Binding DecreaseCommand}" />
 
-              <Button Text="+"
+              <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Text="+"
                     WidthRequest="50"
-                    Clicked="OnAddClicked"
-                    CommandParameter="{Binding Id}" />
-            </HorizontalStackLayout>
+                    Command="{Binding AddCommand}" />
+
+              <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   Text="{Binding QuantityText}"
+                   IsVisible="{Binding HasQuantity}"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   HorizontalOptions="End" />
+            </Grid>
 
           </VerticalStackLayout>
         </Border>

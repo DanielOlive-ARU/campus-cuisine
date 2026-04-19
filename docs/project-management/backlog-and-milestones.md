@@ -241,22 +241,40 @@ These items should only be started after the MVP order flow, Shell navigation, a
 4. Re-ran Windows build, frontend tests, and manual order-flow regression checks.
 5. Updated requirements and architecture documentation to reference the reusable component directly.
 
-### Move Order Summary quantity edit buffer into a view model layer
-**Priority:** SHOULD after MVP stability
+### Completed: Close the remaining MVVM gaps - commands on view-models and constructor DI on pages
+**Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
 **Owner:** Adam
-**Reason:** The current frontend uses a temporary `QuantityText` buffer on `OrderLineDto` so the editable quantity `Entry` in Order Summary can stay in sync without letting invalid values affect totals. This is acceptable for MVP, but it mixes UI editing state into the DTO and is weaker than a cleaner MVVM design.
+**Outcome:** Every meaningful user-facing click now runs through an `ICommand` on the relevant view-model, and every Shell-declared page receives its dependencies through constructor injection rather than pulling them from `App.Services.GetRequiredService`. Both Order Summary and Home now follow the same `BindingContext = _vm` pattern. `CampusCuisine.Core` contains no reference to MAUI framework types; view-model commands reach dialogs and Shell navigation through `IDialogService` / `INavigationService` abstractions implemented in `FrontEnd/Services/`.
 
-**Scope:**
-1. Introduce a dedicated order-summary view model or order-line view model for editable quantity state.
-2. Move `QuantityText` or equivalent UI-buffer behaviour out of `OrderLineDto`.
-3. Keep backend payloads unchanged.
-4. Re-run Windows build and manual order-flow regression tests.
-5. Update documentation to explain the final MVVM structure.
+**Delivered scope:**
+1. Extracted `OrderSummaryPageViewModel` owning the `Lines` collection, totals, `OrderSummaryLineSync` lifecycle, and `HasOrder`, with `Attach` / `Detach` methods exposed so the page can wire sync activation to its visibility.
+2. Added hand-rolled `RelayCommand` / `AsyncRelayCommand` types in `CampusCuisine.Core/ViewModel/Commands.cs` (no `CommunityToolkit.Mvvm` dependency) with 15 unit tests covering parameter passing, `CanExecute` gating, reentry guard, and exception resilience.
+3. Added `IDialogService` / `INavigationService` interfaces in `CampusCuisine.Core/Services/` plus MAUI-side implementations in `FrontEnd/Services/` wrapping `Shell.Current.DisplayAlertAsync` and `Shell.Current.GoToAsync`. Test doubles (`FakeDialogService`, `FakeNavigationService`) live in `CampusCuisine.Tests/TestDoubles/`.
+4. Moved every meaningful click handler onto the relevant view-model: `MenuItemCardViewModel.AddCommand` / `DecreaseCommand`; `OrderSummaryLineViewModel.IncreaseCommand` / `DecreaseCommand` / `RemoveCommand`; `OrderSummaryPageViewModel.ClearOrderCommand` / `PlaceOrderCommand`; `HomePageViewModel.StartNewOrderCommand` / `ContinueOrderCommand` / `NavigateToCommand`. The Place Order command drives `IsPlacingOrder` and a derived `PlaceOrderButtonText` binding so the button text and enabled state are VM-driven.
+5. Registered every Shell-declared page and the two stateful view-models as transient services in `MauiProgram.cs`; page constructors now accept their dependencies via constructor DI.
+6. Stabilised menu-card layout (fixed-height label row) so the card's `+` button position does not shift when quantity state changes.
+7. 47 new tests added; `210` passing frontend tests total on the branch. `dotnet build` on `net10.0-windows10.0.19041.0` → 0 warnings, 0 errors. Windows GUI smoke test passed end-to-end on home navigation, menu-card `+/-`, Order Summary commands, and Place Order.
+8. Updated `docs/meetings/decision-log.md`, `docs/viva/frontend-mvvm-refactor-notes.md`, and this backlog entry.
 
-**Do not start until:**
-1. MVP order flow is stable.
-2. Order Summary editing and validation are stable.
-3. Frontend tests are in place or planned closely enough to protect the refactor.
+Only three view-layer hooks remain in code-behind after this slice: the Place Order `ScaleToAsync` press animation (inherently view-scoped), the Entry `Completed` / `Unfocused` quantity-validation handlers (MAUI `Entry` has no `CompletedCommand`), and construction of `MenuItemViewModel(api, "Mains")` on the category pages (the category string is a runtime value, not DI-resolvable). Each is a conscious MAUI-ergonomics trade rather than architectural smell.
+
+### Completed: Move Order Summary quantity edit buffer into a view model layer
+**Status:** Completed on `mvvm-ordersummary-refactor` (2026-04-19)
+**Owner:** Adam
+**Outcome:** The `QuantityText` UI buffer has been lifted off `OrderLineDto` onto a dedicated `OrderSummaryLineViewModel`. A separate `OrderSummaryLineSync` projects `IOrderStateService.Lines` into the page's observable collection via match-by-MenuItemId incremental diff, preserving view-model instance identity so the quantity `Entry` never loses focus during unrelated updates. `OrderLineDto` is now a minimal serialisation contract (`MenuItemId` + `Quantity` only) and the frontend line representation lives on a new `OrderLineEntry` + immutable `MenuItemSnapshot` pair.
+
+**Delivered scope:**
+1. Added `OrderSummaryLineViewModel` with INPC and a pure `TryValidateQuantity` helper covering the three existing validation rules (non-numeric / non-positive / greater than 999).
+2. Added `OrderSummaryLineSync` with `Dictionary`-backed subscription tracking and idempotent mirror setters.
+3. Rewired `OrderSummaryPage.xaml.cs` to bind an `ObservableCollection<OrderSummaryLineViewModel>` and use `TryValidateQuantity` for a thin validation path.
+4. Introduced `MenuItemSnapshot` (immutable record) and `OrderLineEntry` (INPC wrapper) and migrated `OrderState` onto them atomically in a single commit.
+5. Stripped `OrderLineDto` to `MenuItemId` + `Quantity` only; frontend display state and LineTotal now live on `OrderLineEntry` and its Snapshot.
+6. Extracted a pure `OrderConfirmationPresenter` for the place-order confirmation message, pinned to invariant culture for consistent `£` formatting.
+7. Extracted `HomePageViewModel` (collapsing the 358-line `HomePage.xaml.cs` to ~60 lines) and `MenuItemCardViewModel` + `MenuItemCardSync` (replacing `MenuItemView`'s wholesale rebuild).
+8. Ran `dotnet build` on `net10.0-windows10.0.19041.0` (0 warnings / 0 errors) and `dotnet test` on the full suite (47 existing + 101 new = 148 passing) after every commit. Windows GUI smoke test passed end-to-end.
+9. Updated `docs/meetings/decision-log.md`, `docs/reflection/development-reflection.md`, `README.md`, and added `docs/viva/frontend-mvvm-refactor-notes.md`.
+
+Closes Issue 32.
 
 ### Expand GitHub Actions into a staged test-and-build pipeline
 **Priority:** MAY after all MUST requirements, SHOULD requirements, and likely most MAY work are complete

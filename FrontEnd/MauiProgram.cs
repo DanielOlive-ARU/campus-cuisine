@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using CampusCuisine.FrontEnd.Services;
+using CampusCuisine.Pages;
 using CampusCuisine.Services;
+using CampusCuisine.ViewModel;
 using Microsoft.Maui.Devices;
 
 namespace CampusCuisine
@@ -39,6 +42,31 @@ namespace CampusCuisine
 
       builder.Services.AddSingleton<OrderState>();
       builder.Services.AddSingleton<IOrderStateService>(sp => sp.GetRequiredService<OrderState>());
+
+      // MAUI-scoped abstractions over Shell.DisplayAlert and Shell.GoToAsync
+      // let view-model commands raise dialogs and navigate without taking
+      // a compile-time dependency on the MAUI framework types. Core stays
+      // platform-neutral; the implementations live in the FrontEnd project.
+      builder.Services.AddSingleton<IDialogService, MauiDialogService>();
+      builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
+
+      // Register page-scoped view-models so pages can receive them through
+      // constructor injection rather than resolving services manually via
+      // App.Services.GetRequiredService. MenuItemViewModel is not registered
+      // here because its category is a runtime string, not a DI-resolvable
+      // dependency; the category pages construct it explicitly.
+      builder.Services.AddTransient<HomePageViewModel>();
+      builder.Services.AddTransient<OrderSummaryPageViewModel>();
+
+      // Register pages so Shell resolves them through the DI container; their
+      // constructor dependencies (view-models or services) are injected by
+      // the container rather than pulled from App.Services at runtime.
+      builder.Services.AddTransient<HomePage>();
+      builder.Services.AddTransient<MainsPage>();
+      builder.Services.AddTransient<StartersPage>();
+      builder.Services.AddTransient<DessertsPage>();
+      builder.Services.AddTransient<OrderSummaryPage>();
+      builder.Services.AddTransient<HelpPage>();
 
 #if DEBUG
       builder.Logging.AddDebug();

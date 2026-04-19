@@ -99,7 +99,7 @@
           </Grid>
 
           <Button Text="View in Mains"
-                  Clicked="OnQuickNavigateClicked"
+                  Command="{Binding NavigateToCommand}"
                   CommandParameter="//MainsPage" />
         </VerticalStackLayout>
       </Border>
@@ -146,7 +146,7 @@
           </Grid>
 
           <Button Text="View in Desserts"
-                  Clicked="OnQuickNavigateClicked"
+                  Command="{Binding NavigateToCommand}"
                   CommandParameter="//DessertsPage" />
         </VerticalStackLayout>
       </Border>
@@ -192,11 +192,10 @@
               TextColor="{StaticResource BrandInk}" />
 
           <VerticalStackLayout Spacing="10">
-            <Button Text="Start New Order" Clicked="OnStartNewOrderClicked" />
+            <Button Text="Start New Order" Command="{Binding StartNewOrderCommand}" />
             <Button Text="Continue Current Order"
-                    Clicked="OnContinueOrderClicked"
-                    IsVisible="{Binding HasOrder}"
-                    IsEnabled="{Binding HasOrder}" />
+                    Command="{Binding ContinueOrderCommand}"
+                    IsVisible="{Binding HasOrder}" />
           </VerticalStackLayout>
         </VerticalStackLayout>
       </Border>
@@ -217,7 +216,7 @@
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
-                      Clicked="OnQuickNavigateClicked"
+                      Command="{Binding NavigateToCommand}"
                       CommandParameter="//StartersPage"
                       VerticalOptions="Center" />
             </Grid>
@@ -231,7 +230,7 @@
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
-                      Clicked="OnQuickNavigateClicked"
+                      Command="{Binding NavigateToCommand}"
                       CommandParameter="//MainsPage"
                       VerticalOptions="Center" />
             </Grid>
@@ -245,7 +244,7 @@
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Open"
-                      Clicked="OnQuickNavigateClicked"
+                      Command="{Binding NavigateToCommand}"
                       CommandParameter="//DessertsPage"
                       VerticalOptions="Center" />
             </Grid>
@@ -259,7 +258,7 @@
               </VerticalStackLayout>
               <Button Grid.Column="1"
                       Text="Help"
-                      Clicked="OnQuickNavigateClicked"
+                      Command="{Binding NavigateToCommand}"
                       CommandParameter="//HelpPage"
                       VerticalOptions="Center" />
             </Grid>

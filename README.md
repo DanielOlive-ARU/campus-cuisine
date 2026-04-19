@@ -32,7 +32,7 @@ The project is designed to satisfy the core MUST requirements from the brief fir
 
 ## Technology Stack
 - Frontend: .NET MAUI, XAML, C#
-- Frontend architecture: pragmatic MVVM with shared DI services
+- Frontend architecture: MVVM with dedicated per-page view-models, sync projections over shared DI services (see `docs/viva/frontend-mvvm-refactor-notes.md`)
 - Backend: FastAPI, SQLModel, SQLite, pydantic-settings, pytest
 - API style: REST with OpenAPI docs
 - Test stack:

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,9 +8,9 @@ namespace CampusCuisine.Services;
 
 public class OrderState : IOrderStateService
 {
-  private readonly ObservableCollection<OrderLineDto> _lines = new();
+  private readonly ObservableCollection<OrderLineEntry> _lines = new();
 
-  public ObservableCollection<OrderLineDto> Lines => _lines;
+  public ObservableCollection<OrderLineEntry> Lines => _lines;
 
   public int TotalItems => _lines.Sum(x => x.Quantity);
 
@@ -24,14 +24,14 @@ public class OrderState : IOrderStateService
     {
       if (e.NewItems is not null)
       {
-        foreach (OrderLineDto line in e.NewItems)
-          line.PropertyChanged += OnLinePropertyChanged;
+        foreach (OrderLineEntry entry in e.NewItems)
+          entry.PropertyChanged += OnEntryPropertyChanged;
       }
 
       if (e.OldItems is not null)
       {
-        foreach (OrderLineDto line in e.OldItems)
-          line.PropertyChanged -= OnLinePropertyChanged;
+        foreach (OrderLineEntry entry in e.OldItems)
+          entry.PropertyChanged -= OnEntryPropertyChanged;
       }
 
       NotifyStateChanged();
@@ -47,27 +47,34 @@ public class OrderState : IOrderStateService
 
     if (existing is null)
     {
-      var line = new OrderLineDto
-      {
-        MenuItemId = menuItemId,
-        Quantity = quantity,
-        Name = name ?? string.Empty,
-        UnitPrice = unitPrice,
-        Description = description ?? string.Empty
-      };
-      _lines.Add(line);
+      var snapshot = new MenuItemSnapshot(
+        name ?? string.Empty,
+        description ?? string.Empty,
+        unitPrice);
+      var entry = new OrderLineEntry(menuItemId, snapshot, quantity);
+      _lines.Add(entry);
     }
     else
     {
       existing.Quantity += quantity;
 
-      // If name/price were not set before, fill them
-      if (string.IsNullOrWhiteSpace(existing.Name) && !string.IsNullOrWhiteSpace(name))
-        existing.Name = name!;
-      if (existing.UnitPrice == 0 && unitPrice > 0)
-        existing.UnitPrice = unitPrice;
-      if (string.IsNullOrWhiteSpace(existing.Description) && !string.IsNullOrWhiteSpace(description))
-        existing.Description = description!;
+      // Fill-if-empty upgrade: if an earlier AddLine created the entry
+      // with stub snapshot data, a later AddLine with real data upgrades it.
+      var current = existing.Snapshot;
+      var newName = string.IsNullOrWhiteSpace(current.Name) && !string.IsNullOrWhiteSpace(name)
+        ? name!
+        : current.Name;
+      var newDescription = string.IsNullOrWhiteSpace(current.Description) && !string.IsNullOrWhiteSpace(description)
+        ? description!
+        : current.Description;
+      var newPrice = current.UnitPrice == 0 && unitPrice > 0
+        ? unitPrice
+        : current.UnitPrice;
+
+      if (newName != current.Name || newDescription != current.Description || newPrice != current.UnitPrice)
+      {
+        existing.Snapshot = new MenuItemSnapshot(newName, newDescription, newPrice);
+      }
     }
 
     NotifyStateChanged();
@@ -126,16 +133,15 @@ public class OrderState : IOrderStateService
       {
         MenuItemId = x.MenuItemId,
         Quantity = x.Quantity
-        // Name and UnitPrice intentionally not copied — server expects only menu_item_id and quantity
       }).ToList()
     };
   }
 
   public event PropertyChangedEventHandler? PropertyChanged;
 
-  private void OnLinePropertyChanged(object? sender, PropertyChangedEventArgs e)
+  private void OnEntryPropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    if (e.PropertyName is nameof(OrderLineDto.Quantity) or nameof(OrderLineDto.UnitPrice) or nameof(OrderLineDto.LineTotal))
+    if (e.PropertyName is nameof(OrderLineEntry.Quantity) or nameof(OrderLineEntry.LineTotal))
       NotifyStateChanged();
   }
 
