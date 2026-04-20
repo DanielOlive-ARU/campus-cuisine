@@ -1,6 +1,6 @@
 # Frontend MVVM Refactor Viva Notes
 
-These notes support the viva defence of the post-submission MVVM refactor that lives on branch `mvvm-ordersummary-refactor`. The submitted `main` branch is the safe fallback; this branch strengthens the LO3 "structured architectural pattern (e.g. MVVM)" clause from "pragmatic MVVM" to a view-model layer that owns state, validation, and user commands without leaking MAUI framework types into the Core library.
+These notes support the viva defence of the post-merge MVVM refactor that landed in `main` via PR #11 (merge commit `a6ccbf5`, 2026-04-19). The refactor lifts the LO3 "structured architectural pattern (e.g. MVVM)" clause from the original "pragmatic MVVM" submission state to a view-model layer that owns state, validation, and user commands without leaking MAUI framework types into the `CampusCuisine.Core` library. The original pre-refactor architecture remains in git history; the rollback anchor tags (`pre-homepage`, `pre-summary-vm`, `pre-commands`) were retained on origin for traceability and pre/post diff comparison.
 
 Cross-references:
 - `docs/meetings/decision-log.md` — decisions taken and superseded
@@ -127,7 +127,7 @@ Every *other* click handler has been moved onto an ICommand on the relevant view
 | `MenuItemCardSyncTests` | 18 | Seed, Items Add/Remove/Reset, Cart Add/Remove/Set/Clear, orphaned ids, Dispose |
 | `CommandsTests` | 15 | RelayCommand + AsyncRelayCommand full contract (parameters, canExecute, reentry, exception resilience) |
 | `MenuItemSnapshotTests` + existing tests | 5 + 43 | Value-equality tests + the 47 original tests (less 4 that needed shape updates for the OrderLineEntry migration) |
-| **Total** | **~210** | All green on every commit in the branch |
+| **Total** | **~210** | All green on every commit through the refactor (now merged to `main` via PR #11) |
 
 ## Why is `OrderState` still a singleton?
 

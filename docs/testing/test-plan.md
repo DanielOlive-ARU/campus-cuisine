@@ -59,50 +59,51 @@ Current implemented backend tests cover:
 - Retrieve order by id
 - Return order status field
 
-## Frontend Test Scope (Adam)
+## Frontend Test Scope
 
-### Order State Service Tests
-- Add first item to order
-- Add same item again increases quantity
-- Remove item reduces quantity or removes line
-- Update quantity directly
-- Calculate total item count correctly
-- Calculate total price correctly
-- Clear order resets state
-- Removing an item not present does not crash
+The frontend test surface was authored end-to-end by Dan, in two waves: the initial test project structure with 47 baseline tests for `OrderState`, `ApiService`, and `MenuItemViewModel` (committed 2026-04-17 alongside the `CampusCuisine.Core` / `CampusCuisine.Tests` split), and the post-merge view-model / sync / command suite added during the MVVM refactor that took the suite from 47 to 210 tests across 24 commits. The groupings below describe what each test suite covers, not who wrote it.
 
-### API/Service Tests
-- Menu view model maps frontend categories to backend categories correctly
-- Menu service parses menu response correctly
-- Relative image URLs are converted to absolute URLs
-- Absolute image URLs are preserved
-- Invalid/network responses are handled gracefully when mocked
-- Order submission response maps to confirmation DTO
-- API error status codes map to expected frontend exception messages
+### Service-layer tests
+- `OrderState` add/decrease/set/clear behavior, total item count, grand total
+- `OrderState` `PropertyChanged` notifications for aggregate state updates
+- Safe handling of missing-line removal and invalid (zero / negative) add quantities
+- Request DTO mapping (`ToCreateOrderRequest` produces the minimal `OrderLineDto` shape)
+- `OrderState` singleton persistence under DI resolution (proxy for cross-page navigation persistence)
+- `ApiService` image URL normalization (relative -> absolute, absolute preserved)
+- `ApiService` order-confirmation mapping
+- `ApiService` HTTP / network error translation (`ApiException` with status-aware messages)
+- `CachedApiService` decorator: success caches, failure falls back to cache, no-cache re-throws, single-item passthrough
 
-### Navigation/State Tests
-- Order state persists when switching pages
-- Summary bar reflects latest totals after quantity changes
-- Empty order state shown correctly on summary page
+### View-model tests
+- `MenuItemViewModel` category mapping, success / failure handling, busy-state re-entry guard
+- `MenuItemCardViewModel` ctor-from-`MenuItemModel`, INPC, `HasQuantity` / `QuantityText`, `AddCommand` / `DecreaseCommand` (with and without an injected service)
+- `OrderSummaryLineViewModel` quantity / `QuantityText` normalisation, `LineTotal` math, `UpdateFrom`, `TryValidateQuantity`, per-line `IncreaseCommand` / `DecreaseCommand` / `RemoveCommand` paths
+- `OrderSummaryPageViewModel` ctor / Attach / Detach lifecycle, `ClearOrderCommand` and `PlaceOrderCommand` paths covering confirm-accept, confirm-cancel, empty cart, happy path, null response, network exception, and `IsPlacingOrder` toggling
+- `HomePageViewModel` defaults, featured / indulgence loaders, error paths, cache reuse, retry-after-failure, `OrderState` subscription updates, `StartNewOrderCommand` / `ContinueOrderCommand` / `NavigateToCommand` across empty / confirm-accept / confirm-cancel / invalid-parameter
+
+### Sync / projection tests
+- `OrderSummaryLineSync` seed, Add, Remove, `SetQuantity` (instance identity preserved via match-by-id), Clear, Dispose, AddRemoveAdd same id
+- `MenuItemCardSync` seed, items Add / Remove / Reset, cart Add / Remove / Set / Clear, orphaned ids, Dispose
+
+### Command and presenter tests
+- `RelayCommand` and `AsyncRelayCommand` parameter passing, `CanExecute` gating, reentry guard, exception resilience, null-guard constructors
+- `OrderConfirmationPresenter` full message, missing status, missing prep, whitespace status
+
+### Model tests
+- `MenuItemSnapshot` record value equality on each field
+- `OrderLineEntry` ctor, `Quantity` / `Snapshot` INPC, delegated property reads, `LineTotal` math
 
 ## Current Frontend Validation Status
-The frontend now has a dedicated automated test project at `CampusCuisine.Tests` backed by the plain .NET class library `CampusCuisine.Core`.
-
-Current implemented frontend automated tests cover:
-- `OrderState` add/remove/set/clear behavior
-- total item count and grand total calculation
-- `OrderState` `PropertyChanged` notifications for aggregate state updates
-- safe handling of missing-line removal and invalid add quantities
-- request DTO mapping for placed orders
-- `MenuItemViewModel` category mapping and success/failure handling
-- `MenuItemViewModel` busy-state re-entry guard
-- `ApiService` image URL normalization
-- `ApiService` order-confirmation mapping
-- `ApiService` HTTP/network error translation
+The frontend has a dedicated automated test project at `CampusCuisine.Tests` backed by the platform-neutral class library `CampusCuisine.Core` (no MAUI references). The test project uses xUnit and runs under `dotnet test` without spinning up a MAUI runtime.
 
 Current validated result:
-- `39` frontend tests passing locally with `dotnet test`
-- MAUI app build, core library build, and frontend test project build all succeed on the current branch
+- **`210` frontend tests passing locally** with `dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug`
+- MAUI app build, core library build, and frontend test project build all succeed on `net10.0-windows10.0.19041.0` with 0 warnings / 0 errors
+- The MVVM refactor branch grew the suite from `47` to `210` tests across 24 commits; every commit on the refactor branch was green at both `dotnet build` and `dotnet test`
+
+Test doubles live alongside the tests in `CampusCuisine.Tests/TestDoubles/`:
+- `FakeApiService`, `FakeHttpMessageHandler`, `FakeMenuCache` for the service layer
+- `FakeDialogService`, `FakeNavigationService` for the view-model commands
 
 ## Priority Test Cases
 

@@ -52,7 +52,7 @@ Adam owns the mobile app user experience and state-driven UI.
 ## Shared Responsibilities
 Both members are expected to contribute to:
 - Requirements analysis
-- GitHub project planning
+- Project board management
 - Documentation updates
 - Meeting notes
 - Integration debugging

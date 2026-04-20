@@ -5,7 +5,7 @@ Use this outline to structure a 10–15 minute individual presentation.
 ## 1. Project Overview
 - App purpose: mobile restaurant ordering app with flyout navigation
 - Stack: .NET MAUI frontend + FastAPI backend
-- Team split: Adam frontend, Dan backend
+- Team split: Adam owned the original frontend foundation, the wireframe, the Azure DevOps board snapshots, and a first-pass presentation deck. Dan owned the backend end-to-end, the entire automated test suite (backend pytest + frontend xUnit including the test-project structure and the test doubles), and the post-merge frontend hardening (reusable summary bar, `IOrderStateService`, brand vocabulary, offline cache, animations, prep time, admin status endpoint, and the MVVM refactor). The contribution split is verifiable in the GitHub commit history.
 
 ## 2. Requirements Analysis
 Explain that the brief was broken into:
@@ -37,21 +37,62 @@ Show that the **requirements mapping** drove design decisions rather than just l
 - Why reusable components reduced duplication between menu pages
 
 ## 5. Individual Contribution – Dan
-- Designed API contract
-- Implemented menu retrieval endpoints
-- Implemented admin CRUD for food items
-- Implemented order creation and order status endpoints
-- Added validation and sanitisation
-- Wrote backend tests
-- Supported frontend integration with sample responses/payloads
+
+### Backend (sole owner)
+- Designed the REST API contract (`docs/api/api-contract.md`)
+- Implemented FastAPI service with SQLModel + SQLite: public menu retrieval, admin menu CRUD via OpenAPI, order creation with server-calculated totals and prep time, and the `PATCH /api/admin/orders/{id}/status` admin endpoint for `confirmed -> cancelled` transitions
+- Implemented input validation and sanitisation (Pydantic schemas with `extra = "forbid"`, positive prices, positive quantities, non-blank names, known menu-item ids)
+- Implemented the admin `x-admin-key` router-level dependency
+- Set up the manual GitHub Actions backend validation workflow and captured a clean Phase 7 run
+
+### Testing (sole owner across the project)
+- Backend: 51 pytest tests covering health endpoint, seed behaviour, menu listing / filtering / lookup, admin authentication and CRUD, order creation with totals, prep-time calculation, and order status transitions
+- Frontend: 210 xUnit tests across the service layer, view-models, sync projections, commands, presenter, and models (full breakdown in [docs/testing/test-plan.md](../testing/test-plan.md))
+- Built the test infrastructure: the `CampusCuisine.Core` / `CampusCuisine.Tests` project split that allows view-models to be unit-tested without spinning up MAUI, plus the test doubles (`FakeApiService`, `FakeHttpMessageHandler`, `FakeMenuCache`, `FakeDialogService`, `FakeNavigationService`)
+- Authored every test file in both waves: the initial 47-test baseline (`OrderState`, `ApiService`, `MenuItemViewModel` — committed 2026-04-17) and the post-MVVM-refactor +163 tests across the new view-model / sync / command surface
+
+### Frontend hardening and post-merge MVVM refactor
+- Refactored the duplicated category-page summary bar into the reusable `OrderSummaryBar` component
+- Introduced `IOrderStateService` over the shared `OrderState` singleton, with order-state singleton persistence tests that pin the DI contract
+- Introduced the Campus Cuisine brand vocabulary (`Brand*` colour tokens, chrome and typography styles) and pinned the app to Light theme to fix dark-mode control bleed
+- Built the Help page and the distinct Desserts palette
+- Built the Today's pick / Today's indulgence featured cards on Home
+- Built the offline menu browsing layer (`CachedApiService` decorator + `PreferencesMenuCache`)
+- Built the Place Order press animation (`ScaleToAsync`)
+- Built the estimated prep time display in the order confirmation alert
+- Delivered the post-merge MVVM refactor on `mvvm-ordersummary-refactor` (24 green-building commits, five phases): `OrderLineEntry` + `MenuItemSnapshot`, `OrderSummaryLineViewModel` + `OrderSummaryLineSync`, `HomePageViewModel`, `MenuItemCardViewModel` + `MenuItemCardSync`, `OrderSummaryPageViewModel`, hand-rolled `RelayCommand` / `AsyncRelayCommand`, `IDialogService` / `INavigationService` abstractions with MAUI-side implementations, and constructor-injection on every Shell-declared page
+
+### Documentation
+- `docs/viva/backend-viva-notes.md`, `docs/viva/frontend-mvvm-refactor-notes.md`
+- `docs/meetings/decision-log.md` entries for DI review, Order Summary Shell navigation fix, MVVM refactor phases
+- `docs/reflection/development-reflection.md`
+- `docs/ethics-and-future-development.md` rewrite
+- README polish, requirements-mapping refresh, .gitattributes line-ending policy
 
 ## 6. Individual Contribution – Adam
-- Built flyout navigation and core pages
-- Implemented XAML layouts and MVVM bindings
-- Built reusable DishCard and OrderSummaryBar components
-- Implemented shared order state integration
-- Styled app and handled user flow
-- Wrote frontend/state tests
+
+### Original frontend foundation
+The frontend foundation Adam delivered between 14 March and 12 April established the architecture that the post-merge hardening and MVVM refactor were built on top of.
+
+- Created the MAUI frontend project on .NET 10 (`Add Maui frontend project`, 14 March)
+- Migrated deprecated MAUI controls for .NET 10 compatibility (`Frame` -> `Border`, namespace cleanup, `MainPage` deprecation, AppShell + `CreateWindow` rework)
+- Built the unified `MenuItemView` component with the menu-item injection model used by every category page (Mains, Starters, Desserts)
+- Built the API integration on the category pages (the `MenuItemViewModel` async loader and the page-level wiring)
+- Built the original shared `OrderState` service: snapshot ownership pattern, the `Add` / `Decrease` / `Set` / `Clear` operations, and the `[JsonIgnore]` snapshot fields that later evolved into `MenuItemSnapshot`
+- Built the original Order Summary page and checkout flow
+- Built the menu quantity controls (`+` / `-` buttons on each menu card)
+- Made the API base URL platform-aware (Windows vs Android emulator)
+- Built the original page-level summary bar on each category page (later refactored into the shared `OrderSummaryBar` component)
+- Surfaced backend-down errors on category pages
+- Built the Start New Order / Continue Current Order buttons on the Home page
+- Added navigation from the Home page Start Order button into the menu
+- Repo hygiene: stopping environment-specific files from being tracked (`.csproj.user`, build artifacts)
+
+### Project-management and presentation evidence
+- Created the Initial Wireframe (`docs/wireframes/Initial Wireframe.jpg`)
+- Created the Weekly meetings document (`docs/meetings/Weekly meetings.docx`)
+- Captured the Azure DevOps board snapshots for Weeks 1-5 (`docs/project-management/week-by-week boards/`)
+- Authored the first-pass Campus Cuisine presentation deck. The current working copy of the deck is maintained off-repo to allow continued slide work without conflicting with the repo submission state.
 
 ## 7. Feature Demonstration Flow
 Demo order journey in this order:
@@ -73,7 +114,7 @@ Discuss:
 
 ## 9. Collaboration Evidence
 Show:
-- GitHub Project board / issues
+- Azure DevOps weekly board snapshots
 - commit history from both members
 - meeting notes and decision log
 - role split with shared integration work
@@ -93,15 +134,8 @@ Show:
 - richer order status updates
 - stronger offline support
 
-## Dan’s Likely Viva Questions
-### Q: Why did you choose FastAPI?
-A: It supports RESTful APIs, strong validation, and automatic OpenAPI docs, which directly matches the brief.
+## Q&A Reference Material
 
-### Q: How do you satisfy “there must be a way to add food items without changing code”?
-A: Menu items are stored in SQLite and managed through admin CRUD endpoints, so new dishes can be added through the API rather than hardcoded.
+For deep backend Q&A during viva preparation see [backend-viva-notes.md](backend-viva-notes.md) - 15 questions covering tech-stack rationale, the CRUD interface, order handling, server-side totals, status workflow, admin auth, validation, testing, prep time, and deferred scope.
 
-### Q: How is input validation handled?
-A: Pydantic schemas validate fields such as category, price, and quantity; invalid requests are rejected before processing.
-
-### Q: How did backend work support the frontend?
-A: I agreed endpoint shapes and payload structures early so Adam could build against a stable contract and integrate progressively.
+For deep frontend / MVVM Q&A see [frontend-mvvm-refactor-notes.md](frontend-mvvm-refactor-notes.md) - architectural reasoning behind the post-merge view-model layer, the sync projections, immutable snapshots, the command pattern, and the three remaining MAUI-ergonomics trade-offs left in code-behind.
