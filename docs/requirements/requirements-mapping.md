@@ -96,7 +96,7 @@ This file translates the assignment brief into implementable requirements and li
 | DOC-01 | MUST | Source code hosted in GitHub | Single repo containing frontend, backend, docs | Shared | repository |
 | DOC-02 | MUST | Supporting documentation in repo | Meeting notes, requirements, reflection, wireframes | Shared | `/docs` |
 | DOC-03 | MUST | README with setup/run/test instructions | Detailed root README | Shared | `README.md` |
-| PM-01 | MUST | Use GitHub Issues or project management tool | GitHub Projects with linked issues and assignees | Shared | screenshots |
+| PM-01 | MUST | Use GitHub Issues or project management tool | Azure DevOps board with weekly snapshots captured into the repo for evidence | Shared | `docs/project-management/week-by-week boards/Week 1-5 Board.png` |
 | PM-02 | MUST | Evidence of planning/task allocation | Export or screenshot board in docs | Shared | `/docs/project-management` |
 | ETH-01 | SHOULD | Explain ethics considerations | Accessibility, security, trust, data handling | Shared | ethics doc |
 | FUT-01 | SHOULD | Explain future development | Prioritised roadmap beyond MVP | Shared | ethics/future doc |

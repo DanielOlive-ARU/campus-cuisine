@@ -191,7 +191,9 @@ dotnet test ".\CampusCuisine.Tests\CampusCuisine.Tests.csproj" -c Debug
 ```
 
 Current frontend suite status:
-- `47` tests passing
+- `210` tests passing
+
+Coverage spans the shared services (`OrderState`, `ApiService`, `CachedApiService`), the per-page and per-line view-models (`HomePageViewModel`, `OrderSummaryPageViewModel`, `OrderSummaryLineViewModel`, `MenuItemCardViewModel`, `MenuItemViewModel`), the sync projections (`OrderSummaryLineSync`, `MenuItemCardSync`), the hand-rolled `RelayCommand` / `AsyncRelayCommand` types, the `OrderConfirmationPresenter`, and the `MenuItemSnapshot` / `OrderLineEntry` model pair. See [docs/testing/test-plan.md](docs/testing/test-plan.md) for the full breakdown.
 
 Optional targeted frontend test run:
 

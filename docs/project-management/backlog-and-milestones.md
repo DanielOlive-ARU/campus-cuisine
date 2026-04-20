@@ -2,12 +2,15 @@
 
 This backlog is structured so that all **MUST** requirements are completed before the viva. SHOULD features are only attempted after the end-to-end flow is stable.
 
-## Suggested GitHub Project Columns
+## Project Board Columns
+The Azure DevOps board used for week-by-week tracking carries the standard columns:
 - Backlog
 - To Do
 - In Progress
 - In Review
 - Done
+
+Weekly snapshots of the board are exported to `docs/project-management/week-by-week boards/` for repo-side evidence.
 
 ## Labels
 - `frontend`
@@ -24,7 +27,7 @@ This backlog is structured so that all **MUST** requirements are completed befor
 
 ### Tasks
 1. Create repository structure
-2. Create GitHub Project board and labels
+2. Create project board and labels (Azure DevOps)
 3. Write requirements mapping
 4. Produce wireframes for core pages
 5. Agree API contract and sample payloads
@@ -35,7 +38,7 @@ This backlog is structured so that all **MUST** requirements are completed befor
 - Requirements mapping stored in `/docs/requirements`
 - Wireframes stored in `/docs/wireframes`
 - API contract stored in `/docs/api`
-- GitHub board screenshot stored in `/docs/project-management`
+- Project board screenshots stored in `/docs/project-management/week-by-week boards/`
 
 ## Milestone 2 – Core Foundations
 **Target:** Week 2

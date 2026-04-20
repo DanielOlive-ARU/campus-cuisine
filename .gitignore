@@ -5,6 +5,11 @@ obj/
 *.rsuser
 *.suo
 .codex
+
+# Office application lock files (e.g. ~$Foo.pptx, ~$Bar.docx).
+# These appear while a document is open and must never be tracked.
+~$*
+
 backend/.venv/
 backend/.env
 backend/.artifacts/
